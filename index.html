@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#123a5a"><meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="AED Audit">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="AED Audit"><link rel="manifest" href="manifest.webmanifest">
 <title>Gladstone AED Inventory</title>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
@@ -99,6 +99,32 @@ aedForm.onsubmit=e=>{e.preventDefault();let id=$('aid').value,a=id&&db.aeds.find
 window.openCheck=id=>{let a=db.aeds.find(x=>x.id==id);checkForm.reset();$('cid').value=id;$('cdate').value=today();$('auditStatus').value=a.status||'In Service';$('statusDate').value=today();$('statusNotes').value='';$('auditResult').value='No issues found - Working properly';$('notes').required=false;$('issueHint').style.display='none';$('pst').value=a.pedConfig==='N/A'?'N/A':'Present / In Date';$('csum').innerHTML='<b>'+a.location+'</b><br>'+a.serial+'<br>Adult: '+fmt(a.adult)+' · Pediatric: '+(a.pedConfig==='N/A'?'N/A':fmt(a.ped))+' · Battery: '+fmt(a.battery);checkDlg.showModal()};
 checkForm.onsubmit=e=>{e.preventDefault();if($('auditResult').value==='Issues found'&&!$('notes').value.trim()){$('notes').required=true;$('issueHint').style.display='block';$('notes').focus();return}let id=$('cid').value,a=db.aeds.find(x=>x.id==id),d=dt($('cdate').value),c={id:crypto.randomUUID(),date:$('cdate').value,quarter:q(d),year:d.getFullYear(),inspector:$('insp').value.trim(),ready:$('ready').value,physical:$('phys').value,adult:$('ast').value,ped:$('pst').value,battery:$('bst').value,accessories:$('acc').value,auditResult:$('auditResult').value,status:$('auditStatus').value,statusDate:$('statusDate').value,statusNotes:$('statusNotes').value.trim(),notes:$('notes').value.trim()};a.checks.push(c);let priorStatus=a.status||'In Service';a.status=c.status;if(priorStatus!==c.status){log('AED Status Change',id,'Status changed from '+priorStatus+' to '+c.status+(c.statusNotes?' — '+c.statusNotes:''),c.inspector)}log('Quarterly Inspection',id,'Q'+c.quarter+' '+c.year+' inspection completed. Result: '+c.auditResult+'. Ready: '+c.ready+'. Status: '+c.status+'.',c.inspector);checkDlg.close();save();openReport(id,c.id)};
 $('newdep').onclick=()=>{depForm.reset();$('ddate').value=today();depDlg.showModal()};depForm.onsubmit=e=>{e.preventDefault();let id=$('daed').value,a=db.aeds.find(x=>x.id==id),d={date:$('ddate').value,report:$('report').value.trim(),by:$('dby').value.trim(),pads:$('pads').checked,battery:$('bchg').checked,rts:$('rts').checked,notes:$('dnotes').value.trim()};a.deps.push(d);log('AED Deployment',id,'Deployment recorded'+(d.report?' for report '+d.report:'')+'.',d.by);depDlg.close();save()};
-if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));if(window.navigator.standalone===true)$('install').style.display='none';render();
+if('serviceWorker' in navigator){
+  let reloading=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    if(reloading)return;
+    reloading=true;
+    location.reload();
+  });
+  window.addEventListener('load',async()=>{
+    try{
+      const reg=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});
+      await reg.update();
+      if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
+      reg.addEventListener('updatefound',()=>{
+        const worker=reg.installing;
+        if(!worker)return;
+        worker.addEventListener('statechange',()=>{
+          if(worker.state==='installed'&&navigator.serviceWorker.controller){
+            worker.postMessage({type:'SKIP_WAITING'});
+          }
+        });
+      });
+      setInterval(()=>{ if(navigator.onLine) reg.update().catch(()=>{}); },60000);
+      document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'&&navigator.onLine) reg.update().catch(()=>{}); });
+    }catch(e){}
+  });
+}
+if(window.navigator.standalone===true)$('install').style.display='none';render();
 const linkedId=new URLSearchParams(location.search).get('aed');if(linkedId&&db.aeds.some(a=>a.id===linkedId)){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));document.querySelector('[data-v="inv"]').classList.add('on');document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));$('inv').classList.add('on');invFilter='all';document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('on',x.dataset.f==='all'));$('search').value='';inv();setTimeout(()=>{let row=$('row-'+linkedId);if(row){row.classList.add('open');row.scrollIntoView({behavior:'smooth',block:'center'})}},100)}
 </script></body></html>
