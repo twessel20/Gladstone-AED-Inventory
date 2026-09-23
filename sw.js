@@ -1,7 +1,7 @@
-const VERSION='gfd-aed-pwa-v16';
+const VERSION='gfd-aed-pwa-v17';
 const CORE_CACHE=VERSION+'-core';
 const RUNTIME_CACHE=VERSION+'-runtime';
-const CORE=['./','./index.html','./gfd-patch.jpg','./gfd-patch.jpg?v=15','./manifest.webmanifest'];
+const CORE=['./','./index.html','./manifest.webmanifest'];
 
 self.addEventListener('install',event=>{
   self.skipWaiting();
