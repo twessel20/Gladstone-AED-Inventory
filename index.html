@@ -132,6 +132,10 @@ function groupUrgency(items){
     return ua.rank-ub.rank||ua.days-ub.days||(groupOrder[a.serial]??999)-(groupOrder[b.serial]??999)||a.location.localeCompare(b.location)||(a.descriptor||'').localeCompare(b.descriptor||'');
   }));
   const groups=Object.keys(buckets).sort((a,b)=>{
+    const aUnassigned=a.trim().toLowerCase()==='unassigned';
+    const bUnassigned=b.trim().toLowerCase()==='unassigned';
+    if(aUnassigned&&!bUnassigned)return 1;
+    if(bUnassigned&&!aUnassigned)return -1;
     const ua=groupUrgency(buckets[a]),ub=groupUrgency(buckets[b]);
     return ua.rank-ub.rank||ua.days-ub.days||a.localeCompare(b);
   });
