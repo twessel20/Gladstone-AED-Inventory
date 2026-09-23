@@ -12,7 +12,7 @@
 header{padding:calc(22px + env(safe-area-inset-top)) 18px 22px;color:#fff;background:linear-gradient(135deg,var(--n),#1c587f)}h1{margin:3px 0 5px;font-size:1.8rem}.k{font-size:.72rem;letter-spacing:.14em;font-weight:800}header p{margin:0;opacity:.9}
 nav{display:flex;overflow:auto;gap:4px;position:sticky;top:0;z-index:9;background:#fff;border-bottom:1px solid var(--l);padding:8px}button{font:inherit;font-weight:750;border:1px solid var(--l);background:#fff;border-radius:9px;padding:10px 12px}.tab{border:0;color:var(--m);white-space:nowrap}.tab.on{background:#e9f2f7;color:var(--n)}.primary{background:var(--n);color:#fff;border-color:var(--n)}
 main{max-width:1050px;margin:auto;padding:16px 12px 50px}.view{display:none}.view.on{display:block}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.card,.item,.stat{background:#fff;border:1px solid var(--l);border-radius:14px;padding:15px;margin-bottom:10px;box-shadow:0 5px 16px #1632470b}.big{font-size:1.8rem;font-weight:850}.muted,.small{color:var(--m);font-size:.88rem}.two{display:grid;grid-template-columns:1.1fr 1fr;gap:10px;margin-top:10px}.row,.top,.bar{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.row{border-top:1px solid #edf1f3;padding:9px 0}.row:first-child{border-top:0}.title{font-weight:850}.meta{color:var(--m);font-size:.86rem;margin-top:3px}.pills,.actions,.filters{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}.pill{font-size:.8rem;padding:5px 8px;border-radius:99px;background:#eef3f6}.ok{background:#e9f5ee;color:var(--g)}.warn{background:#fff3db;color:var(--a)}.bad{background:#fdeaea;color:var(--r)}.compact{padding:11px 13px}.compact .top{align-items:center}.compact .details{display:none;padding-top:10px}.compact.open .details{display:block}.chev{font-size:1.1rem;color:var(--m)}.filter.on{background:var(--n);color:#fff;border-color:var(--n)}
-input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd7df;border-radius:9px;background:#fff}.search{margin:0 0 10px}.bar{margin-bottom:12px}.bar h2{margin:0}.bar p{margin:3px 0 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}label{display:grid;gap:5px;font-weight:650;font-size:.9rem}textarea{min-height:80px}dialog{width:min(94vw,680px);border:0;border-radius:16px;padding:18px;box-shadow:0 24px 70px #0005}dialog::backdrop{background:#10202d77}.da{display:flex;justify-content:flex-end;gap:7px;margin-top:14px}.check{display:flex;gap:8px;align-items:flex-start;margin-top:10px}.check input{width:auto}.install{background:#eef5fa}
+input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd7df;border-radius:9px;background:#fff}.search{margin:0 0 10px}.bar{margin-bottom:12px}.bar h2{margin:0}.bar p{margin:3px 0 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}label{display:grid;gap:5px;font-weight:650;font-size:.9rem}textarea{min-height:80px}dialog{width:min(94vw,680px);border:0;border-radius:16px;padding:18px;box-shadow:0 24px 70px #0005}dialog::backdrop{background:#10202d77}.da{display:flex;justify-content:flex-end;gap:7px;margin-top:14px}.check{display:flex;gap:8px;align-items:flex-start;margin-top:10px}.check input{width:auto}.install{background:#eef5fa}.update-banner{display:none;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;background:#fff;border:1px solid var(--l);border-radius:14px;padding:12px 14px;box-shadow:0 12px 36px #10202d33}.update-banner.show{display:flex;justify-content:space-between;align-items:center;gap:12px}.update-banner .text{min-width:0}.update-banner b{display:block;color:var(--n)}
 @media(max-width:700px){
   .stats{grid-template-columns:1fr 1fr}
   .two,.grid{grid-template-columns:1fr}
@@ -39,7 +39,7 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
 </head>
 <body>
 <header><img class="brand-patch" src="gfd-patch.jpg" alt="Gladstone Fire EMS patch"><div class="k">GLADSTONE FIRE / EMS</div><h1>AED Inventory & Quarterly Audit</h1><p>Inventory, expirations, inspections, deployments and traceable records.</p></header>
-<nav><button class="tab on" data-v="dash">Dashboard</button><button class="tab" data-v="inv">Inventory</button><button class="tab" data-v="checks">Quarterly</button><button class="tab" data-v="deps">Deployments</button><button class="tab" data-v="reports">Reports</button><button class="tab" data-v="audit">Audit Log</button><button id="install">Add to iPhone</button></nav>
+<nav><button class="tab on" data-v="dash">Dashboard</button><button class="tab" data-v="inv">Inventory</button><button class="tab" data-v="checks">Quarterly</button><button class="tab" data-v="deps">Deployments</button><button class="tab" data-v="reports">Reports</button><button class="tab" data-v="audit">Audit Log</button><button id="appUpdate">Check for Update</button><button id="install">Add to iPhone</button></nav>
 <main>
 <section id="dash" class="view on"><div id="stats" class="stats"></div><div class="two"><div class="card"><h2>Expiration Watch</h2><div id="watch"></div></div><div class="card"><h2 id="qtitle">Quarterly Status</h2><div id="qstatus"></div></div></div></section>
 <section id="inv" class="view"><div class="bar"><div><h2>AED Inventory</h2><p class="muted">Tap a location to expand details.</p></div><div class="actions" style="margin-top:0"><button id="scanSerial">Scan Serial</button><button class="primary" id="add">+ Add AED</button></div></div><input id="search" class="search" placeholder="Search location or serial"><div class="filters"><button class="filter on" data-f="all">All</button><button class="filter" data-f="attention">Needs Attention</button><button class="filter" data-f="due">Due This Quarter</button></div><div id="list"></div></section>
@@ -56,6 +56,7 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
 <dialog id="qrDlg"><h2 id="qrTitle">AED QR Code</h2><div style="text-align:center"><img id="qrImg" alt="AED QR Code" style="width:240px;height:240px;max-width:80vw;border:10px solid white;border-radius:12px"><p id="qrLabel" class="muted"></p></div><div class="card install"><b>Print or place this QR code on the AED/cabinet.</b><br><span class="muted">Scanning it with the iPhone Camera opens this exact AED in the app.</span></div><div class="da"><button onclick="window.print()">Print</button><button class="primary" onclick="qrDlg.close()">Done</button></div></dialog>
 <dialog id="reportDlg" style="width:min(96vw,920px);max-height:92vh"><div id="reportModalContent"></div><div class="da"><button onclick="reportDlg.close()">Close</button></div></dialog>
 <dialog id="installDlg"><h2>Add AED Audit to iPhone</h2><div class="card install"><b>Safari → Share → Add to Home Screen → Add</b></div><p class="muted">It will launch from your Home Screen like an app. After the first load, the service worker keeps the app shell available offline.</p><div class="da"><button class="primary" onclick="installDlg.close()">Got it</button></div></dialog>
+<div id="updateBanner" class="update-banner"><div class="text"><b>App update available</b><div class="muted">A newer version of the AED app is ready.</div></div><button class="primary" id="updateNow">Update Now</button></div>
 <script>
 const KEY='gfd-aed-v2', $=x=>document.getElementById(x), today=()=>new Date().toISOString().slice(0,10);
 const seed=[
@@ -151,28 +152,49 @@ window.openCheck=id=>{let a=db.aeds.find(x=>x.id==id);checkForm.reset();$('cid')
 checkForm.onsubmit=e=>{e.preventDefault();if($('auditResult').value==='Issues found'&&!$('notes').value.trim()){$('notes').required=true;$('issueHint').style.display='block';$('notes').focus();return}let id=$('cid').value,a=db.aeds.find(x=>x.id==id),d=dt($('cdate').value),c={id:crypto.randomUUID(),date:$('cdate').value,quarter:q(d),year:d.getFullYear(),inspector:$('insp').value.trim(),ready:$('ready').value,physical:$('phys').value,adult:$('ast').value,ped:$('pst').value,battery:$('bst').value,accessories:$('acc').value,auditResult:$('auditResult').value,status:$('auditStatus').value,statusDate:$('statusDate').value,statusNotes:$('statusNotes').value.trim(),notes:$('notes').value.trim()};a.checks.push(c);let priorStatus=a.status||'In Service';a.status=c.status;if(priorStatus!==c.status){log('AED Status Change',id,'Status changed from '+priorStatus+' to '+c.status+(c.statusNotes?' — '+c.statusNotes:''),c.inspector)}log('Quarterly Inspection',id,'Q'+c.quarter+' '+c.year+' inspection completed. Result: '+c.auditResult+'. Ready: '+c.ready+'. Status: '+c.status+'.',c.inspector);checkDlg.close();save();openReport(id,c.id)};
 $('newdep').onclick=()=>{depForm.reset();$('ddate').value=today();depDlg.showModal()};depForm.onsubmit=e=>{e.preventDefault();let id=$('daed').value,a=db.aeds.find(x=>x.id==id),d={date:$('ddate').value,report:$('report').value.trim(),by:$('dby').value.trim(),pads:$('pads').checked,battery:$('bchg').checked,rts:$('rts').checked,notes:$('dnotes').value.trim()};a.deps.push(d);log('AED Deployment',id,'Deployment recorded'+(d.report?' for report '+d.report:'')+'.',d.by);depDlg.close();save()};
 if('serviceWorker' in navigator){
-  let reloading=false;
+  let reloading=false,swReg=null;
+  const showUpdate=()=>{
+    $('updateBanner').classList.add('show');
+    $('appUpdate').textContent='Update Available';
+  };
+  const hideUpdate=()=>{
+    $('updateBanner').classList.remove('show');
+    $('appUpdate').textContent='Check for Update';
+  };
+  const applyUpdate=()=>{
+    if(swReg&&swReg.waiting) swReg.waiting.postMessage({type:'SKIP_WAITING'});
+  };
   navigator.serviceWorker.addEventListener('controllerchange',()=>{
     if(reloading)return;
     reloading=true;
     location.reload();
   });
+  $('updateNow').onclick=applyUpdate;
+  $('appUpdate').onclick=async()=>{
+    if(swReg&&swReg.waiting){applyUpdate();return;}
+    $('appUpdate').textContent='Checking...';
+    try{
+      if(swReg) await swReg.update();
+      setTimeout(()=>{if(!(swReg&&swReg.waiting)){$('appUpdate').textContent='Up to Date';setTimeout(hideUpdate,1800)}},900);
+    }catch(e){
+      $('appUpdate').textContent=navigator.onLine?'Update Check Failed':'Offline';
+      setTimeout(hideUpdate,1800);
+    }
+  };
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});
-      await reg.update();
-      if(reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
-      reg.addEventListener('updatefound',()=>{
-        const worker=reg.installing;
+      swReg=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});
+      if(swReg.waiting) showUpdate();
+      swReg.addEventListener('updatefound',()=>{
+        const worker=swReg.installing;
         if(!worker)return;
         worker.addEventListener('statechange',()=>{
-          if(worker.state==='installed'&&navigator.serviceWorker.controller){
-            worker.postMessage({type:'SKIP_WAITING'});
-          }
+          if(worker.state==='installed'&&navigator.serviceWorker.controller) showUpdate();
         });
       });
-      setInterval(()=>{ if(navigator.onLine) reg.update().catch(()=>{}); },60000);
-      document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'&&navigator.onLine) reg.update().catch(()=>{}); });
+      if(navigator.onLine) swReg.update().catch(()=>{});
+      setInterval(()=>{if(navigator.onLine) swReg.update().catch(()=>{})},60000);
+      document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&navigator.onLine) swReg.update().catch(()=>{})});
     }catch(e){}
   });
 }
