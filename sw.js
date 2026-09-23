@@ -1,7 +1,7 @@
-const VERSION='gfd-aed-pwa-v52';
+const VERSION='gfd-aed-pwa-v53';
 const CORE_CACHE=VERSION+'-core';
 const RUNTIME_CACHE=VERSION+'-runtime';
-const CORE=['./','./index.html','./manifest.webmanifest','./deployment-admin.js'];
+const CORE=['./','./index.html','./manifest.webmanifest'];
 
 self.addEventListener('install',event=>{
   self.skipWaiting();
@@ -20,26 +20,14 @@ self.addEventListener('message',event=>{
   if(event.data&&event.data.type==='SKIP_WAITING') self.skipWaiting();
 });
 
-async function injectDeploymentAdmin(response){
-  try{
-    const type=response.headers.get('content-type')||'';
-    if(!type.includes('text/html')) return response;
-    let html=await response.text();
-    if(!html.includes('deployment-admin.js')) html=html.replace('</body>','<script src="deployment-admin.js"></script></body>');
-    const headers=new Headers(response.headers);headers.delete('content-length');
-    return new Response(html,{status:response.status,statusText:response.statusText,headers});
-  }catch(e){return response}
-}
-
 async function networkFirst(request){
   try{
     const fresh=await fetch(request,{cache:'no-store'});
     const cache=await caches.open(RUNTIME_CACHE);
     cache.put(request,fresh.clone());
-    return injectDeploymentAdmin(fresh);
+    return fresh;
   }catch(err){
-    const cached=(await caches.match(request)) || (await caches.match('./index.html'));
-    return cached?injectDeploymentAdmin(cached):Response.error();
+    return (await caches.match(request)) || (await caches.match('./index.html'));
   }
 }
 
