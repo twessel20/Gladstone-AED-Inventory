@@ -1,0 +1,11 @@
+{
+  "name": "Gladstone Fire EMS AED Inventory",
+  "short_name": "AED Audit",
+  "description": "Gladstone Fire/EMS AED inventory, quarterly inspection, deployment and reporting app.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7f9",
+  "theme_color": "#123a5a",
+  "orientation": "portrait-primary"
+}
