@@ -113,6 +113,11 @@ function aedUrgency(a){
 }
 function groupUrgency(items){
   return items.map(a=>aedUrgency(a)).sort((x,y)=>x.rank-y.rank||x.days-y.days)[0]||{rank:4,days:Infinity,label:'Clear'};
+}
+function lastCompletedCheck(a){
+  const checks=(a.checks||[]).filter(ch=>ch.date);
+  if(!checks.length)return null;
+  return checks.slice().sort((x,y)=>String(y.date).localeCompare(String(x.date)))[0];
 }function inv(){
   let s=$('search').value.toLowerCase();
   let arr=db.aeds
@@ -166,7 +171,7 @@ function groupUrgency(items){
       buckets[g].map(a=>
         '<div class="item compact" id="row-'+a.id+'">'+
           '<div class="top" onclick="toggleRow(\''+a.id+'\')">'+
-            '<div>'+locHTML(a)+'<div class="meta">'+esc(a.serial)+'</div></div>'+
+            '<div>'+locHTML(a)+'<div class="meta">'+esc(a.serial)+'</div><div class="meta">Last check: '+(lastCompletedCheck(a)?fmt(lastCompletedCheck(a).date):'No completed check')+'</div></div>'+
             '<div><span class="pill '+statusClass(a)+'">'+(a.status==='In Service'?(needsAttention(a)?'Attention':'OK'):'OUT OF SERVICE')+'</span> <span class="chev">▾</span></div>'+
           '</div>'+
           '<div class="details">'+
