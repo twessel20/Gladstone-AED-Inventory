@@ -90,11 +90,11 @@ if(a.serial==='X11L528800'&&a.group==='Community Center / Parks & Recreation'){a
 if(!a.group||a.group==='Other Locations'){a.group=a.location||'Unassigned';migrated=true}
 if(!a.status){a.status='In Service';migrated=true}if(!a.pedConfig){a.pedConfig=a.ped?'Installed':'N/A';migrated=true}if(!a.checks)a.checks=[];a.checks.forEach(ch=>{if(!ch.id){ch.id=crypto.randomUUID();migrated=true}})});if(migrated)localStorage.setItem(KEY,JSON.stringify(db));let invFilter='all';
 function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}function q(d=new Date()){return Math.floor(d.getMonth()/3)+1}function qn(){return 'Q'+q()+' '+new Date().getFullYear()}function dt(v){if(!v)return null;if(/^\d{4}-\d{2}$/.test(v)){let [y,m]=v.split('-').map(Number);return new Date(y,m,0,12,0,0)}return new Date(v+'T12:00:00')}function fmt(v){if(!v)return 'N/A';if(/^\d{4}-\d{2}$/.test(v)){let [y,m]=v.split('-');return m+'/'+y}let d=dt(v);return d?d.toLocaleDateString():'N/A'}function days(v){let d=dt(v);return d?Math.ceil((d-new Date())/86400000):null}function cls(v){let n=days(v);return n==null?'':n<0||n<=90?'bad':n<=180?'warn':'ok'}function log(type,id,detail,who='System'){db.audit.unshift({time:new Date().toISOString(),type,id,detail,who})}function cur(a){let y=new Date().getFullYear(),qq=q();return a.checks.find(c=>c.year==y&&c.quarter==qq)}
-function pill(t,v){return '<span class="pill '+cls(v)+'">'+t+': '+fmt(v)+'</span>'}function exp(){let z=[];db.aeds.forEach(a=>{[['Adult pads',a.adult],['Battery',a.battery]].forEach(x=>{if(x[1])z.push({a,t:x[0],v:x[1],n:days(x[1])})});if(a.pedConfig!=='N/A'&&a.ped)z.push({a,t:'Pediatric pads',v:a.ped,n:days(a.ped)})});return z.sort((a,b)=>a.n-b.n)}
-function render(){let e=exp(),over=e.filter(x=>x.n<0).length,soon=e.filter(x=>x.n>=0&&x.n<=180).length,done=db.aeds.filter(cur).length;populateReportYears();$('stats').innerHTML=[['AEDs',db.aeds.length],['Expired',over],['Due ≤180 Days',soon],['Out of Service',db.aeds.filter(a=>a.status!=='In Service').length],[qn()+' Checked',done+'/'+db.aeds.length]].map(x=>'<div class="stat"><div class="big">'+x[1]+'</div><div class="small">'+x[0]+'</div></div>').join('');
+function pill(t,v){return '<span class="pill '+cls(v)+'">'+t+': '+fmt(v)+'</span>'}function exp(){let z=[];db.aeds.filter(isActive).forEach(a=>{[['Adult pads',a.adult],['Battery',a.battery]].forEach(x=>{if(x[1])z.push({a,t:x[0],v:x[1],n:days(x[1])})});if(a.pedConfig!=='N/A'&&a.ped)z.push({a,t:'Pediatric pads',v:a.ped,n:days(a.ped)})});return z.sort((a,b)=>a.n-b.n)}
+function render(){let active=db.aeds.filter(isActive),inactive=db.aeds.filter(a=>!isActive(a)),e=exp(),over=e.filter(x=>x.n<0).length,soon=e.filter(x=>x.n>=0&&x.n<=180).length,done=active.filter(cur).length;populateReportYears();$('stats').innerHTML=[['Active AEDs',active.length],['Expired',over],['Due ≤180 Days',soon],['Inactive',inactive.length],[qn()+' Checked',done+'/'+active.length]].map(x=>'<div class="stat"><div class="big">'+x[1]+'</div><div class="small">'+x[0]+'</div></div>').join('');
 $('watch').innerHTML=e.filter(x=>x.n<=180).slice(0,20).map(x=>'<div class="row"><div><b>'+esc(x.a.location)+'</b>'+(x.a.descriptor?'<div class="pills" style="margin-top:4px"><span class="pill">'+esc(x.a.descriptor)+'</span></div>':'')+'<div class="meta">'+x.t+' · '+x.a.serial+'</div></div><b class="'+cls(x.v)+'">'+fmt(x.v)+'</b></div>').join('')||'<p class="muted">No expirations within 180 days.</p>';
-$('qtitle').textContent='Quarterly Status — '+qn();let due=db.aeds.filter(a=>!cur(a));$('qstatus').innerHTML='<div class="row"><span>Complete</span><b class="ok">'+(db.aeds.length-due.length)+'</b></div><div class="row"><span>Still Due</span><b class="warn">'+due.length+'</b></div>'+due.slice(0,8).map(a=>'<div class="row"><span>'+esc(a.location)+(a.descriptor?' <span class="pill">'+esc(a.descriptor)+'</span>':'')+'</span><b class="warn">Due</b></div>').join('')+(due.length>8?'<p class="muted">+'+(due.length-8)+' more due — open Quarterly to view all.</p>':'');inv();checks();deps();reports();audit();$('daed').innerHTML=db.aeds.map(a=>'<option value="'+a.id+'">'+a.location+(a.descriptor?' - '+a.descriptor:'')+' — '+a.serial+'</option>').join('')}
-function needsAttention(a){return a.status!=='In Service'||[a.adult,a.battery].some(v=>v&&days(v)<=180)||(a.pedConfig!=='N/A'&&a.ped&&days(a.ped)<=180)}function statusClass(a){return a.status==='In Service'?'ok':'bad'}function locLabel(a){return a.location||''}function locDescriptor(a){return a.descriptor||''}function locGroup(a){return a.group||''}function locHTML(a){return '<div class="title">'+esc(locLabel(a))+'</div>'+(locDescriptor(a)?'<div class="pills" style="margin-top:5px"><span class="pill">'+esc(locDescriptor(a))+'</span></div>':'')}
+$('qtitle').textContent='Quarterly Status — '+qn();let due=active.filter(a=>!cur(a));$('qstatus').innerHTML='<div class="row"><span>Complete</span><b class="ok">'+(active.length-due.length)+'</b></div><div class="row"><span>Still Due</span><b class="warn">'+due.length+'</b></div>'+due.slice(0,8).map(a=>'<div class="row"><span>'+esc(a.location)+(a.descriptor?' <span class="pill">'+esc(a.descriptor)+'</span>':'')+'</span><b class="warn">Due</b></div>').join('')+(due.length>8?'<p class="muted">+'+(due.length-8)+' more due — open Quarterly to view all.</p>':'');inv();checks();deps();reports();audit();$('daed').innerHTML=active.map(a=>'<option value="'+a.id+'">'+a.location+(a.descriptor?' - '+a.descriptor:'')+' — '+a.serial+'</option>').join('')}
+function isActive(a){return (a.status||'In Service')==='In Service'}function needsAttention(a){return isActive(a)&&([a.adult,a.battery].some(v=>v&&days(v)<=180)||(a.pedConfig!=='N/A'&&a.ped&&days(a.ped)<=180))}function statusClass(a){return isActive(a)?'ok':'bad'}function locLabel(a){return a.location||''}function locDescriptor(a){return a.descriptor||''}function locGroup(a){return a.group||''}function locHTML(a){return '<div class="title">'+esc(locLabel(a))+'</div>'+(locDescriptor(a)?'<div class="pills" style="margin-top:5px"><span class="pill">'+esc(locDescriptor(a))+'</span></div>':'')}
 function expirationDaysForAed(a){
   let vals=[];
   if(a.adult)vals.push(days(a.adult));
@@ -104,7 +104,7 @@ function expirationDaysForAed(a){
   return vals.length?Math.min(...vals):Infinity;
 }
 function aedUrgency(a){
-  if(a.status!=='In Service')return {rank:0,days:-999999,label:'Out of Service'};
+  if(!isActive(a))return {rank:99,days:Infinity,label:'Inactive'};
   const exp=expirationDaysForAed(a);
   if(exp<0)return {rank:1,days:exp,label:'Expired'};
   if(exp!==Infinity&&exp<=180)return {rank:2,days:exp,label:'Expiration '+exp+'d'};
@@ -126,7 +126,7 @@ function lastCompletedCheck(a){
 
   const buckets={};
   arr.forEach(a=>{
-    const g=a.group||a.location||'Unassigned';
+    const g=isActive(a)?(a.group||a.location||'Unassigned'):'Inactive AEDs';
     if(!buckets[g])buckets[g]=[];
     buckets[g].push(a);
   });
@@ -137,6 +137,9 @@ function lastCompletedCheck(a){
     return ua.rank-ub.rank||ua.days-ub.days||(groupOrder[a.serial]??999)-(groupOrder[b.serial]??999)||a.location.localeCompare(b.location)||(a.descriptor||'').localeCompare(b.descriptor||'');
   }));
   const groups=Object.keys(buckets).sort((a,b)=>{
+    const aInactive=a==='Inactive AEDs',bInactive=b==='Inactive AEDs';
+    if(aInactive&&!bInactive)return 1;
+    if(bInactive&&!aInactive)return -1;
     const aUnassigned=a.trim().toLowerCase()==='unassigned';
     const bUnassigned=b.trim().toLowerCase()==='unassigned';
     if(aUnassigned&&!bUnassigned)return 1;
@@ -150,18 +153,19 @@ function lastCompletedCheck(a){
     const key='group-'+g.replace(/[^a-z0-9]+/gi,'-').toLowerCase();
     const collapsed=localStorage.getItem('gfd-aed-group-'+key)==='1';
     const items=buckets[g];
-    const attn=items.filter(a=>needsAttention(a)).length;
-    const oos=items.filter(a=>a.status!=='In Service').length;
-    const due=items.filter(a=>!cur(a)).length;
-    const gu=groupUrgency(items);
-    const urgencyPill=gu.rank===0?'<span class="group-banner-pill bad">Immediate: Out of Service</span>':gu.rank===1?'<span class="group-banner-pill bad">Immediate: Expired</span>':gu.rank===2?'<span class="group-banner-pill alert">Next Expiration: '+gu.days+'d</span>':gu.rank===3?'<span class="group-banner-pill due">Action: Quarterly Due</span>':'';
-    const bannerPills=
+    const inactiveGroup=g==='Inactive AEDs';
+    const attn=inactiveGroup?0:items.filter(a=>needsAttention(a)).length;
+    const oos=0;
+    const due=inactiveGroup?0:items.filter(a=>!cur(a)).length;
+    const gu=inactiveGroup?{rank:99,days:Infinity,label:'Inactive'}:groupUrgency(items);
+    const urgencyPill=inactiveGroup?'':gu.rank===1?'<span class="group-banner-pill bad">Immediate: Expired</span>':gu.rank===2?'<span class="group-banner-pill alert">Next Expiration: '+gu.days+'d</span>':gu.rank===3?'<span class="group-banner-pill due">Action: Quarterly Due</span>':'';
+    const bannerPills=inactiveGroup?'':(
       '<div class="group-banner-pills">'+urgencyPill+
       (oos?'<span class="group-banner-pill bad">'+oos+' Out of Service</span>':'')+
       (attn?'<span class="group-banner-pill alert">'+attn+' Attention</span>':'')+
       (due?'<span class="group-banner-pill due">'+due+' Quarterly Due</span>':'')+
       (!oos&&!attn&&!due?'<span class="group-banner-pill ok">All Clear</span>':'')+
-      '</div>';
+      '</div>');
     html+='<div class="group-block'+(collapsed?' collapsed':'')+'" id="'+key+'">'+
       '<button type="button" class="group-banner" onclick="toggleGroup(\''+key+'\')">'+
         '<div><div class="group-name">'+esc(g)+'</div><div class="group-count">'+items.length+' AED'+(items.length===1?'':'s')+'</div>'+bannerPills+'</div>'+
@@ -172,7 +176,7 @@ function lastCompletedCheck(a){
         '<div class="item compact" id="row-'+a.id+'">'+
           '<div class="top" onclick="toggleRow(\''+a.id+'\')">'+
             '<div>'+locHTML(a)+'<div class="meta">'+esc(a.serial)+'</div><div class="meta">Last check: '+(lastCompletedCheck(a)?fmt(lastCompletedCheck(a).date):'No completed check')+'</div></div>'+
-            '<div><span class="pill '+statusClass(a)+'">'+(a.status==='In Service'?(needsAttention(a)?'Attention':'OK'):'OUT OF SERVICE')+'</span> <span class="chev">▾</span></div>'+
+            '<div><span class="pill '+statusClass(a)+'">'+(isActive(a)?(needsAttention(a)?'Attention':'OK'):'Inactive')+'</span> <span class="chev">▾</span></div>'+
           '</div>'+
           '<div class="details">'+
             '<div class="pills"><span class="pill '+statusClass(a)+'">Status: '+esc(a.status)+'</span>'+
@@ -192,7 +196,7 @@ window.toggleGroup=id=>{let el=$(id);if(!el)return;el.classList.toggle('collapse
 window.toggleRow=id=>$('row-'+id).classList.toggle('open');window.showQR=id=>{let a=db.aeds.find(x=>x.id==id);let url=location.origin+location.pathname+'?aed='+encodeURIComponent(id);$('qrTitle').textContent='QR — '+a.location;$('qrLabel').textContent=a.location+' · '+a.serial;$('qrImg').src='https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&data='+encodeURIComponent(url);qrDlg.showModal()}
 function checks(){
   const buckets={};
-  db.aeds.forEach(a=>{
+  db.aeds.filter(isActive).forEach(a=>{
     const g=a.group||a.location||'Unassigned';
     if(!buckets[g])buckets[g]=[];
     buckets[g].push(a);
@@ -352,6 +356,7 @@ async function stopDeploySerialScanner(){if(deploySerialScanner){try{await deplo
 function openDeploymentBySerial(raw){
   let s=normSerial(raw),a=db.aeds.find(x=>normSerial(x.serial)===s);
   if(!a){$('deployScanMsg').textContent='No AED found for serial: '+raw;return false}
+  if(!isActive(a)){$('deployScanMsg').textContent='AED is inactive and cannot be deployed.';return false}
   $('deployScanMsg').textContent='Matched '+a.location+(a.descriptor?' - '+a.descriptor:'')+' — '+a.serial;
   depForm.reset();$('ddate').value=today();$('daed').value=a.id;depDlg.showModal();
   return true
