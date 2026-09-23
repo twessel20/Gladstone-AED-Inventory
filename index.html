@@ -72,7 +72,7 @@ const KEY='gfd-aed-v2', $=x=>document.getElementById(x), today=()=>new Date().to
 const seed=[
 ['X11L528611','Car 100','2027-05-28','','2030-09-30'],['X11L529465','Car 101','2027-05-28','','2033-12-31'],['X11L528795','Car 102','2027-05-28','','2030-12-31'],['X11L529221','Car 103','2027-05-28','','2030-09-30'],['X11L529205','Car 104','2027-05-28','','2031-01-31'],['X11L528608','Car 105','2027-05-28','','2030-09-30'],['X11L528858','Car 106','2027-05-28','','2027-03-30'],['X11L528613','Car 107','2027-05-28','','2030-09-30'],['X11L528619','Car 108','2027-05-28','','2033-12-31'],['X16J868825','Car 109','2027-05-28','','2030-09-30'],['X11L528627','Car 110','2027-05-28','2027-05-28','2030-09-30'],['X11L528801','Animal Control','2027-05-28','','2033-12-31'],['X11L528610','Public Works','2027-05-28','','2030-12-31'],['X11L528800','Happy Rock East','2027-01-18','2026-09-28','2033-12-31'],['X11L529367','Linden Square','2027-05-28','2027-05-28','2030-09-30'],['X11L529451','City Manager Office','2027-05-28','','2033-12-31'],['X11L529144','Police Department Records','2027-05-28','','2035-12-30'],['X11L528791','Police Department','2027-05-28','','2035-12-31'],['X11L528628','Council Chambers','2027-05-28','','2035-12-31'],['X19D140932','Community Center','2027-07-02','','2034-03-31'],['X19D140968','Outdoor Pool','2027-05-28','2027-05-28','2034-03-31'],['X20A241496','Community Center','2027-07-02','','2034-03-31'],['X11L528814','Water Plant','2027-05-28','','2033-12-31'],['X19D142339','Jail','2027-07-28','','2034-03-31'],['X19D141892','Unassigned','2027-07-02','','2034-03-31'],['X17L979521','Atkins Farm Event Center','','','']
 ];
-let db=JSON.parse(localStorage.getItem(KEY)||'null')||{aeds:seed.map((x,i)=>({id:'aed-'+(i+1),serial:x[0],location:x[1],descriptor:(x[0]==='X11L529144'?'Upper Level':x[0]==='X11L528791'?'Time Clock Area · Lower Level':x[0]==='X19D140932'?'Lobby':x[0]==='X20A241496'?'2nd Floor':''),group:(['X11L528611','X11L529465','X11L528795','X11L529221','X11L529205','X11L528608','X11L528858','X11L528613','X11L528619','X16J868825','X11L528627'].includes(x[0])?'Police Patrol Cars':(['X11L529144','X11L528791','X11L528628','X11L529451','X19D142339'].includes(x[0])?'Police Department / City Hall':(['X11L528801','X11L528610'].includes(x[0])?'Public Works / Animal Control':(['X19D140932','X20A241496','X19D140968','X11L529367'].includes(x[0])?'Community Center / Parks & Recreation':'')))),adult:x[2],ped:x[3],battery:x[4],status:'In Service',comments:'',checks:[],deps:[]})),audit:[]};let migrated=false;db.aeds.forEach(a=>{
+let db=JSON.parse(localStorage.getItem(KEY)||'null')||{aeds:seed.map((x,i)=>({id:'aed-'+(i+1),serial:x[0],location:x[1],descriptor:(x[0]==='X11L529144'?'Upper Level':x[0]==='X11L528791'?'Time Clock Area · Lower Level':x[0]==='X19D140932'?'Lobby':x[0]==='X20A241496'?'2nd Floor':''),group:(['X11L528611','X11L529465','X11L528795','X11L529221','X11L529205','X11L528608','X11L528858','X11L528613','X11L528619','X16J868825','X11L528627'].includes(x[0])?'Police Patrol Cars':(['X11L529144','X11L528791','X11L528628','X11L529451','X19D142339'].includes(x[0])?'Police Department / City Hall':(['X11L528801','X11L528610'].includes(x[0])?'Public Works / Animal Control':(['X19D140932','X20A241496','X19D140968','X11L529367'].includes(x[0])?'Community Center / Parks & Recreation':'Other Locations')))),adult:x[2],ped:x[3],battery:x[4],status:'In Service',comments:'',checks:[],deps:[]})),audit:[]};let migrated=false;db.aeds.forEach(a=>{
 if(a.location==='Records Office (PD Side)'){a.location='Police Department Records';a.descriptor='Upper Level';migrated=true}
 if(a.location==='PD Time Clock / Lower Level'){a.location='Police Department';a.descriptor='Time Clock Area · Lower Level';migrated=true}
 if(a.location==='CC Lobby'){a.location='Community Center';a.descriptor='Lobby';migrated=true}
@@ -87,7 +87,7 @@ if(['X11L529144','X11L528791','X11L528628','X11L529451','X19D142339'].includes(a
 if(['X11L528801','X11L528610'].includes(a.serial)&&a.group!=='Public Works / Animal Control'){a.group='Public Works / Animal Control';migrated=true}
 if(['X19D140932','X20A241496','X19D140968','X11L529367'].includes(a.serial)&&a.group!=='Community Center / Parks & Recreation'){a.group='Community Center / Parks & Recreation';migrated=true}
 if(a.serial==='X11L528800'&&a.group==='Community Center / Parks & Recreation'){a.group='';migrated=true}
-if(!a.group)a.group='';
+if(!a.group){a.group='Other Locations';migrated=true}
 if(!a.status){a.status='In Service';migrated=true}if(!a.pedConfig){a.pedConfig=a.ped?'Installed':'N/A';migrated=true}if(!a.checks)a.checks=[];a.checks.forEach(ch=>{if(!ch.id){ch.id=crypto.randomUUID();migrated=true}})});if(migrated)localStorage.setItem(KEY,JSON.stringify(db));let invFilter='all';
 function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}function q(d=new Date()){return Math.floor(d.getMonth()/3)+1}function qn(){return 'Q'+q()+' '+new Date().getFullYear()}function dt(v){if(!v)return null;if(/^\d{4}-\d{2}$/.test(v)){let [y,m]=v.split('-').map(Number);return new Date(y,m,0,12,0,0)}return new Date(v+'T12:00:00')}function fmt(v){if(!v)return 'N/A';if(/^\d{4}-\d{2}$/.test(v)){let [y,m]=v.split('-');return m+'/'+y}let d=dt(v);return d?d.toLocaleDateString():'N/A'}function days(v){let d=dt(v);return d?Math.ceil((d-new Date())/86400000):null}function cls(v){let n=days(v);return n==null?'':n<0||n<=90?'bad':n<=180?'warn':'ok'}function log(type,id,detail,who='System'){db.audit.unshift({time:new Date().toISOString(),type,id,detail,who})}function cur(a){let y=new Date().getFullYear(),qq=q();return a.checks.find(c=>c.year==y&&c.quarter==qq)}
 function pill(t,v){return '<span class="pill '+cls(v)+'">'+t+': '+fmt(v)+'</span>'}function exp(){let z=[];db.aeds.forEach(a=>{[['Adult pads',a.adult],['Battery',a.battery]].forEach(x=>{if(x[1])z.push({a,t:x[0],v:x[1],n:days(x[1])})});if(a.pedConfig!=='N/A'&&a.ped)z.push({a,t:'Pediatric pads',v:a.ped,n:days(a.ped)})});return z.sort((a,b)=>a.n-b.n)}
@@ -102,7 +102,7 @@ function needsAttention(a){return a.status!=='In Service'||[a.adult,a.battery].s
 
   const buckets={};
   arr.forEach(a=>{
-    const g=a.group||'Ungrouped';
+    const g=a.group||'Other Locations';
     if(!buckets[g])buckets[g]=[];
     buckets[g].push(a);
   });
@@ -110,8 +110,8 @@ function needsAttention(a){return a.status!=='In Service'||[a.adult,a.battery].s
   const groupOrder={'X19D140932':1,'X20A241496':2,'X19D140968':3,'X11L529367':4};
   Object.values(buckets).forEach(items=>items.sort((a,b)=>(groupOrder[a.serial]??999)-(groupOrder[b.serial]??999)||a.location.localeCompare(b.location)||(a.descriptor||'').localeCompare(b.descriptor||'')));
   const groups=Object.keys(buckets).sort((a,b)=>{
-    if(a==='Ungrouped'&&b!=='Ungrouped')return 1;
-    if(b==='Ungrouped'&&a!=='Ungrouped')return -1;
+    if(a==='Other Locations'&&b!=='Other Locations')return 1;
+    if(b==='Other Locations'&&a!=='Other Locations')return -1;
     return a.localeCompare(b);
   });
 
