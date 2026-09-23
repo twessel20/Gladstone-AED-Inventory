@@ -12,6 +12,14 @@
 header{padding:calc(22px + env(safe-area-inset-top)) 18px 22px;color:#fff;background:linear-gradient(135deg,var(--n),#1c587f);min-height:118px}.app-header-inner{max-width:1050px;margin:auto;display:flex;align-items:center;gap:18px}.app-header-logo{width:82px;height:82px;object-fit:contain;flex:0 0 auto;border-radius:10px;background:#fff;padding:3px;box-shadow:0 3px 10px #0003}.app-header-copy{min-width:0}.app-header-copy h1{margin:2px 0 4px;font-size:1.75rem;line-height:1.12}.app-header-copy p{margin:0;opacity:.92;font-size:.96rem}.k{font-size:.76rem;letter-spacing:.14em;font-weight:800}
 nav{display:flex;overflow:auto;gap:4px;position:sticky;top:0;z-index:9;background:#fff;border-bottom:1px solid var(--l);padding:8px}button{font:inherit;font-weight:750;border:1px solid var(--l);background:#fff;border-radius:9px;padding:10px 12px}.tab{border:0;color:var(--m);white-space:nowrap}.tab.on{background:#e9f2f7;color:var(--n)}.primary{background:var(--n);color:#fff;border-color:var(--n)}
 main{max-width:1050px;margin:auto;padding:16px 12px 50px}.view{display:none}.view.on{display:block}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.card,.item,.stat{background:#fff;border:1px solid var(--l);border-radius:14px;padding:15px;margin-bottom:10px;box-shadow:0 5px 16px #1632470b}.big{font-size:1.8rem;font-weight:850}.muted,.small{color:var(--m);font-size:.88rem}.two{display:grid;grid-template-columns:1.1fr 1fr;gap:10px;margin-top:10px}.row,.top,.bar{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.row{border-top:1px solid #edf1f3;padding:9px 0}.row:first-child{border-top:0}.title{font-weight:850}.meta{color:var(--m);font-size:.86rem;margin-top:3px}.pills,.actions,.filters{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}.pill{font-size:.8rem;padding:5px 8px;border-radius:99px;background:#eef3f6}.ok{background:#e9f5ee;color:var(--g)}.warn{background:#fff3db;color:var(--a)}.bad{background:#fdeaea;color:var(--r)}.compact{padding:11px 13px}.compact .top{align-items:center}.compact .details{display:none;padding-top:10px}.compact.open .details{display:block}.chev{font-size:1.1rem;color:var(--m)}.filter.on{background:var(--n);color:#fff;border-color:var(--n)}
+.group-block{margin:14px 0}
+.group-banner{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;border:0;border-radius:12px;padding:12px 14px;background:linear-gradient(135deg,var(--n),#1c587f);color:#fff;text-align:left;box-shadow:0 5px 16px #16324718}
+.group-banner .group-name{font-weight:850;letter-spacing:.02em}
+.group-banner .group-count{font-size:.82rem;opacity:.9}
+.group-banner .group-chev{font-size:1.1rem;transition:transform .2s ease}
+.group-block.collapsed .group-chev{transform:rotate(-90deg)}
+.group-items{margin-top:8px}
+.group-block.collapsed .group-items{display:none}
 input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd7df;border-radius:9px;background:#fff}.search{margin:0 0 10px}.bar{margin-bottom:12px}.bar h2{margin:0}.bar p{margin:3px 0 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}label{display:grid;gap:5px;font-weight:650;font-size:.9rem}textarea{min-height:80px}dialog{width:min(94vw,680px);border:0;border-radius:16px;padding:18px;box-shadow:0 24px 70px #0005}dialog::backdrop{background:#10202d77}.da{display:flex;justify-content:flex-end;gap:7px;margin-top:14px}.check{display:flex;gap:8px;align-items:flex-start;margin-top:10px}.check input{width:auto}.install{background:#eef5fa}.update-banner{display:none;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;background:#fff;border:1px solid var(--l);border-radius:14px;padding:12px 14px;box-shadow:0 12px 36px #10202d33}.update-banner.show{display:flex;justify-content:space-between;align-items:center;gap:12px}.update-banner .text{min-width:0}.update-banner b{display:block;color:var(--n)}
 @media(max-width:700px){
   .stats{grid-template-columns:1fr 1fr}
@@ -91,41 +99,48 @@ function needsAttention(a){return a.status!=='In Service'||[a.adult,a.battery].s
 
   const buckets={};
   arr.forEach(a=>{
-    const g=a.group||'';
+    const g=a.group||'Ungrouped';
     if(!buckets[g])buckets[g]=[];
     buckets[g].push(a);
   });
 
   const groups=Object.keys(buckets).sort((a,b)=>{
-    if(a&&!b)return -1;
-    if(!a&&b)return 1;
+    if(a==='Ungrouped'&&b!=='Ungrouped')return 1;
+    if(b==='Ungrouped'&&a!=='Ungrouped')return -1;
     return a.localeCompare(b);
   });
 
   let html='';
   groups.forEach(g=>{
-    if(g){
-      html+='<div class="card" style="padding:11px 13px;margin:14px 0 8px"><div class="k" style="color:var(--n)">'+esc(g)+'</div><div class="muted">'+buckets[g].length+' AED'+(buckets[g].length===1?'':'s')+'</div></div>';
-    }
-    html+=buckets[g].map(a=>
-      '<div class="item compact" id="row-'+a.id+'">'+
-        '<div class="top" onclick="toggleRow(\''+a.id+'\')">'+
-          '<div>'+locHTML(a)+'<div class="meta">'+esc(a.serial)+'</div></div>'+
-          '<div><span class="pill '+statusClass(a)+'">'+(a.status==='In Service'?(needsAttention(a)?'Attention':'OK'):'OUT OF SERVICE')+'</span> <span class="chev">▾</span></div>'+
-        '</div>'+
-        '<div class="details">'+
-          '<div class="pills"><span class="pill '+statusClass(a)+'">Status: '+esc(a.status)+'</span>'+
-          pill('Adult Pads',a.adult)+
-          (a.pedConfig==='N/A'?'<span class="pill">Pediatric Pads: N/A</span>':pill('Pediatric',a.ped))+
-          pill('Battery',a.battery)+'</div>'+
-          '<div class="actions"><button onclick="edit(\''+a.id+'\')">Edit</button><button onclick="showQR(\''+a.id+'\')">QR Code</button><button onclick="openCheck(\''+a.id+'\')">Quarterly Check</button></div>'+
-        '</div>'+
-      '</div>'
-    ).join('');
+    const key='group-'+g.replace(/[^a-z0-9]+/gi,'-').toLowerCase();
+    const collapsed=localStorage.getItem('gfd-aed-group-'+key)==='1';
+    html+='<div class="group-block'+(collapsed?' collapsed':'')+'" id="'+key+'">'+
+      '<button type="button" class="group-banner" onclick="toggleGroup(\''+key+'\')">'+
+        '<div><div class="group-name">'+esc(g)+'</div><div class="group-count">'+buckets[g].length+' AED'+(buckets[g].length===1?'':'s')+'</div></div>'+
+        '<span class="group-chev">▾</span>'+
+      '</button>'+
+      '<div class="group-items">'+
+      buckets[g].map(a=>
+        '<div class="item compact" id="row-'+a.id+'">'+
+          '<div class="top" onclick="toggleRow(\''+a.id+'\')">'+
+            '<div>'+locHTML(a)+'<div class="meta">'+esc(a.serial)+'</div></div>'+
+            '<div><span class="pill '+statusClass(a)+'">'+(a.status==='In Service'?(needsAttention(a)?'Attention':'OK'):'OUT OF SERVICE')+'</span> <span class="chev">▾</span></div>'+
+          '</div>'+
+          '<div class="details">'+
+            '<div class="pills"><span class="pill '+statusClass(a)+'">Status: '+esc(a.status)+'</span>'+
+            pill('Adult Pads',a.adult)+
+            (a.pedConfig==='N/A'?'<span class="pill">Pediatric Pads: N/A</span>':pill('Pediatric',a.ped))+
+            pill('Battery',a.battery)+'</div>'+
+            '<div class="actions"><button onclick="edit(\''+a.id+'\')">Edit</button><button onclick="showQR(\''+a.id+'\')">QR Code</button><button onclick="openCheck(\''+a.id+'\')">Quarterly Check</button></div>'+
+          '</div>'+
+        '</div>'
+      ).join('')+
+      '</div></div>';
   });
 
   $('list').innerHTML=html||'<div class="card muted">No AEDs match this filter.</div>';
 }
+window.toggleGroup=id=>{let el=$(id);if(!el)return;el.classList.toggle('collapsed');localStorage.setItem('gfd-aed-group-'+id,el.classList.contains('collapsed')?'1':'0')};
 window.toggleRow=id=>$('row-'+id).classList.toggle('open');window.showQR=id=>{let a=db.aeds.find(x=>x.id==id);let url=location.origin+location.pathname+'?aed='+encodeURIComponent(id);$('qrTitle').textContent='QR — '+a.location;$('qrLabel').textContent=a.location+' · '+a.serial;$('qrImg').src='https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&data='+encodeURIComponent(url);qrDlg.showModal()}
 function checks(){let arr=[...db.aeds].sort((a,b)=>(cur(a)?1:0)-(cur(b)?1:0)||a.location.localeCompare(b.location));$('checklist').innerHTML=arr.map(a=>{let c=cur(a);return '<div class="item compact"><div class="top"><div>'+locHTML(a)+'<div class="meta">'+a.serial+(c?' · '+fmt(c.date)+' · '+c.inspector:'')+'</div></div><div><span class="pill '+statusClass(a)+'">'+(a.status==='In Service'?(c?'Complete':'Due'):a.status)+'</span></div></div><div class="actions">'+(!c?'<button class="primary" onclick="openCheck(\''+a.id+'\')">Complete Check</button>':'<button onclick="openCheck(\''+a.id+'\')">Add Check</button><button class="primary" onclick="openReport(\''+a.id+'\',\''+c.id+'\')">View Report</button>')+'</div></div>'}).join('')}
 function deps(){let x=[];db.aeds.forEach(a=>a.deps.forEach(d=>x.push({...d,a})));x.sort((a,b)=>b.date.localeCompare(a.date));$('deplist').innerHTML=x.map(d=>'<div class="item"><b>'+esc(d.a.location)+'</b>'+(d.a.descriptor?'<div class="pills"><span class="pill">'+esc(d.a.descriptor)+'</span></div>':'')+'<div class="meta">'+fmt(d.date)+' · '+(d.report||'No report number')+' · '+d.by+'</div><p>'+[d.pads?'Pads replaced':'',d.battery?'Battery replaced':'',d.rts?'Returned to service':''].filter(Boolean).join(' · ')+'</p><div class="muted">'+(d.notes||'')+'</div></div>').join('')||'<div class="card muted">No deployments recorded.</div>'}
