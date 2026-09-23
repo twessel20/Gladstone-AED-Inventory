@@ -15,7 +15,7 @@ main{max-width:1050px;margin:auto;padding:16px 12px 50px}.view{display:none}.vie
 .group-block{margin:14px 0}
 .group-banner{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;border:0;border-radius:12px;padding:12px 14px;background:linear-gradient(135deg,var(--n),#1c587f);color:#fff;text-align:left;box-shadow:0 5px 16px #16324718}
 .group-banner .group-name{font-weight:850;letter-spacing:.02em}
-.group-banner .group-count{font-size:.82rem;opacity:.9}.group-banner-pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}.group-banner-pill{font-size:.72rem;font-weight:800;padding:4px 7px;border-radius:999px;background:#ffffff22;border:1px solid #ffffff44;color:#fff}.group-banner-pill.alert{background:#fff3db;color:#805300;border-color:#f1cf83}.group-banner-pill.bad{background:#fdeaea;color:#8f2020;border-color:#efb4b4}.group-banner-pill.ok{background:#e9f5ee;color:#1f754a;border-color:#b9dfc8}
+.group-banner .group-count{font-size:.82rem;opacity:.9}.group-banner-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px;align-items:center}.group-banner-pill{display:inline-flex;align-items:center;justify-content:center;min-height:26px;padding:5px 9px;border-radius:999px;font-size:.74rem;font-weight:800;line-height:1;letter-spacing:.01em;white-space:nowrap;border:1px solid transparent;background:#e9f2f7;color:var(--n)}.group-banner-pill.due{background:#eef5fa;color:#1f608e;border-color:#bfd5e4}.group-banner-pill.alert{background:#fff3db;color:#805300;border-color:#f1cf83}.group-banner-pill.bad{background:#fdeaea;color:#8f2020;border-color:#efb4b4}.group-banner-pill.ok{background:#e9f5ee;color:#1f754a;border-color:#b9dfc8}
 .group-banner .group-chev{font-size:1.1rem;transition:transform .2s ease}
 .group-block.collapsed .group-chev{transform:rotate(-90deg)}
 .group-items{margin-top:8px}
@@ -129,7 +129,7 @@ function needsAttention(a){return a.status!=='In Service'||[a.adult,a.battery].s
       '<div class="group-banner-pills">'+
       (oos?'<span class="group-banner-pill bad">'+oos+' Out of Service</span>':'')+
       (attn?'<span class="group-banner-pill alert">'+attn+' Attention</span>':'')+
-      (due?'<span class="group-banner-pill">'+due+' Quarterly Due</span>':'')+
+      (due?'<span class="group-banner-pill due">'+due+' Quarterly Due</span>':'')+
       (!oos&&!attn&&!due?'<span class="group-banner-pill ok">All Clear</span>':'')+
       '</div>';
     html+='<div class="group-block'+(collapsed?' collapsed':'')+'" id="'+key+'">'+
