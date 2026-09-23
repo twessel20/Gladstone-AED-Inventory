@@ -15,7 +15,7 @@ main{max-width:1050px;margin:auto;padding:16px 12px 50px}.view{display:none}.vie
 .group-block{margin:14px 0}
 .group-banner{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;border:0;border-radius:12px;padding:12px 14px;background:linear-gradient(135deg,var(--n),#1c587f);color:#fff;text-align:left;box-shadow:0 5px 16px #16324718}
 .group-banner .group-name{font-weight:850;letter-spacing:.02em}
-.group-banner .group-count{font-size:.82rem;opacity:.9}
+.group-banner .group-count{font-size:.82rem;opacity:.9}.group-banner-pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}.group-banner-pill{font-size:.72rem;font-weight:800;padding:4px 7px;border-radius:999px;background:#ffffff22;border:1px solid #ffffff44;color:#fff}.group-banner-pill.alert{background:#fff3db;color:#805300;border-color:#f1cf83}.group-banner-pill.bad{background:#fdeaea;color:#8f2020;border-color:#efb4b4}.group-banner-pill.ok{background:#e9f5ee;color:#1f754a;border-color:#b9dfc8}
 .group-banner .group-chev{font-size:1.1rem;transition:transform .2s ease}
 .group-block.collapsed .group-chev{transform:rotate(-90deg)}
 .group-items{margin-top:8px}
@@ -108,7 +108,11 @@ function needsAttention(a){return a.status!=='In Service'||[a.adult,a.battery].s
   });
 
   const groupOrder={'X19D140932':1,'X20A241496':2,'X19D140968':3,'X11L529367':4};
-  Object.values(buckets).forEach(items=>items.sort((a,b)=>(groupOrder[a.serial]??999)-(groupOrder[b.serial]??999)||a.location.localeCompare(b.location)||(a.descriptor||'').localeCompare(b.descriptor||'')));
+  Object.values(buckets).forEach(items=>items.sort((a,b)=>{
+    const pa=(a.status!=='In Service'?0:(needsAttention(a)?1:2));
+    const pb=(b.status!=='In Service'?0:(needsAttention(b)?1:2));
+    return pa-pb||(groupOrder[a.serial]??999)-(groupOrder[b.serial]??999)||a.location.localeCompare(b.location)||(a.descriptor||'').localeCompare(b.descriptor||'');
+  }));
   const groups=Object.keys(buckets).sort((a,b)=>{
     if(a==='Other Locations'&&b!=='Other Locations')return 1;
     if(b==='Other Locations'&&a!=='Other Locations')return -1;
@@ -119,9 +123,20 @@ function needsAttention(a){return a.status!=='In Service'||[a.adult,a.battery].s
   groups.forEach(g=>{
     const key='group-'+g.replace(/[^a-z0-9]+/gi,'-').toLowerCase();
     const collapsed=localStorage.getItem('gfd-aed-group-'+key)==='1';
+    const items=buckets[g];
+    const attn=items.filter(a=>needsAttention(a)).length;
+    const oos=items.filter(a=>a.status!=='In Service').length;
+    const due=items.filter(a=>!cur(a)).length;
+    const bannerPills=
+      '<div class="group-banner-pills">'+
+      (oos?'<span class="group-banner-pill bad">'+oos+' Out of Service</span>':'')+
+      (attn?'<span class="group-banner-pill alert">'+attn+' Attention</span>':'')+
+      (due?'<span class="group-banner-pill">'+due+' Quarterly Due</span>':'')+
+      (!oos&&!attn&&!due?'<span class="group-banner-pill ok">All Clear</span>':'')+
+      '</div>';
     html+='<div class="group-block'+(collapsed?' collapsed':'')+'" id="'+key+'">'+
       '<button type="button" class="group-banner" onclick="toggleGroup(\''+key+'\')">'+
-        '<div><div class="group-name">'+esc(g)+'</div><div class="group-count">'+buckets[g].length+' AED'+(buckets[g].length===1?'':'s')+'</div></div>'+
+        '<div><div class="group-name">'+esc(g)+'</div><div class="group-count">'+items.length+' AED'+(items.length===1?'':'s')+'</div>'+bannerPills+'</div>'+
         '<span class="group-chev">▾</span>'+
       '</button>'+
       '<div class="group-items">'+
