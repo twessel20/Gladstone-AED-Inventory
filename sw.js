@@ -1,4 +1,4 @@
-const VERSION='gfd-aed-pwa-v29';
+const VERSION='gfd-aed-pwa-v30';
 const CORE_CACHE=VERSION+'-core';
 const RUNTIME_CACHE=VERSION+'-runtime';
 const CORE=['./','./index.html','./manifest.webmanifest'];
