@@ -94,7 +94,26 @@ function pill(t,v){return '<span class="pill '+cls(v)+'">'+t+': '+fmt(v)+'</span
 function render(){let e=exp(),over=e.filter(x=>x.n<0).length,soon=e.filter(x=>x.n>=0&&x.n<=180).length,done=db.aeds.filter(cur).length;populateReportYears();$('stats').innerHTML=[['AEDs',db.aeds.length],['Expired',over],['Due ≤180 Days',soon],['Out of Service',db.aeds.filter(a=>a.status!=='In Service').length],[qn()+' Checked',done+'/'+db.aeds.length]].map(x=>'<div class="stat"><div class="big">'+x[1]+'</div><div class="small">'+x[0]+'</div></div>').join('');
 $('watch').innerHTML=e.filter(x=>x.n<=180).slice(0,20).map(x=>'<div class="row"><div><b>'+esc(x.a.location)+'</b>'+(x.a.descriptor?'<div class="pills" style="margin-top:4px"><span class="pill">'+esc(x.a.descriptor)+'</span></div>':'')+'<div class="meta">'+x.t+' · '+x.a.serial+'</div></div><b class="'+cls(x.v)+'">'+fmt(x.v)+'</b></div>').join('')||'<p class="muted">No expirations within 180 days.</p>';
 $('qtitle').textContent='Quarterly Status — '+qn();let due=db.aeds.filter(a=>!cur(a));$('qstatus').innerHTML='<div class="row"><span>Complete</span><b class="ok">'+(db.aeds.length-due.length)+'</b></div><div class="row"><span>Still Due</span><b class="warn">'+due.length+'</b></div>'+due.slice(0,8).map(a=>'<div class="row"><span>'+esc(a.location)+(a.descriptor?' <span class="pill">'+esc(a.descriptor)+'</span>':'')+'</span><b class="warn">Due</b></div>').join('')+(due.length>8?'<p class="muted">+'+(due.length-8)+' more due — open Quarterly to view all.</p>':'');inv();checks();deps();reports();audit();$('daed').innerHTML=db.aeds.map(a=>'<option value="'+a.id+'">'+a.location+(a.descriptor?' - '+a.descriptor:'')+' — '+a.serial+'</option>').join('')}
-function needsAttention(a){return a.status!=='In Service'||[a.adult,a.battery].some(v=>v&&days(v)<=180)||(a.pedConfig!=='N/A'&&a.ped&&days(a.ped)<=180)}function statusClass(a){return a.status==='In Service'?'ok':'bad'}function locLabel(a){return a.location||''}function locDescriptor(a){return a.descriptor||''}function locGroup(a){return a.group||''}function locHTML(a){return '<div class="title">'+esc(locLabel(a))+'</div>'+(locDescriptor(a)?'<div class="pills" style="margin-top:5px"><span class="pill">'+esc(locDescriptor(a))+'</span></div>':'')}function inv(){
+function needsAttention(a){return a.status!=='In Service'||[a.adult,a.battery].some(v=>v&&days(v)<=180)||(a.pedConfig!=='N/A'&&a.ped&&days(a.ped)<=180)}function statusClass(a){return a.status==='In Service'?'ok':'bad'}function locLabel(a){return a.location||''}function locDescriptor(a){return a.descriptor||''}function locGroup(a){return a.group||''}function locHTML(a){return '<div class="title">'+esc(locLabel(a))+'</div>'+(locDescriptor(a)?'<div class="pills" style="margin-top:5px"><span class="pill">'+esc(locDescriptor(a))+'</span></div>':'')}
+function expirationDaysForAed(a){
+  let vals=[];
+  if(a.adult)vals.push(days(a.adult));
+  if(a.battery)vals.push(days(a.battery));
+  if(a.pedConfig!=='N/A'&&a.ped)vals.push(days(a.ped));
+  vals=vals.filter(v=>v!=null);
+  return vals.length?Math.min(...vals):Infinity;
+}
+function aedUrgency(a){
+  if(a.status!=='In Service')return {rank:0,days:-999999,label:'Out of Service'};
+  const exp=expirationDaysForAed(a);
+  if(exp<0)return {rank:1,days:exp,label:'Expired'};
+  if(exp!==Infinity&&exp<=180)return {rank:2,days:exp,label:'Expiration '+exp+'d'};
+  if(!cur(a))return {rank:3,days:Infinity,label:'Quarterly Due'};
+  return {rank:4,days:Infinity,label:'Clear'};
+}
+function groupUrgency(items){
+  return items.map(a=>aedUrgency(a)).sort((x,y)=>x.rank-y.rank||x.days-y.days)[0]||{rank:4,days:Infinity,label:'Clear'};
+}function inv(){
   let s=$('search').value.toLowerCase();
   let arr=db.aeds
     .filter(a=>(a.location+' '+(a.descriptor||'')+' '+(a.group||'')+' '+a.serial).toLowerCase().includes(s))
@@ -109,12 +128,12 @@ function needsAttention(a){return a.status!=='In Service'||[a.adult,a.battery].s
 
   const groupOrder={'X19D140932':1,'X20A241496':2,'X19D140968':3,'X11L529367':4};
   Object.values(buckets).forEach(items=>items.sort((a,b)=>{
-    const pa=(a.status!=='In Service'?0:(needsAttention(a)?1:2));
-    const pb=(b.status!=='In Service'?0:(needsAttention(b)?1:2));
-    return pa-pb||(groupOrder[a.serial]??999)-(groupOrder[b.serial]??999)||a.location.localeCompare(b.location)||(a.descriptor||'').localeCompare(b.descriptor||'');
+    const ua=aedUrgency(a),ub=aedUrgency(b);
+    return ua.rank-ub.rank||ua.days-ub.days||(groupOrder[a.serial]??999)-(groupOrder[b.serial]??999)||a.location.localeCompare(b.location)||(a.descriptor||'').localeCompare(b.descriptor||'');
   }));
   const groups=Object.keys(buckets).sort((a,b)=>{
-    return a.localeCompare(b);
+    const ua=groupUrgency(buckets[a]),ub=groupUrgency(buckets[b]);
+    return ua.rank-ub.rank||ua.days-ub.days||a.localeCompare(b);
   });
 
   let html='';
@@ -125,8 +144,10 @@ function needsAttention(a){return a.status!=='In Service'||[a.adult,a.battery].s
     const attn=items.filter(a=>needsAttention(a)).length;
     const oos=items.filter(a=>a.status!=='In Service').length;
     const due=items.filter(a=>!cur(a)).length;
+    const gu=groupUrgency(items);
+    const urgencyPill=gu.rank===0?'<span class="group-banner-pill bad">Immediate: Out of Service</span>':gu.rank===1?'<span class="group-banner-pill bad">Immediate: Expired</span>':gu.rank===2?'<span class="group-banner-pill alert">Next Expiration: '+gu.days+'d</span>':gu.rank===3?'<span class="group-banner-pill due">Action: Quarterly Due</span>':'';
     const bannerPills=
-      '<div class="group-banner-pills">'+
+      '<div class="group-banner-pills">'+urgencyPill+
       (oos?'<span class="group-banner-pill bad">'+oos+' Out of Service</span>':'')+
       (attn?'<span class="group-banner-pill alert">'+attn+' Attention</span>':'')+
       (due?'<span class="group-banner-pill due">'+due+' Quarterly Due</span>':'')+
