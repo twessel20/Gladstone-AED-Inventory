@@ -4,6 +4,18 @@
 const PAGE={left:0.62,right:0.62,top:0.62,bottom:0.62,width:8.5,height:11};
 const CONTENT_W=PAGE.width-PAGE.left-PAGE.right;
 const CONTENT_BOTTOM=PAGE.height-PAGE.bottom;
+const THEME={
+  navy:[18,58,90],
+  blue:[31,96,142],
+  bg:[244,247,249],
+  ink:[23,40,56],
+  muted:[104,123,138],
+  line:[217,227,234],
+  table:[238,243,247],
+  green:[31,117,74],
+  amber:[148,97,0],
+  red:[163,44,44]
+};
 
 function getJsPDF(){
   return window.jspdf&&window.jspdf.jsPDF;
@@ -13,9 +25,9 @@ function clean(v){
 }
 function healthColor(health){
   const h=clean(health).toUpperCase();
-  if(h.includes('ATTENTION REQUIRED')) return [163,44,44];
-  if(h.includes('WATCH')) return [148,97,0];
-  return [31,117,74];
+  if(h.includes('ATTENTION REQUIRED')) return THEME.red;
+  if(h.includes('WATCH')) return THEME.amber;
+  return THEME.green;
 }
 function sheet(){
   const s=document.getElementById('generatedReportSheet');
@@ -49,7 +61,7 @@ function ensureSpace(doc,state,need){
 function addText(doc,state,text,{size=9,bold=false,x=PAGE.left,width=CONTENT_W,gap=0.03}={}){
   const t=clean(text); if(!t) return;
   doc.setFont('helvetica',bold?'bold':'normal');
-  doc.setTextColor(20,35,45);
+  doc.setTextColor(...THEME.ink);
   const lines=textLines(doc,t,width,size), lh=lineHeight(size);
   for(const line of lines){
     ensureSpace(doc,state,lh);
@@ -60,7 +72,7 @@ function addText(doc,state,text,{size=9,bold=false,x=PAGE.left,width=CONTENT_W,g
 }
 function addRule(doc,state){
   ensureSpace(doc,state,0.12);
-  doc.setDrawColor(18,58,90); doc.setLineWidth(0.02);
+  doc.setDrawColor(...THEME.navy); doc.setLineWidth(0.02);
   doc.line(PAGE.left,state.y,PAGE.width-PAGE.right,state.y);
   state.y+=0.16;
 }
@@ -87,11 +99,12 @@ function addTable(doc,state,table){
     const n=Math.max(1,...wrapped.map(a=>a.length)),h=n*0.145+0.10;
     ensureSpace(doc,state,h);
     const y0=state.y-0.02;
-    doc.setDrawColor(210);doc.setLineWidth(0.005);
+    doc.setDrawColor(...THEME.line);doc.setLineWidth(0.005);
     for(let i=0;i<cols;i++){
       const x=PAGE.left+i*colW;
-      doc.rect(x,y0,colW,h);
+      if(bold){doc.setFillColor(...THEME.table);doc.rect(x,y0,colW,h,'FD')}else{doc.rect(x,y0,colW,h)}
       doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(8);
+      doc.setTextColor(...(bold?THEME.navy:THEME.ink));
       wrapped[i].forEach((line,j)=>doc.text(line,x+0.06,state.y+0.11+j*0.145));
     }
     state.y+=h;
@@ -144,11 +157,18 @@ function buildPdf(){
   const doc=new JsPDF({unit:'in',format:[8.5,11],orientation:'portrait',compress:true});
   const state={y:PAGE.top};
 
-  addText(doc,state,title,{size:18,bold:true,gap:0.05});
+  doc.setTextColor(...THEME.navy);
+  doc.setFont('helvetica','bold');doc.setFontSize(18);
+  const titleLines=textLines(doc,title,CONTENT_W,18),titleLh=lineHeight(18);
+  for(const line of titleLines){doc.text(line,PAGE.left,state.y);state.y+=titleLh}
+  state.y+=0.05;
+  doc.setTextColor(...THEME.muted);
   addText(doc,state,subtitle,{size:9,gap:0.12});
   addRule(doc,state);
 
-  addText(doc,state,'Executive Summary',{size:15,bold:true,gap:0.10});
+  doc.setTextColor(...THEME.navy);
+  doc.setFont('helvetica','bold');doc.setFontSize(15);
+  doc.text('Executive Summary',PAGE.left,state.y);state.y+=0.28;
   if(summary){
     if(summary.scope)addText(doc,state,summary.scope,{size:9,bold:true,gap:0.10});
     if(summary.health){
@@ -174,17 +194,21 @@ function buildPdf(){
   // accidental overlap and guarantees every selected unit appears exactly once.
   for(const aed of aeds){
     doc.addPage();state.y=PAGE.top;
-    addText(doc,state,aed.name,{size:15,bold:true,gap:0.04});
-    if(aed.meta)addText(doc,state,aed.meta,{size:8.5,gap:0.12});
+    doc.setTextColor(...THEME.navy);doc.setFont('helvetica','bold');doc.setFontSize(15);
+    const nameLines=textLines(doc,aed.name,CONTENT_W,15),nameLh=lineHeight(15);
+    for(const line of nameLines){doc.text(line,PAGE.left,state.y);state.y+=nameLh}
+    state.y+=0.04;
+    if(aed.meta){doc.setTextColor(...THEME.muted);addText(doc,state,aed.meta,{size:8.5,gap:0.12})}
+    doc.setTextColor(...THEME.blue);
     addText(doc,state,'Current Components',{size:11,bold:true,gap:0.04});
     aed.componentKvs.forEach(k=>addKeyValue(doc,state,k.label,k.value));
 
     if(aed.inspectionTable){
-      state.y+=0.08;addText(doc,state,'Quarterly Inspection',{size:11,bold:true,gap:0.04});
+      state.y+=0.08;doc.setTextColor(...THEME.blue);addText(doc,state,'Quarterly Inspection',{size:11,bold:true,gap:0.04});
       addTable(doc,state,aed.inspectionTable);
     }
     for(const part of aed.sections){
-      state.y+=0.08;addText(doc,state,part.title,{size:11,bold:true,gap:0.04});
+      state.y+=0.08;doc.setTextColor(...THEME.blue);addText(doc,state,part.title,{size:11,bold:true,gap:0.04});
       if(part.table)addTable(doc,state,part.table);
     }
   }
@@ -192,10 +216,11 @@ function buildPdf(){
   const pages=doc.getNumberOfPages();
   for(let p=1;p<=pages;p++){
     doc.setPage(p);
-    doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(105);
+    doc.setDrawColor(...THEME.line);doc.setLineWidth(0.01);doc.line(PAGE.left,10.38,PAGE.width-PAGE.right,10.38);
+    doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(...THEME.muted);
     doc.text('Gladstone Fire / EMS AED Inventory',PAGE.left,10.55);
     doc.text('Page '+p+' of '+pages,7.15,10.55);
-    doc.setTextColor(0);
+    doc.setTextColor(...THEME.ink);
   }
   return doc;
 }
