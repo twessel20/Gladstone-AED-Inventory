@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AED PDF Export Isolated Test</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+body{font-family:Arial,sans-serif;margin:20px;background:#f4f7f9;color:#172838}.report-sheet{max-width:760px;margin:auto;background:#fff;padding:24px}.report-header{display:flex;gap:14px;border-bottom:2px solid #123a5a;margin-bottom:18px}.report-title h1{margin:0}.report-box{border:1px solid #ccd6df;padding:12px;margin:12px 0}.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kv{display:flex;justify-content:space-between;border-bottom:1px solid #eee;padding:4px 0}.summary-table{width:100%;border-collapse:collapse}.summary-table th,.summary-table td{border:1px solid #ddd;padding:5px}.muted{color:#667}.actions{max-width:760px;margin:0 auto 12px;display:flex;gap:8px}.actions button{padding:10px 14px}
+</style>
+</head>
+<body>
+<div class="actions">
+<button id="inspect">Inspect fixture</button>
+<button id="open">Open PDF</button>
+<span id="result"></span>
+</div>
+<div class="report-sheet" id="generatedReportSheet">
+  <div class="report-header"><div class="report-title"><h1>Community Center AED Report</h1><p>Gladstone Fire / EMS · Group: Community Center · Q3 2026 · 3 AEDs</p></div></div>
+  <section style="page-break-after:always"><div class="report-box">
+    <h2>Executive Summary</h2>
+    <p><b>Scope:</b> Community Center · Q3 2026 · 3 AEDs</p>
+    <div class="report-grid">
+      <div class="report-box"><h3>Overall Health</h3><div>WATCH</div><p>All selected AEDs are currently serviceable based on recorded status, but one or more components expire within 180 days.</p></div>
+      <div class="report-box"><h3>Quarterly Status</h3><div class="kv"><b>Inspections completed</b><div>3 / 3</div></div><div class="kv"><b>Quarter complete</b><div>Yes</div></div></div>
+    </div>
+    <div class="report-grid">
+      <div class="report-box"><h3>Readiness</h3><div class="kv"><b>Out of service</b><div>0</div></div><div class="kv"><b>Expired components</b><div>0</div></div><div class="kv"><b>Expiration ≤180 days</b><div>1</div></div><div class="kv"><b>Missing expiration dates</b><div>0</div></div></div>
+      <div class="report-box"><h3>Activity This Quarter</h3><div class="kv"><b>Deployments</b><div>1</div></div><div class="kv"><b>Shock-delivery events</b><div>0</div></div></div>
+    </div>
+    <h3>Items Requiring Attention / Watch</h3><ul><li>Community Center Lobby: Adult pads expire 12/31/2026</li></ul>
+  </div></section>
+
+  <section class="report-box"><h2>Community Center — Lobby</h2><p class="muted">Serial: X19D140932 · Group: Community Center · Current Status: In Service</p>
+    <div class="report-grid"><div class="report-box"><h3>Current Components</h3><div class="kv"><b>Adult Pads</b><div>12/31/2026</div></div><div class="kv"><b>Battery</b><div>03/31/2034</div></div></div><div class="report-box"><h3>Quarterly Inspection</h3><table class="summary-table"><thead><tr><th>Date</th><th>Inspector</th><th>Result</th></tr></thead><tbody><tr><td>09/10/2026</td><td>Tester · #123</td><td>Completed</td></tr></tbody></table></div></div>
+    <h3>Deployments</h3><table class="summary-table"><thead><tr><th>Date</th><th>Report #</th><th>Event</th></tr></thead><tbody><tr><td>09/12/2026</td><td>26-001</td><td>No shock</td></tr></tbody></table>
+    <h3>Status / Return-to-Service History</h3><table class="summary-table"><thead><tr><th>Date</th><th>Event</th><th>Details</th></tr></thead><tbody><tr><td colspan="3">No status/return-to-service events recorded.</td></tr></tbody></table>
+  </section>
+  <section class="report-box"><h2>Community Center — 2nd Floor</h2><p class="muted">Serial: X20A241496 · Group: Community Center · Current Status: In Service</p>
+    <div class="report-grid"><div class="report-box"><h3>Current Components</h3><div class="kv"><b>Adult Pads</b><div>07/02/2027</div></div><div class="kv"><b>Battery</b><div>03/31/2034</div></div></div><div class="report-box"><h3>Quarterly Inspection</h3><table class="summary-table"><thead><tr><th>Date</th><th>Inspector</th><th>Result</th></tr></thead><tbody><tr><td>09/11/2026</td><td>Tester · #123</td><td>Completed</td></tr></tbody></table></div></div>
+    <h3>Deployments</h3><table class="summary-table"><thead><tr><th>Date</th><th>Report #</th><th>Event</th></tr></thead><tbody><tr><td colspan="3">No deployments recorded.</td></tr></tbody></table>
+    <h3>Status / Return-to-Service History</h3><table class="summary-table"><thead><tr><th>Date</th><th>Event</th><th>Details</th></tr></thead><tbody><tr><td colspan="3">No status/return-to-service events recorded.</td></tr></tbody></table>
+  </section>
+  <section class="report-box"><h2>Outdoor Pool</h2><p class="muted">Serial: X19D140968 · Group: Community Center · Current Status: In Service</p>
+    <div class="report-grid"><div class="report-box"><h3>Current Components</h3><div class="kv"><b>Adult Pads</b><div>05/28/2027</div></div><div class="kv"><b>Pediatric Pads</b><div>05/28/2027</div></div><div class="kv"><b>Battery</b><div>03/31/2034</div></div></div><div class="report-box"><h3>Quarterly Inspection</h3><table class="summary-table"><thead><tr><th>Date</th><th>Inspector</th><th>Result</th></tr></thead><tbody><tr><td>09/12/2026</td><td>Tester · #123</td><td>Completed</td></tr></tbody></table></div></div>
+    <h3>Deployments</h3><table class="summary-table"><thead><tr><th>Date</th><th>Report #</th><th>Event</th></tr></thead><tbody><tr><td colspan="3">No deployments recorded.</td></tr></tbody></table>
+    <h3>Status / Return-to-Service History</h3><table class="summary-table"><thead><tr><th>Date</th><th>Event</th><th>Details</th></tr></thead><tbody><tr><td colspan="3">No status/return-to-service events recorded.</td></tr></tbody></table>
+  </section>
+  <div class="report-foot">Generated test fixture.</div>
+</div>
+<script src="./pdf-export.js"></script>
+<script>
+const result=document.getElementById('result');
+document.getElementById('inspect').onclick=()=>{const x=GFDAEDPdfExporter.inspectReport();result.textContent=JSON.stringify(x)};
+document.getElementById('open').onclick=()=>GFDAEDPdfExporter.openPdf();
+</script>
+</body>
+</html>
