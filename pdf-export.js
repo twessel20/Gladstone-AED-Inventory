@@ -1,249 +1,41 @@
 (()=>{
 'use strict';
-
-const PAGE={left:0.62,right:0.62,top:0.62,bottom:0.62,width:8.5,height:11};
-const CONTENT_W=PAGE.width-PAGE.left-PAGE.right;
-const CONTENT_BOTTOM=PAGE.height-PAGE.bottom;
-const THEME={
-  navy:[18,58,90],
-  blue:[31,96,142],
-  bg:[244,247,249],
-  ink:[23,40,56],
-  muted:[104,123,138],
-  line:[217,227,234],
-  table:[238,243,247],
-  green:[31,117,74],
-  amber:[148,97,0],
-  red:[163,44,44]
-};
-
-function getJsPDF(){
-  return (window.jspdf&&window.jspdf.jsPDF)||window.jsPDF||null;
-}
-function clean(v){
-  return String(v??'').replace(/\u00a0/g,' ').replace(/[ \t]+/g,' ').replace(/\s*\n\s*/g,' ').trim();
-}
-function healthColor(health){
-  const h=clean(health).toUpperCase();
-  if(h.includes('ATTENTION REQUIRED')) return THEME.red;
-  if(h.includes('WATCH')) return THEME.amber;
-  return THEME.green;
-}
-function sheet(){
-  const s=document.getElementById('generatedReportSheet');
-  if(!s) throw new Error('Generate a report first.');
-  return s;
-}
-function meta(){
-  const s=sheet();
-  return {
-    sheet:s,
-    title:clean(s.querySelector('.report-title h1')?.textContent)||'Gladstone AED Report',
-    subtitle:clean(s.querySelector('.report-title p')?.textContent)
-  };
-}
-function filename(){
-  const {title,subtitle}=meta();
-  const q=(subtitle.match(/Q\d\s+\d{4}/i)||[''])[0].replace(/\s+/g,'-').toLowerCase();
-  const base=title.replace(/[^a-z0-9]+/ig,'-').replace(/^-+|-+$/g,'').toLowerCase()||'aed-report';
-  return base+(q?'-'+q:'')+'.pdf';
-}
-function textLines(doc,text,width,size){
-  doc.setFontSize(size);
-  return doc.splitTextToSize(clean(text),width);
-}
-function lineHeight(size){ return size<=8?0.14:size<=9?0.16:size<=11?0.19:0.23; }
-function ensureSpace(doc,state,need){
-  if(state.y+need<=CONTENT_BOTTOM) return;
-  doc.addPage();
-  state.y=PAGE.top;
-}
-function addText(doc,state,text,{size=9,bold=false,x=PAGE.left,width=CONTENT_W,gap=0.03}={}){
-  const t=clean(text); if(!t) return;
-  doc.setFont('helvetica',bold?'bold':'normal');
-  doc.setTextColor(...THEME.ink);
-  const lines=textLines(doc,t,width,size), lh=lineHeight(size);
-  for(const line of lines){
-    ensureSpace(doc,state,lh);
-    doc.text(line,x,state.y);
-    state.y+=lh;
-  }
-  state.y+=gap;
-}
-function addRule(doc,state){
-  ensureSpace(doc,state,0.12);
-  doc.setDrawColor(...THEME.navy); doc.setLineWidth(0.02);
-  doc.line(PAGE.left,state.y,PAGE.width-PAGE.right,state.y);
-  state.y+=0.16;
-}
-function addKeyValue(doc,state,label,value){
-  const l=clean(label),v=clean(value); if(!l&&!v)return;
-  const leftW=2.55,rightX=PAGE.left+2.7,rightW=CONTENT_W-2.7;
-  const ll=textLines(doc,l,leftW,8.5), rr=textLines(doc,v,rightW,8.5);
-  const rows=Math.max(ll.length,rr.length,1), h=rows*0.16+0.05;
-  ensureSpace(doc,state,h);
-  doc.setFont('helvetica','bold');doc.setFontSize(8.5);
-  ll.forEach((x,i)=>doc.text(x,PAGE.left,state.y+i*0.16));
-  doc.setFont('helvetica','normal');
-  rr.forEach((x,i)=>doc.text(x,rightX,state.y+i*0.16));
-  state.y+=h;
-}
-function addTable(doc,state,table){
-  const heads=[...table.querySelectorAll('thead th')].map(x=>clean(x.textContent));
-  const rows=[...table.querySelectorAll('tbody tr')].map(tr=>[...tr.children].map(td=>clean(td.textContent)));
-  if(!heads.length&&!rows.length)return;
-  const cols=Math.max(heads.length,...rows.map(r=>r.length),1);
-  const colW=CONTENT_W/cols;
-  const drawRow=(cells,bold=false)=>{
-    const wrapped=Array.from({length:cols},(_,i)=>textLines(doc,cells[i]||'',colW-0.12,8));
-    const n=Math.max(1,...wrapped.map(a=>a.length)),h=n*0.145+0.10;
-    ensureSpace(doc,state,h);
-    const y0=state.y-0.02;
-    doc.setDrawColor(...THEME.line);doc.setLineWidth(0.005);
-    for(let i=0;i<cols;i++){
-      const x=PAGE.left+i*colW;
-      if(bold){doc.setFillColor(...THEME.table);doc.rect(x,y0,colW,h,'FD')}else{doc.rect(x,y0,colW,h)}
-      doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(8);
-      doc.setTextColor(...(bold?THEME.navy:THEME.ink));
-      wrapped[i].forEach((line,j)=>doc.text(line,x+0.06,state.y+0.11+j*0.145));
-    }
-    state.y+=h;
-  };
-  if(heads.length)drawRow(heads,true);
-  rows.forEach(r=>drawRow(r,false));
-  state.y+=0.08;
-}
-function directKVs(root){
-  return [...root.querySelectorAll('.kv')].filter(k=>!k.parentElement?.closest('.kv')).map(k=>{
-    const parts=[...k.children].map(x=>clean(x.textContent));
-    return {label:parts[0]||'',value:parts.slice(1).join(' ')};
-  });
-}
-function extractSummary(s){
-  const summary=[...s.children].find(x=>x.tagName==='SECTION'&&!x.classList.contains('report-box')) || s.querySelector('section');
-  if(!summary)return null;
-  const scope=clean([...summary.querySelectorAll('p')].find(p=>/^Scope:/i.test(clean(p.textContent)))?.textContent);
-  const healthBox=[...summary.querySelectorAll('.report-box')].find(b=>/Overall Health/i.test(clean(b.textContent)));
-  const health=healthBox?clean([...healthBox.querySelectorAll('div')].find(d=>/GOOD|WATCH|ATTENTION REQUIRED/i.test(clean(d.textContent)))?.textContent):'';
-  const healthText=healthBox?clean([...healthBox.querySelectorAll('p')][0]?.textContent):'';
-  const kvs=directKVs(summary);
-  const issues=[...summary.querySelectorAll('li')].map(x=>clean(x.textContent)).filter(Boolean);
-  return {scope,health,healthText,kvs,issues};
-}
-function extractAeds(s){
-  return [...s.children].filter(x=>x.tagName==='SECTION'&&x.classList.contains('report-box')).map(sec=>({
-    name:clean(sec.querySelector('h2')?.textContent)||'AED Detail',
-    meta:clean(sec.querySelector(':scope > p.muted')?.textContent),
-    componentKvs:directKVs(sec.querySelector('.report-grid')||sec),
-    sections:[...sec.querySelectorAll(':scope > h3')].map(h=>{
-      let n=h.nextElementSibling;
-      return {title:clean(h.textContent),table:n&&n.tagName==='TABLE'?n:null};
-    }),
-    inspectionTable:sec.querySelector('.report-grid table.summary-table')
-  }));
-}
-function inspectReport(){
-  const {sheet:s,title,subtitle}=meta();
-  const summary=extractSummary(s),aeds=extractAeds(s);
-  return {title,subtitle,summary,aedCount:aeds.length,aedNames:aeds.map(a=>a.name)};
-}
-function buildPdf(){
-  const JsPDF=getJsPDF();
-  if(!JsPDF)throw new Error('PDF engine is unavailable. html2pdf/jsPDF must be loaded first.');
-  const {sheet:s,title,subtitle}=meta();
-  const summary=extractSummary(s),aeds=extractAeds(s);
-  if(!aeds.length)throw new Error('No AED detail sections were found in the generated report.');
-
-  const doc=new JsPDF({unit:'in',format:[8.5,11],orientation:'portrait',compress:true});
-  const state={y:PAGE.top};
-
-  doc.setTextColor(...THEME.navy);
-  doc.setFont('helvetica','bold');doc.setFontSize(18);
-  const titleLines=textLines(doc,title,CONTENT_W,18),titleLh=lineHeight(18);
-  for(const line of titleLines){doc.text(line,PAGE.left,state.y);state.y+=titleLh}
-  state.y+=0.05;
-  doc.setTextColor(...THEME.muted);
-  addText(doc,state,subtitle,{size:9,gap:0.12});
-  addRule(doc,state);
-
-  doc.setTextColor(...THEME.navy);
-  doc.setFont('helvetica','bold');doc.setFontSize(15);
-  doc.text('Executive Summary',PAGE.left,state.y);state.y+=0.28;
-  if(summary){
-    if(summary.scope)addText(doc,state,summary.scope,{size:9,bold:true,gap:0.10});
-    if(summary.health){
-      const c=healthColor(summary.health);
-      doc.setTextColor(c[0],c[1],c[2]);
-      doc.setFont('helvetica','bold');doc.setFontSize(12);
-      const lines=textLines(doc,'Overall Health: '+summary.health,CONTENT_W,12),lh=lineHeight(12);
-      for(const line of lines){ensureSpace(doc,state,lh);doc.text(line,PAGE.left,state.y);state.y+=lh}
-      state.y+=0.05;
-      doc.setTextColor(20,35,45);
-    }
-    if(summary.healthText)addText(doc,state,summary.healthText,{size:9,gap:0.12});
-    for(const kv of summary.kvs)addKeyValue(doc,state,kv.label,kv.value);
-    if(summary.issues.length){
-      state.y+=0.08;addText(doc,state,'Items Requiring Attention / Watch',{size:11,bold:true,gap:0.05});
-      summary.issues.forEach(x=>addText(doc,state,'• '+x,{size:8.5,x:PAGE.left+0.08,width:CONTENT_W-0.08,gap:0.01}));
-    }else{
-      state.y+=0.08;addText(doc,state,'Attention items: None identified from the recorded inventory data.',{size:9});
-    }
-  }
-
-  // Details always begin on a fresh page. Each AED begins on a fresh page, which prevents
-  // accidental overlap and guarantees every selected unit appears exactly once.
-  for(const aed of aeds){
-    doc.addPage();state.y=PAGE.top;
-    doc.setTextColor(...THEME.navy);doc.setFont('helvetica','bold');doc.setFontSize(15);
-    const nameLines=textLines(doc,aed.name,CONTENT_W,15),nameLh=lineHeight(15);
-    for(const line of nameLines){doc.text(line,PAGE.left,state.y);state.y+=nameLh}
-    state.y+=0.04;
-    if(aed.meta){doc.setTextColor(...THEME.muted);addText(doc,state,aed.meta,{size:8.5,gap:0.12})}
-    doc.setTextColor(...THEME.blue);
-    addText(doc,state,'Current Components',{size:11,bold:true,gap:0.04});
-    aed.componentKvs.forEach(k=>addKeyValue(doc,state,k.label,k.value));
-
-    if(aed.inspectionTable){
-      state.y+=0.08;doc.setTextColor(...THEME.blue);addText(doc,state,'Quarterly Inspection',{size:11,bold:true,gap:0.04});
-      addTable(doc,state,aed.inspectionTable);
-    }
-    for(const part of aed.sections){
-      state.y+=0.08;doc.setTextColor(...THEME.blue);addText(doc,state,part.title,{size:11,bold:true,gap:0.04});
-      if(part.table)addTable(doc,state,part.table);
-    }
-  }
-
-  const pages=doc.getNumberOfPages();
-  for(let p=1;p<=pages;p++){
-    doc.setPage(p);
-    doc.setDrawColor(...THEME.line);doc.setLineWidth(0.01);doc.line(PAGE.left,10.38,PAGE.width-PAGE.right,10.38);
-    doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(...THEME.muted);
-    doc.text('Gladstone Fire / EMS AED Inventory',PAGE.left,10.55);
-    doc.text('Page '+p+' of '+pages,7.15,10.55);
-    doc.setTextColor(...THEME.ink);
-  }
-  return doc;
-}
-function blob(){
-  const b=buildPdf().output('blob');
-  if(!b||b.size<1000)throw new Error('PDF generation failed.');
-  return b;
-}
-function openPdf(){
-  const b=blob(),url=URL.createObjectURL(b);
-  window.open(url,'_blank');
-  setTimeout(()=>URL.revokeObjectURL(url),120000);
-}
-async function sharePdf(){
-  const b=blob(),name=filename(),file=new File([b],name,{type:'application/pdf'});
-  if(navigator.share&&(!navigator.canShare||navigator.canShare({files:[file]}))){
-    await navigator.share({title:meta().title,files:[file]});
-    return;
-  }
-  const url=URL.createObjectURL(b);
-  window.open(url,'_blank');
-  setTimeout(()=>URL.revokeObjectURL(url),120000);
-}
-
+const PAGE={left:0.55,right:0.55,top:0.55,bottom:0.62,width:8.5,height:11};
+const CONTENT_W=PAGE.width-PAGE.left-PAGE.right,CONTENT_BOTTOM=PAGE.height-PAGE.bottom;
+const THEME={navy:[18,58,90],blue:[31,96,142],bg:[244,247,249],ink:[23,40,56],muted:[104,123,138],line:[217,227,234],table:[238,243,247],green:[31,117,74],greenBg:[232,245,238],amber:[148,97,0],amberBg:[255,244,207],red:[163,44,44],redBg:[253,234,234],white:[255,255,255]};
+function getJsPDF(){return(window.jspdf&&window.jspdf.jsPDF)||window.jsPDF||null}
+function clean(v){return String(v??'').replace(/\u00a0/g,' ').replace(/[ \t]+/g,' ').replace(/\s*\n\s*/g,' ').trim()}
+function healthColor(h){h=clean(h).toUpperCase();return h.includes('ATTENTION REQUIRED')?THEME.red:h.includes('WATCH')?THEME.amber:THEME.green}
+function healthBg(h){h=clean(h).toUpperCase();return h.includes('ATTENTION REQUIRED')?THEME.redBg:h.includes('WATCH')?THEME.amberBg:THEME.greenBg}
+function healthLabel(h){h=clean(h).toUpperCase();return h.includes('ATTENTION REQUIRED')?'ATTENTION REQUIRED':h.includes('WATCH')?'WATCH':'GOOD'}
+function sheet(){const s=document.getElementById('generatedReportSheet');if(!s)throw new Error('Generate a report first.');return s}
+function meta(){const s=sheet();return{sheet:s,title:clean(s.querySelector('.report-title h1')?.textContent)||'Gladstone AED Report',subtitle:clean(s.querySelector('.report-title p')?.textContent)}}
+function filename(){const{title,subtitle}=meta(),q=(subtitle.match(/Q\d\s+\d{4}/i)||[''])[0].replace(/\s+/g,'-').toLowerCase(),base=title.replace(/[^a-z0-9]+/ig,'-').replace(/^-+|-+$/g,'').toLowerCase()||'aed-report';return base+(q?'-'+q:'')+'.pdf'}
+function textLines(doc,text,width,size){doc.setFontSize(size);return doc.splitTextToSize(clean(text),width)}
+function lineHeight(size){return size<=8?.14:size<=9?.16:size<=11?.19:.23}
+function ensureSpace(doc,state,need){if(state.y+need<=CONTENT_BOTTOM)return;doc.addPage();state.y=PAGE.top}
+function addText(doc,state,text,{size=9,bold=false,x=PAGE.left,width=CONTENT_W,gap=.03,color=THEME.ink}={}){const t=clean(text);if(!t)return;doc.setFont('helvetica',bold?'bold':'normal');doc.setTextColor(...color);const lines=textLines(doc,t,width,size),lh=lineHeight(size);for(const line of lines){ensureSpace(doc,state,lh);doc.text(line,x,state.y);state.y+=lh}state.y+=gap}
+function roundedBox(doc,x,y,w,h,fill=THEME.white,stroke=THEME.line,r=.08){doc.setFillColor(...fill);doc.setDrawColor(...stroke);doc.setLineWidth(.008);doc.roundedRect(x,y,w,h,r,r,'FD')}
+function sectionHeader(doc,state,title){ensureSpace(doc,state,.31);doc.setFillColor(...THEME.navy);doc.roundedRect(PAGE.left,state.y-.17,CONTENT_W,.27,.05,.05,'F');doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...THEME.white);doc.text(title,PAGE.left+.12,state.y);state.y+=.22}
+function addKeyValue(doc,state,label,value,x=PAGE.left,width=CONTENT_W){const l=clean(label),v=clean(value);if(!l&&!v)return;const leftW=width*.48,rightX=x+width*.52,rightW=width*.48,ll=textLines(doc,l,leftW,8.4),rr=textLines(doc,v,rightW,8.4),rows=Math.max(ll.length,rr.length,1),h=rows*.155+.055;ensureSpace(doc,state,h);doc.setFont('helvetica','bold');doc.setFontSize(8.4);doc.setTextColor(...THEME.ink);ll.forEach((z,i)=>doc.text(z,x,state.y+i*.155));doc.setFont('helvetica','normal');rr.forEach((z,i)=>doc.text(z,rightX,state.y+i*.155));state.y+=h}
+function addTable(doc,state,table){const heads=[...table.querySelectorAll('thead th')].map(x=>clean(x.textContent)),rows=[...table.querySelectorAll('tbody tr')].map(tr=>[...tr.children].map(td=>clean(td.textContent)));if(!heads.length&&!rows.length)return;const cols=Math.max(heads.length,...rows.map(r=>r.length),1),colW=CONTENT_W/cols;const drawRow=(cells,bold=false)=>{const wrapped=Array.from({length:cols},(_,i)=>textLines(doc,cells[i]||'',colW-.12,8)),n=Math.max(1,...wrapped.map(a=>a.length)),h=n*.145+.10;ensureSpace(doc,state,h);const y0=state.y-.02;doc.setDrawColor(...THEME.line);doc.setLineWidth(.005);for(let i=0;i<cols;i++){const x=PAGE.left+i*colW;if(bold){doc.setFillColor(...THEME.table);doc.rect(x,y0,colW,h,'FD')}else doc.rect(x,y0,colW,h);doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(8);doc.setTextColor(...(bold?THEME.navy:THEME.ink));wrapped[i].forEach((line,j)=>doc.text(line,x+.06,state.y+.11+j*.145))}state.y+=h};if(heads.length)drawRow(heads,true);rows.forEach(r=>drawRow(r));state.y+=.08}
+function directKVs(root){return[...root.querySelectorAll('.kv')].filter(k=>!k.parentElement?.closest('.kv')).map(k=>{const p=[...k.children].map(x=>clean(x.textContent));return{label:p[0]||'',value:p.slice(1).join(' ')}})}
+function extractSummary(s){const summary=[...s.children].find(x=>x.tagName==='SECTION'&&!x.classList.contains('report-box'))||s.querySelector('section');if(!summary)return null;const scope=clean([...summary.querySelectorAll('p')].find(p=>/^Scope:/i.test(clean(p.textContent)))?.textContent),healthBox=[...summary.querySelectorAll('.report-box')].find(b=>/Overall Health/i.test(clean(b.textContent))),health=healthBox?clean([...healthBox.querySelectorAll('div')].find(d=>/GOOD|WATCH|ATTENTION REQUIRED/i.test(clean(d.textContent)))?.textContent):'',healthText=healthBox?clean([...healthBox.querySelectorAll('p')][0]?.textContent):'',kvs=directKVs(summary),issues=[...summary.querySelectorAll('li')].map(x=>clean(x.textContent)).filter(Boolean);return{scope,health,healthText,kvs,issues}}
+function extractAeds(s){return[...s.children].filter(x=>x.tagName==='SECTION'&&x.classList.contains('report-box')).map(sec=>({name:clean(sec.querySelector('h2')?.textContent)||'AED Detail',meta:clean(sec.querySelector(':scope > p.muted')?.textContent),componentKvs:directKVs(sec.querySelector('.report-grid')||sec),sections:[...sec.querySelectorAll(':scope > h3')].map(h=>{let n=h.nextElementSibling;return{title:clean(h.textContent),table:n&&n.tagName==='TABLE'?n:null}}),inspectionTable:sec.querySelector('.report-grid table.summary-table')}))}
+function inspectReport(){const{sheet:s,title,subtitle}=meta(),summary=extractSummary(s),aeds=extractAeds(s);return{title,subtitle,summary,aedCount:aeds.length,aedNames:aeds.map(a=>a.name)}}
+function summaryMetric(summary,label){return summary?.kvs.find(k=>clean(k.label).toLowerCase()===label.toLowerCase())?.value||'0'}
+function buildPdf(){const JsPDF=getJsPDF();if(!JsPDF)throw new Error('PDF engine is unavailable. jsPDF must be loaded first.');const{sheet:s,title,subtitle}=meta(),summary=extractSummary(s),aeds=extractAeds(s);if(!aeds.length)throw new Error('No AED detail sections were found in the generated report.');const doc=new JsPDF({unit:'in',format:[8.5,11],orientation:'portrait',compress:true}),state={y:PAGE.top};
+// branded masthead
+roundedBox(doc,PAGE.left,state.y-.08,CONTENT_W,.78,THEME.navy,THEME.navy,.08);doc.setFont('helvetica','bold');doc.setFontSize(17);doc.setTextColor(...THEME.white);const titleLines=textLines(doc,title,CONTENT_W-.3,17);titleLines.forEach((line,i)=>doc.text(line,PAGE.left+.15,state.y+.18+i*.22));doc.setFont('helvetica','normal');doc.setFontSize(8.7);doc.setTextColor(225,235,242);doc.text(clean(subtitle),PAGE.left+.15,state.y+.57);state.y+=.92;
+sectionHeader(doc,state,'EXECUTIVE SUMMARY');
+if(summary){if(summary.scope)addText(doc,state,summary.scope.replace(/^Scope:\s*/i,''),{size:8.5,bold:true,gap:.10,color:THEME.muted});const label=healthLabel(summary.health),c=healthColor(label),bg=healthBg(label);roundedBox(doc,PAGE.left,state.y,CONTENT_W,.78,bg,c,.09);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(...c);doc.text('OVERALL HEALTH',PAGE.left+.14,state.y+.19);doc.setFontSize(18);doc.text(label,PAGE.left+.14,state.y+.45);doc.setFont('helvetica','normal');doc.setFontSize(8.4);doc.setTextColor(...THEME.ink);const desc=textLines(doc,summary.healthText,CONTENT_W-2.35,8.4);desc.slice(0,3).forEach((line,i)=>doc.text(line,PAGE.left+2.05,state.y+.25+i*.15));state.y+=.91;
+const cards=[['INSPECTIONS',summaryMetric(summary,'Inspections completed')],['OUT OF SERVICE',summaryMetric(summary,'Out of service')],['EXPIRING ≤180 DAYS',summaryMetric(summary,'Expiration ≤180 days')],['EXPIRED',summaryMetric(summary,'Expired components')]],gap=.09,cw=(CONTENT_W-gap*3)/4;cards.forEach((card,i)=>{const x=PAGE.left+i*(cw+gap);roundedBox(doc,x,state.y,cw,.58,THEME.bg,THEME.line,.06);doc.setFont('helvetica','bold');doc.setFontSize(7.2);doc.setTextColor(...THEME.muted);doc.text(card[0],x+.09,state.y+.17);doc.setFontSize(15);doc.setTextColor(...THEME.navy);doc.text(clean(card[1]),x+.09,state.y+.42)});state.y+=.70;
+const extra=[['Quarter complete',summaryMetric(summary,'Quarter complete')],['Missing expiration dates',summaryMetric(summary,'Missing expiration dates')],['Deployments',summaryMetric(summary,'Deployments')],['Shock-delivery events',summaryMetric(summary,'Shock-delivery events')]];roundedBox(doc,PAGE.left,state.y,CONTENT_W,.54,THEME.white,THEME.line,.06);let xx=PAGE.left+.12;extra.forEach((kv,i)=>{doc.setFont('helvetica','bold');doc.setFontSize(7.3);doc.setTextColor(...THEME.muted);doc.text(kv[0],xx,state.y+.17);doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(...THEME.ink);doc.text(clean(kv[1]),xx,state.y+.38);xx+=CONTENT_W/4});state.y+=.66;
+sectionHeader(doc,state,summary.issues.length?'ITEMS REQUIRING ATTENTION / WATCH':'ATTENTION STATUS');if(summary.issues.length)summary.issues.forEach(x=>addText(doc,state,'• '+x,{size:8.5,x:PAGE.left+.1,width:CONTENT_W-.2,gap:.03}));else addText(doc,state,'No attention items identified from the recorded inventory data.',{size:8.7,gap:.04,color:THEME.green})}
+for(const aed of aeds){doc.addPage();state.y=PAGE.top;roundedBox(doc,PAGE.left,state.y-.06,CONTENT_W,.58,THEME.navy,THEME.navy,.07);doc.setFont('helvetica','bold');doc.setFontSize(15);doc.setTextColor(...THEME.white);doc.text(textLines(doc,aed.name,CONTENT_W-.3,15)[0],PAGE.left+.14,state.y+.25);state.y+=.67;if(aed.meta)addText(doc,state,aed.meta,{size:8.4,gap:.12,color:THEME.muted});sectionHeader(doc,state,'CURRENT COMPONENTS');roundedBox(doc,PAGE.left,state.y,CONTENT_W,.12+Math.max(1,aed.componentKvs.length)*.22,THEME.bg,THEME.line,.06);state.y+=.18;aed.componentKvs.forEach(k=>addKeyValue(doc,state,k.label,k.value,PAGE.left+.12,CONTENT_W-.24));state.y+=.10;if(aed.inspectionTable){sectionHeader(doc,state,'QUARTERLY INSPECTION');addTable(doc,state,aed.inspectionTable)}for(const part of aed.sections){sectionHeader(doc,state,part.title.toUpperCase());if(part.table)addTable(doc,state,part.table)}}
+const pages=doc.getNumberOfPages();for(let p=1;p<=pages;p++){doc.setPage(p);doc.setDrawColor(...THEME.line);doc.setLineWidth(.01);doc.line(PAGE.left,10.38,PAGE.width-PAGE.right,10.38);doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(...THEME.muted);doc.text('Gladstone Fire / EMS AED Inventory',PAGE.left,10.55);doc.text('Page '+p+' of '+pages,7.15,10.55)}return doc}
+function blob(){const b=buildPdf().output('blob');if(!b||b.size<1000)throw new Error('PDF generation failed.');return b}
+function openPdf(){const b=blob(),url=URL.createObjectURL(b);window.open(url,'_blank');setTimeout(()=>URL.revokeObjectURL(url),120000)}
+async function sharePdf(){const b=blob(),name=filename(),file=new File([b],name,{type:'application/pdf'});if(navigator.share&&(!navigator.canShare||navigator.canShare({files:[file]}))){await navigator.share({title:meta().title,files:[file]});return}const url=URL.createObjectURL(b);window.open(url,'_blank');setTimeout(()=>URL.revokeObjectURL(url),120000)}
 window.GFDAEDPdfExporter={buildPdf,blob,openPdf,sharePdf,inspectReport,filename};
 })();
