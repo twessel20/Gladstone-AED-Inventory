@@ -111,8 +111,7 @@ function extractSummary(s){
   if(!summary)return null;
   const scope=clean([...summary.querySelectorAll('p')].find(p=>/^Scope:/i.test(clean(p.textContent)))?.textContent);
   const healthBox=[...summary.querySelectorAll('.report-box')].find(b=>/Overall Health/i.test(clean(b.textContent)));
-  const rawHealth=healthBox?clean([...healthBox.querySelectorAll('div')].find(d=>/GOOD|WATCH|ATTENTION REQUIRED/i.test(clean(d.textContent)))?.textContent):'';
-  const health=/^WATCH$/i.test(rawHealth)?'GOOD — WATCH':rawHealth;
+  const health=healthBox?clean([...healthBox.querySelectorAll('div')].find(d=>/GOOD|WATCH|ATTENTION REQUIRED/i.test(clean(d.textContent)))?.textContent):'';
   const healthText=healthBox?clean([...healthBox.querySelectorAll('p')][0]?.textContent):'';
   const kvs=directKVs(summary);
   const issues=[...summary.querySelectorAll('li')].map(x=>clean(x.textContent)).filter(Boolean);
