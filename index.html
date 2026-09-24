@@ -51,7 +51,7 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
 <main>
 <section id="dash" class="view on"><div class="card" style="margin-bottom:12px"><div class="bar" style="margin:0"><div><h2 style="margin:0">Quick Actions</h2><p class="muted" style="margin:3px 0 0">Scan an AED to open/add inventory, or quickly record a deployment event.</p></div><div class="actions" style="margin-top:0"><button id="dashQuickScan">Quick Scan</button><button class="primary" id="dashQuickDeployment">Record Deployment</button></div></div></div><div id="stats" class="stats"></div><div id="shockOosCard" class="card" style="display:none"><div class="bar"><div><h2 style="margin:0">Out of Service — Shock Delivered</h2><p class="muted" style="margin:3px 0 0">These AEDs remain in inventory but are unavailable until the return-to-service workflow is completed.</p></div></div><div id="shockOosList"></div></div><div class="two"><div class="card"><h2>Expiration Watch</h2><div id="watch"></div></div><div class="card"><h2 id="qtitle">Quarterly Status</h2><div id="qstatus"></div></div></div></section>
 <section id="inv" class="view"><div class="bar"><div><h2>AED Inventory</h2><p class="muted">Tap a location to expand details.</p></div><div class="actions" style="margin-top:0"><button id="scanSerial">Scan Serial</button><button class="primary" id="add">+ Add AED</button></div></div><input id="search" class="search" placeholder="Search location or serial"><div class="filters"><button class="filter on" data-f="all">All</button><button class="filter" data-f="oos">Out of Service</button><button class="filter" data-f="expired">Expired</button><button class="filter" data-f="expiring">Due ≤180 Days</button><button class="filter" data-f="attention">Needs Attention</button><button class="filter" data-f="due">Due This Quarter</button></div><div id="list"></div></section>
-<section id="checks" class="view"><div class="bar"><div><h2>Quarterly Checks</h2><p class="muted">Document and attest each inspection.</p></div></div><div id="checklist"></div></section>
+<section id="checks" class="view"><div class="bar"><div><h2>Quarterly Checks</h2><p class="muted">Priority alerts are listed first so the most urgent AEDs can be handled before routine checks.</p></div></div><div id="checkPriority"></div><div id="checklist"></div></section>
 <section id="deps" class="view"><div class="bar"><div><h2>Deployments</h2><p class="muted">Record use and return-to-service actions.</p></div><div class="actions" style="margin-top:0"><button id="scanDeploySerial">Scan Serial</button><button class="primary" id="newdep">+ Deployment</button></div></div><div id="deplist"></div></section>
 <section id="reports" class="view"><div class="bar"><div><h2>Inspection Reports</h2><p class="muted">Export a complete quarterly report or a full-year summary.</p></div></div><div class="card"><div class="grid"><label>Report Year<select id="reportYear"></select></label><label>Quarter<select id="reportQuarter"><option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option></select></label></div><div class="actions"><button class="primary" id="quarterReportBtn">Quarterly Report</button><button id="annualReportBtn">Annual Summary - All Quarters</button></div></div><div id="reportlist" class="report-list"></div></section>
 <section id="audit" class="view"><div class="bar"><div><h2>Audit Log</h2><p class="muted">Chronological trace of changes and checks.</p></div></div><div id="auditlist"></div></section>
@@ -200,7 +200,8 @@ window.toggleGroup=id=>{let el=$(id);if(!el)return;el.classList.toggle('collapse
 window.toggleRow=id=>$('row-'+id).classList.toggle('open');window.showQR=id=>{let a=db.aeds.find(x=>x.id==id);let url=location.origin+location.pathname+'?aed='+encodeURIComponent(id);$('qrTitle').textContent='QR — '+a.location;$('qrLabel').textContent=a.location+' · '+a.serial;$('qrImg').src='https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&data='+encodeURIComponent(url);qrDlg.showModal()}
 function checks(){
   const buckets={};
-  db.aeds.filter(isInventoryTracked).forEach(a=>{
+  const tracked=db.aeds.filter(isInventoryTracked);
+  tracked.forEach(a=>{
     const g=a.group||a.location||'Unassigned';
     if(!buckets[g])buckets[g]=[];
     buckets[g].push(a);
@@ -211,7 +212,7 @@ function checks(){
     const ca=cur(a),cb=cur(b);
     const ua=aedUrgency(a),ub=aedUrgency(b);
     const qa=ca?1:0,qb=cb?1:0;
-    return qa-qb||ua.rank-ub.rank||ua.days-ub.days||(groupOrder[a.serial]??999)-(groupOrder[b.serial]??999)||a.location.localeCompare(b.location)||(a.descriptor||'').localeCompare(b.descriptor||'');
+    return ua.rank-ub.rank||ua.days-ub.days||qa-qb||(groupOrder[a.serial]??999)-(groupOrder[b.serial]??999)||a.location.localeCompare(b.location)||(a.descriptor||'').localeCompare(b.descriptor||'');
   }));
 
   const groups=Object.keys(buckets).sort((a,b)=>{
@@ -220,13 +221,27 @@ function checks(){
     if(aUnassigned&&!bUnassigned)return 1;
     if(bUnassigned&&!aUnassigned)return -1;
 
+    const ua=groupUrgency(buckets[a]),ub=groupUrgency(buckets[b]);
+    if(ua.rank!==ub.rank)return ua.rank-ub.rank;
+    if(ua.days!==ub.days)return ua.days-ub.days;
+
     const aDue=buckets[a].filter(x=>!cur(x)).length;
     const bDue=buckets[b].filter(x=>!cur(x)).length;
-    if(aDue!==bDue)return bDue-aDue;
-
-    const ua=groupUrgency(buckets[a]),ub=groupUrgency(buckets[b]);
-    return ua.rank-ub.rank||ua.days-ub.days||a.localeCompare(b);
+    return bDue-aDue||a.localeCompare(b);
   });
+
+  const priority=tracked.filter(a=>aedUrgency(a).rank<=2).sort((a,b)=>{
+    const ua=aedUrgency(a),ub=aedUrgency(b);
+    return ua.rank-ub.rank||ua.days-ub.days||a.location.localeCompare(b.location)||(a.descriptor||'').localeCompare(b.descriptor||'');
+  });
+  $('checkPriority').innerHTML=priority.length
+    ?'<div class="card"><div class="bar"><div><h3 style="margin:0">Priority Alerts</h3><p class="muted" style="margin:3px 0 0">Out of service, expired, and upcoming expirations are shown here first.</p></div><span class="pill bad">'+priority.length+' Alert'+(priority.length===1?'':'s')+'</span></div>'+
+      priority.map(a=>{
+        const u=aedUrgency(a),ch=cur(a);
+        const label=u.rank===0?(latestOpenShockDeployment(a)?'Out of Service · Shock Delivered':'Out of Service'):u.rank===1?'Expired':'Expires in '+u.days+' days';
+        return '<div class="row"><div>'+locHTML(a)+'<div class="meta">'+esc(a.serial)+(ch?' · Checked '+fmt(ch.date):' · Quarterly check due')+'</div></div><div class="actions" style="margin-top:0"><span class="pill '+(u.rank<=1?'bad':'warn')+'">'+label+'</span>'+(isOutOfService(a)?'<button class="primary" onclick="openReturnToService(\''+a.id+'\')">Return to Service</button>':'<button class="primary" onclick="openCheck(\''+a.id+'\')">'+(ch?'Add Check':'Complete Check')+'</button>')+'</div></div>';
+      }).join('')+'</div>'
+    :'<div class="card"><b>Priority Alerts</b><p class="muted" style="margin-bottom:0">No out-of-service, expired, or ≤180-day expiration alerts.</p></div>';
 
   let html='';
   groups.forEach(g=>{
