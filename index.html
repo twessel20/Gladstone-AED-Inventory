@@ -184,7 +184,7 @@ function lastCompletedCheck(a){
         '<div class="item compact'+(isOutOfService(a)?' oos-row':'')+'" id="row-'+a.id+'">'+
           '<div class="top" onclick="toggleRow(\''+a.id+'\')">'+
             '<div>'+locHTML(a)+'<div class="meta">'+esc(a.serial)+'</div><div class="meta">Last check: '+(lastCompletedCheck(a)?fmt(lastCompletedCheck(a).date):'No completed check')+'</div></div>'+
-            '<div>'+(isOutOfService(a)?oosReasonPill(a):'<span class="pill '+statusClass(a)+'">'+(isActive(a)?(needsAttention(a)?'Attention':'OK'):'Inactive')+'</span>')+' <span class="chev">▾</span></div>'+
+            '<div>'+(isOutOfService(a)?oosReasonPill(a):'<span class="pill '+(isActive(a)&&needsAttention(a)?'warn':statusClass(a))+'">'+(isActive(a)?(needsAttention(a)?'Attention':'OK'):'Inactive')+'</span>')+' <span class="chev">▾</span></div>'+
           '</div>'+
           '<div class="details">'+
             '<div class="pills">'+(isOutOfService(a)?oosReasonPill(a):'<span class="pill '+statusClass(a)+'">Status: '+esc(a.status)+'</span>')+
