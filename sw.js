@@ -1,7 +1,7 @@
-const VERSION='gfd-aed-pwa-v95';
+const VERSION='gfd-aed-pwa-v96';
 const CORE_CACHE=VERSION+'-core';
 const RUNTIME_CACHE=VERSION+'-runtime';
-const CORE=['./','./index.html','./manifest.webmanifest','./report-builder.js','./report-pdf.css','./pdf-export.js'];
+const CORE=['./','./index.html','./manifest.webmanifest','./report-builder.js','./report-pdf.css'];
 
 self.addEventListener('install',event=>{
   self.skipWaiting();
@@ -25,9 +25,8 @@ async function withReportBuilder(response){
   const type=response.headers.get('content-type')||'';
   if(!type.includes('text/html'))return response;
   let html=await response.text();
-  if(!html.includes('report-pdf.css'))html=html.replace('</head>','<link rel="stylesheet" href="./report-pdf.css?v=95"></head>');
-  if(!html.includes('report-builder.js'))html=html.replace('</body>','<script src="./report-builder.js?v=95"></script></body>');
-  if(!html.includes('pdf-export.js'))html=html.replace('</body>','<script src="./pdf-export.js?v=95"></script></body>');
+  if(!html.includes('report-pdf.css'))html=html.replace('</head>','<link rel="stylesheet" href="./report-pdf.css?v=96"></head>');
+  if(!html.includes('report-builder.js'))html=html.replace('</body>','<script src="./report-builder.js?v=96"></script></body>');
   const headers=new Headers(response.headers);
   headers.delete('content-length');
   return new Response(html,{status:response.status,statusText:response.statusText,headers});
