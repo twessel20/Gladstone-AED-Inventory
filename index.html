@@ -11,7 +11,7 @@
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);padding-bottom:env(safe-area-inset-bottom)}
 header{padding:calc(22px + env(safe-area-inset-top)) 18px 22px;color:#fff;background:linear-gradient(135deg,var(--n),#1c587f);min-height:118px}.app-header-inner{max-width:1050px;margin:auto;display:flex;align-items:center;gap:18px}.app-header-logo{width:82px;height:82px;object-fit:contain;flex:0 0 auto;border-radius:10px;background:#fff;padding:3px;box-shadow:0 3px 10px #0003}.app-header-copy{min-width:0}.app-header-copy h1{margin:2px 0 4px;font-size:1.75rem;line-height:1.12}.app-header-copy p{margin:0;opacity:.92;font-size:.96rem}.k{font-size:.76rem;letter-spacing:.14em;font-weight:800}
 nav{display:flex;overflow:auto;gap:4px;position:sticky;top:0;z-index:9;background:#fff;border-bottom:1px solid var(--l);padding:8px}button{font:inherit;font-weight:750;border:1px solid var(--l);background:#fff;border-radius:9px;padding:10px 12px}.tab{border:0;color:var(--m);white-space:nowrap}.tab.on{background:#e9f2f7;color:var(--n)}.primary{background:var(--n);color:#fff;border-color:var(--n)}
-main{max-width:1050px;margin:auto;padding:16px 12px 50px}.view{display:none}.view.on{display:block}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.card,.item,.stat{background:#fff;border:1px solid var(--l);border-radius:14px;padding:15px;margin-bottom:10px;box-shadow:0 5px 16px #1632470b}.big{font-size:1.8rem;font-weight:850}.muted,.small{color:var(--m);font-size:.88rem}.two{display:grid;grid-template-columns:1.1fr 1fr;gap:10px;margin-top:10px}.row,.top,.bar{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.row{border-top:1px solid #edf1f3;padding:9px 0}.row:first-child{border-top:0}.title{font-weight:850}.meta{color:var(--m);font-size:.86rem;margin-top:3px}.pills,.actions,.filters{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}.pill{font-size:.8rem;padding:5px 8px;border-radius:99px;background:#eef3f6}.ok{background:#e9f5ee;color:var(--g)}.warn{background:#fff3db;color:var(--a)}.bad{background:#fdeaea;color:var(--r)}.compact{padding:11px 13px}.compact .top{align-items:center}.compact .details{display:none;padding-top:10px}.aed-comment{margin-top:10px;padding:10px 12px;border:1px solid var(--l);border-radius:10px;background:#f8fbfd}.aed-comment b{display:block;color:var(--n);margin-bottom:4px}.aed-comment .comment-text{white-space:pre-wrap;line-height:1.35;color:var(--ink)}.compact.open .details{display:block}.chev{font-size:1.1rem;color:var(--m)}.filter.on{background:var(--n);color:#fff;border-color:var(--n)}
+main{max-width:1050px;margin:auto;padding:16px 12px 50px}.view{display:none}.view.on{display:block}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.card,.item,.stat{background:#fff;border:1px solid var(--l);border-radius:14px;padding:15px;margin-bottom:10px;box-shadow:0 5px 16px #1632470b}.big{font-size:1.8rem;font-weight:850}.muted,.small{color:var(--m);font-size:.88rem}.two{display:grid;grid-template-columns:1.1fr 1fr;gap:10px;margin-top:10px}.row,.top,.bar{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.row{border-top:1px solid #edf1f3;padding:9px 0}.row:first-child{border-top:0}.title{font-weight:850}.meta{color:var(--m);font-size:.86rem;margin-top:3px}.pills,.actions,.filters{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}.pill{font-size:.8rem;padding:5px 8px;border-radius:99px;background:#eef3f6}.ok{background:#e9f5ee;color:var(--g)}.warn{background:#fff3db;color:var(--a)}.bad{background:#fdeaea;color:var(--r)}.compact{padding:11px 13px}.compact.oos-row{border:2px solid var(--r);background:#fff7f7;box-shadow:0 5px 18px #a32c2c18}.compact.oos-row .title{color:var(--r)}.compact .top{align-items:center}.compact .details{display:none;padding-top:10px}.aed-comment{margin-top:10px;padding:10px 12px;border:1px solid var(--l);border-radius:10px;background:#f8fbfd}.aed-comment b{display:block;color:var(--n);margin-bottom:4px}.aed-comment .comment-text{white-space:pre-wrap;line-height:1.35;color:var(--ink)}.compact.open .details{display:block}.chev{font-size:1.1rem;color:var(--m)}.filter.on{background:var(--n);color:#fff;border-color:var(--n)}
 .group-block{margin:14px 0}
 .group-banner{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;border:0;border-radius:12px;padding:12px 14px;background:linear-gradient(135deg,var(--n),#1c587f);color:#fff;text-align:left;box-shadow:0 5px 16px #16324718}
 .group-banner .group-name{font-weight:850;letter-spacing:.02em}
@@ -92,11 +92,11 @@ if(a.serial==='X11L528800'&&a.group==='Community Center / Parks & Recreation'){a
 if(!a.group||a.group==='Other Locations'){a.group=a.location||'Unassigned';migrated=true}
 if(!a.status){a.status='In Service';migrated=true}if(!a.pedConfig){a.pedConfig=a.ped?'Installed':'N/A';migrated=true}if(!a.checks)a.checks=[];a.checks.forEach(ch=>{if(!ch.id){ch.id=crypto.randomUUID();migrated=true}})});if(migrated)localStorage.setItem(KEY,JSON.stringify(db));let invFilter='all';
 function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}function q(d=new Date()){return Math.floor(d.getMonth()/3)+1}function qn(){return 'Q'+q()+' '+new Date().getFullYear()}function dt(v){if(!v)return null;if(/^\d{4}-\d{2}$/.test(v)){let [y,m]=v.split('-').map(Number);return new Date(y,m,0,12,0,0)}return new Date(v+'T12:00:00')}function fmt(v){if(!v)return 'N/A';if(/^\d{4}-\d{2}$/.test(v)){let [y,m]=v.split('-');return m+'/'+y}let d=dt(v);return d?d.toLocaleDateString():'N/A'}function days(v){let d=dt(v);return d?Math.ceil((d-new Date())/86400000):null}function cls(v){let n=days(v);return n==null?'':n<0||n<=90?'bad':n<=180?'warn':'ok'}function log(type,id,detail,who='System'){db.audit.unshift({time:new Date().toISOString(),type,id,detail,who})}function cur(a){let y=new Date().getFullYear(),qq=q();return a.checks.find(c=>c.year==y&&c.quarter==qq)}
-function pill(t,v){return '<span class="pill '+cls(v)+'">'+t+': '+fmt(v)+'</span>'}function exp(){let z=[];db.aeds.filter(isActive).forEach(a=>{[['Adult pads',a.adult],['Battery',a.battery]].forEach(x=>{if(x[1])z.push({a,t:x[0],v:x[1],n:days(x[1])})});if(a.pedConfig!=='N/A'&&a.ped)z.push({a,t:'Pediatric pads',v:a.ped,n:days(a.ped)})});return z.sort((a,b)=>a.n-b.n)}
-function render(){let active=db.aeds.filter(isActive),inactive=db.aeds.filter(a=>!isActive(a)),e=exp(),over=e.filter(x=>x.n<0).length,soon=e.filter(x=>x.n>=0&&x.n<=180).length,done=active.filter(cur).length;populateReportYears();$('stats').innerHTML=[['Active AEDs',active.length],['Expired',over],['Due ≤180 Days',soon],['Inactive',inactive.length],[qn()+' Checked',done+'/'+active.length]].map(x=>'<div class="stat"><div class="big">'+x[1]+'</div><div class="small">'+x[0]+'</div></div>').join('');
+function pill(t,v){return '<span class="pill '+cls(v)+'">'+t+': '+fmt(v)+'</span>'}function exp(){let z=[];db.aeds.filter(isInventoryTracked).forEach(a=>{[['Adult pads',a.adult],['Battery',a.battery]].forEach(x=>{if(x[1])z.push({a,t:x[0],v:x[1],n:days(x[1])})});if(a.pedConfig!=='N/A'&&a.ped)z.push({a,t:'Pediatric pads',v:a.ped,n:days(a.ped)})});return z.sort((a,b)=>a.n-b.n)}
+function render(){let tracked=db.aeds.filter(isInventoryTracked),active=tracked.filter(isActive),oos=tracked.filter(isOutOfService),e=exp(),over=e.filter(x=>x.n<0).length,soon=e.filter(x=>x.n>=0&&x.n<=180).length,done=tracked.filter(cur).length;populateReportYears();$('stats').innerHTML=[['Inventory AEDs',tracked.length],['Out of Service',oos.length],['Expired',over],['Due ≤180 Days',soon],[qn()+' Checked',done+'/'+tracked.length]].map(x=>'<div class="stat"><div class="big">'+x[1]+'</div><div class="small">'+x[0]+'</div></div>').join('');
 $('watch').innerHTML=e.filter(x=>x.n<=180).slice(0,20).map(x=>'<div class="row"><div><b>'+esc(x.a.location)+'</b>'+(x.a.descriptor?'<div class="pills" style="margin-top:4px"><span class="pill">'+esc(x.a.descriptor)+'</span></div>':'')+'<div class="meta">'+x.t+' · '+x.a.serial+'</div></div><b class="'+cls(x.v)+'">'+fmt(x.v)+'</b></div>').join('')||'<p class="muted">No expirations within 180 days.</p>';
-$('qtitle').textContent='Quarterly Status — '+qn();let due=active.filter(a=>!cur(a));$('qstatus').innerHTML='<div class="row"><span>Complete</span><b class="ok">'+(active.length-due.length)+'</b></div><div class="row"><span>Still Due</span><b class="warn">'+due.length+'</b></div>'+due.slice(0,8).map(a=>'<div class="row"><span>'+esc(a.location)+(a.descriptor?' <span class="pill">'+esc(a.descriptor)+'</span>':'')+'</span><b class="warn">Due</b></div>').join('')+(due.length>8?'<p class="muted">+'+(due.length-8)+' more due — open Quarterly to view all.</p>':'');inv();checks();deps();reports();audit();$('daed').innerHTML=active.map(a=>'<option value="'+a.id+'">'+a.location+(a.descriptor?' - '+a.descriptor:'')+' — '+a.serial+'</option>').join('')}
-function isActive(a){return (a.status||'In Service')==='In Service'}function latestOpenShockDeployment(a){let ds=(a.deps||[]).filter(d=>d.shock&&!d.rts);return ds.length?ds.slice().sort((x,y)=>String(y.date||'').localeCompare(String(x.date||'')))[0]:null}function needsAttention(a){return isActive(a)&&([a.adult,a.battery].some(v=>v&&days(v)<=180)||(a.pedConfig!=='N/A'&&a.ped&&days(a.ped)<=180))}function statusClass(a){return isActive(a)?'ok':'bad'}function locLabel(a){return a.location||''}function locDescriptor(a){return a.descriptor||''}function locGroup(a){return a.group||''}function locHTML(a){return '<div class="title">'+esc(locLabel(a))+'</div>'+(locDescriptor(a)?'<div class="pills" style="margin-top:5px"><span class="pill">'+esc(locDescriptor(a))+'</span></div>':'')}
+$('qtitle').textContent='Quarterly Status — '+qn();let due=tracked.filter(a=>!cur(a));$('qstatus').innerHTML='<div class="row"><span>Complete</span><b class="ok">'+(tracked.length-due.length)+'</b></div><div class="row"><span>Still Due</span><b class="warn">'+due.length+'</b></div>'+due.slice(0,8).map(a=>'<div class="row"><span>'+esc(a.location)+(a.descriptor?' <span class="pill">'+esc(a.descriptor)+'</span>':'')+'</span><b class="'+(isOutOfService(a)?'bad':'warn')+'">'+(isOutOfService(a)?'Out of Service':'Due')+'</b></div>').join('')+(due.length>8?'<p class="muted">+'+(due.length-8)+' more due — open Quarterly to view all.</p>':'');inv();checks();deps();reports();audit();$('daed').innerHTML=active.map(a=>'<option value="'+a.id+'">'+a.location+(a.descriptor?' - '+a.descriptor:'')+' — '+a.serial+'</option>').join('')}
+function isActive(a){return (a.status||'In Service')==='In Service'}function isOutOfService(a){return /^Out of Service/i.test(a.status||'')}function isInventoryTracked(a){return !/^(Removed|Retired)/i.test(a.status||'')}function latestOpenShockDeployment(a){let ds=(a.deps||[]).filter(d=>d.shock&&!d.rts);return ds.length?ds.slice().sort((x,y)=>String(y.date||'').localeCompare(String(x.date||'')))[0]:null}function needsAttention(a){return isOutOfService(a)||([a.adult,a.battery].some(v=>v&&days(v)<=180)||(a.pedConfig!=='N/A'&&a.ped&&days(a.ped)<=180))}function statusClass(a){return isActive(a)?'ok':'bad'}function locLabel(a){return a.location||''}function locDescriptor(a){return a.descriptor||''}function locGroup(a){return a.group||''}function locHTML(a){return '<div class="title">'+esc(locLabel(a))+'</div>'+(locDescriptor(a)?'<div class="pills" style="margin-top:5px"><span class="pill">'+esc(locDescriptor(a))+'</span></div>':'')}
 function expirationDaysForAed(a){
   let vals=[];
   if(a.adult)vals.push(days(a.adult));
@@ -106,7 +106,8 @@ function expirationDaysForAed(a){
   return vals.length?Math.min(...vals):Infinity;
 }
 function aedUrgency(a){
-  if(!isActive(a))return {rank:99,days:Infinity,label:'Inactive'};
+  if(isOutOfService(a))return {rank:0,days:Infinity,label:'Out of Service'};
+  if(!isInventoryTracked(a))return {rank:99,days:Infinity,label:'Inactive'};
   const exp=expirationDaysForAed(a);
   if(exp<0)return {rank:1,days:exp,label:'Expired'};
   if(exp!==Infinity&&exp<=180)return {rank:2,days:exp,label:'Expiration '+exp+'d'};
@@ -128,7 +129,7 @@ function lastCompletedCheck(a){
 
   const buckets={};
   arr.forEach(a=>{
-    const g=isActive(a)?(a.group||a.location||'Unassigned'):'Inactive AEDs';
+    const g=isInventoryTracked(a)?(a.group||a.location||'Unassigned'):'Inactive AEDs';
     if(!buckets[g])buckets[g]=[];
     buckets[g].push(a);
   });
@@ -157,10 +158,10 @@ function lastCompletedCheck(a){
     const items=buckets[g];
     const inactiveGroup=g==='Inactive AEDs';
     const attn=inactiveGroup?0:items.filter(a=>needsAttention(a)).length;
-    const oos=0;
+    const oos=inactiveGroup?0:items.filter(isOutOfService).length;
     const due=inactiveGroup?0:items.filter(a=>!cur(a)).length;
     const gu=inactiveGroup?{rank:99,days:Infinity,label:'Inactive'}:groupUrgency(items);
-    const urgencyPill=inactiveGroup?'':gu.rank===1?'<span class="group-banner-pill bad">Immediate: Expired</span>':gu.rank===2?'<span class="group-banner-pill alert">Next Expiration: '+gu.days+'d</span>':gu.rank===3?'<span class="group-banner-pill due">Action: Quarterly Due</span>':'';
+    const urgencyPill=inactiveGroup?'':gu.rank===0?'<span class="group-banner-pill bad">Immediate: Out of Service</span>':gu.rank===1?'<span class="group-banner-pill bad">Immediate: Expired</span>':gu.rank===2?'<span class="group-banner-pill alert">Next Expiration: '+gu.days+'d</span>':gu.rank===3?'<span class="group-banner-pill due">Action: Quarterly Due</span>':'';
     const bannerPills=inactiveGroup?'':(
       '<div class="group-banner-pills">'+urgencyPill+
       (oos?'<span class="group-banner-pill bad">'+oos+' Out of Service</span>':'')+
@@ -175,10 +176,10 @@ function lastCompletedCheck(a){
       '</button>'+
       '<div class="group-items">'+
       buckets[g].map(a=>
-        '<div class="item compact" id="row-'+a.id+'">'+
+        '<div class="item compact'+(isOutOfService(a)?' oos-row':'')+'" id="row-'+a.id+'">'+
           '<div class="top" onclick="toggleRow(\''+a.id+'\')">'+
             '<div>'+locHTML(a)+'<div class="meta">'+esc(a.serial)+'</div><div class="meta">Last check: '+(lastCompletedCheck(a)?fmt(lastCompletedCheck(a).date):'No completed check')+'</div></div>'+
-            '<div><span class="pill '+statusClass(a)+'">'+(isActive(a)?(needsAttention(a)?'Attention':'OK'):'Inactive')+'</span> <span class="chev">▾</span></div>'+
+            '<div><span class="pill '+statusClass(a)+'">'+(isOutOfService(a)?'OUT OF SERVICE':isActive(a)?(needsAttention(a)?'Attention':'OK'):'Inactive')+'</span> <span class="chev">▾</span></div>'+
           '</div>'+
           '<div class="details">'+
             '<div class="pills"><span class="pill '+statusClass(a)+'">Status: '+esc(a.status)+'</span>'+
@@ -199,7 +200,7 @@ window.toggleGroup=id=>{let el=$(id);if(!el)return;el.classList.toggle('collapse
 window.toggleRow=id=>$('row-'+id).classList.toggle('open');window.showQR=id=>{let a=db.aeds.find(x=>x.id==id);let url=location.origin+location.pathname+'?aed='+encodeURIComponent(id);$('qrTitle').textContent='QR — '+a.location;$('qrLabel').textContent=a.location+' · '+a.serial;$('qrImg').src='https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&data='+encodeURIComponent(url);qrDlg.showModal()}
 function checks(){
   const buckets={};
-  db.aeds.filter(isActive).forEach(a=>{
+  db.aeds.filter(isInventoryTracked).forEach(a=>{
     const g=a.group||a.location||'Unassigned';
     if(!buckets[g])buckets[g]=[];
     buckets[g].push(a);
@@ -258,12 +259,12 @@ function checks(){
       '<div class="group-items">'+
       items.map(a=>{
         const ch=cur(a);
-        return '<div class="item compact">'+
+        return '<div class="item compact'+(isOutOfService(a)?' oos-row':'')+'">'+
           '<div class="top"><div>'+locHTML(a)+'<div class="meta">'+esc(a.serial)+(ch?' · '+fmt(ch.date)+' · '+esc(ch.inspector):'')+'</div></div>'+
           '<div><span class="pill '+statusClass(a)+'">'+(a.status==='In Service'?(ch?'Complete':'Due'):esc(a.status))+'</span></div></div>'+
-          '<div class="actions">'+(!ch?
+          '<div class="actions">'+(isOutOfService(a)?'<button class="primary" onclick="openReturnToService(\''+a.id+'\')">Return to Service</button>':(!ch?
             '<button class="primary" onclick="openCheck(\''+a.id+'\')">Complete Check</button>':
-            '<button onclick="openCheck(\''+a.id+'\')">Add Check</button><button class="primary" onclick="openReport(\''+a.id+'\',\''+ch.id+'\')">View Report</button>')+
+            '<button onclick="openCheck(\''+a.id+'\')">Add Check</button><button class="primary" onclick="openReport(\''+a.id+'\',\''+ch.id+'\')">View Report</button>'))+
           '</div></div>';
       }).join('')+
       '</div></div>';
