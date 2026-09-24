@@ -239,8 +239,9 @@ function checks(){
     const ua=aedUrgency(a),ub=aedUrgency(b);
     return ua.rank-ub.rank||ua.days-ub.days||a.location.localeCompare(b.location)||(a.descriptor||'').localeCompare(b.descriptor||'');
   });
+  const priorityHasImmediate=priority.some(a=>aedUrgency(a).rank<=1),priorityOnlyUpcoming=priority.length&&priority.every(a=>aedUrgency(a).rank===2);
   $('checkPriority').innerHTML=priority.length
-    ?'<div class="card"><div class="bar"><div><h3 style="margin:0">Priority Alerts</h3><p class="muted" style="margin:3px 0 0">Out of service, expired, and upcoming expirations are shown here first.</p></div><span class="pill bad">'+priority.length+' Alert'+(priority.length===1?'':'s')+'</span></div>'+
+    ?'<div class="card"><div class="bar"><div><h3 style="margin:0">Priority Alerts</h3><p class="muted" style="margin:3px 0 0">Out of service, expired, and upcoming expirations are shown here first.</p></div><span class="pill '+(priorityHasImmediate?'bad':'warn')+'">'+priority.length+' '+(priorityOnlyUpcoming?'Expiration Alert':'Alert')+(priority.length===1?'':'s')+'</span></div>'+
       priority.map(a=>{
         const u=aedUrgency(a),ch=cur(a);
         const label=u.rank===0?(latestOpenShockDeployment(a)?'Out of Service · Shock Delivered':'Out of Service'):u.rank===1?'Expired':'Expires in '+u.days+' days';
