@@ -11,6 +11,12 @@ function getJsPDF(){
 function clean(v){
   return String(v??'').replace(/\u00a0/g,' ').replace(/[ \t]+/g,' ').replace(/\s*\n\s*/g,' ').trim();
 }
+function healthColor(health){
+  const h=clean(health).toUpperCase();
+  if(h.includes('ATTENTION REQUIRED')) return [163,44,44];
+  if(h.includes('WATCH')) return [148,97,0];
+  return [31,117,74];
+}
 function sheet(){
   const s=document.getElementById('generatedReportSheet');
   if(!s) throw new Error('Generate a report first.');
@@ -146,7 +152,15 @@ function buildPdf(){
   addText(doc,state,'Executive Summary',{size:15,bold:true,gap:0.10});
   if(summary){
     if(summary.scope)addText(doc,state,summary.scope,{size:9,bold:true,gap:0.10});
-    if(summary.health)addText(doc,state,'Overall Health: '+summary.health,{size:12,bold:true,gap:0.05});
+    if(summary.health){
+      const c=healthColor(summary.health);
+      doc.setTextColor(c[0],c[1],c[2]);
+      doc.setFont('helvetica','bold');doc.setFontSize(12);
+      const lines=textLines(doc,'Overall Health: '+summary.health,CONTENT_W,12),lh=lineHeight(12);
+      for(const line of lines){ensureSpace(doc,state,lh);doc.text(line,PAGE.left,state.y);state.y+=lh}
+      state.y+=0.05;
+      doc.setTextColor(20,35,45);
+    }
     if(summary.healthText)addText(doc,state,summary.healthText,{size:9,gap:0.12});
     for(const kv of summary.kvs)addKeyValue(doc,state,kv.label,kv.value);
     if(summary.issues.length){
