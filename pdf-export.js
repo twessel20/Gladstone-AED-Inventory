@@ -105,7 +105,8 @@ function extractSummary(s){
   if(!summary)return null;
   const scope=clean([...summary.querySelectorAll('p')].find(p=>/^Scope:/i.test(clean(p.textContent)))?.textContent);
   const healthBox=[...summary.querySelectorAll('.report-box')].find(b=>/Overall Health/i.test(clean(b.textContent)));
-  const health=healthBox?clean([...healthBox.querySelectorAll('div')].find(d=>/GOOD|WATCH|ATTENTION REQUIRED/i.test(clean(d.textContent)))?.textContent):'';
+  const rawHealth=healthBox?clean([...healthBox.querySelectorAll('div')].find(d=>/GOOD|WATCH|ATTENTION REQUIRED/i.test(clean(d.textContent)))?.textContent):'';
+  const health=/^WATCH$/i.test(rawHealth)?'GOOD — WATCH':rawHealth;
   const healthText=healthBox?clean([...healthBox.querySelectorAll('p')][0]?.textContent):'';
   const kvs=directKVs(summary);
   const issues=[...summary.querySelectorAll('li')].map(x=>clean(x.textContent)).filter(Boolean);
@@ -135,7 +136,7 @@ function buildPdf(){
   const summary=extractSummary(s),aeds=extractAeds(s);
   if(!aeds.length)throw new Error('No AED detail sections were found in the generated report.');
 
-  const doc=new JsPDF({unit:'in',format:'letter',orientation:'portrait',compress:true});
+  const doc=new JsPDF({unit:'in',format:[8.5,11],orientation:'portrait',compress:true});
   const state={y:PAGE.top};
 
   addText(doc,state,title,{size:18,bold:true,gap:0.05});
