@@ -1,7 +1,7 @@
-const VERSION='gfd-aed-pwa-v80';
+const VERSION='gfd-aed-pwa-v81';
 const CORE_CACHE=VERSION+'-core';
 const RUNTIME_CACHE=VERSION+'-runtime';
-const CORE=['./','./index.html','./manifest.webmanifest'];
+const CORE=['./','./index.html','./manifest.webmanifest','./report-builder.js'];
 
 self.addEventListener('install',event=>{
   self.skipWaiting();
@@ -20,14 +20,26 @@ self.addEventListener('message',event=>{
   if(event.data&&event.data.type==='SKIP_WAITING') self.skipWaiting();
 });
 
+async function withReportBuilder(response){
+  if(!response||!response.ok)return response;
+  const type=response.headers.get('content-type')||'';
+  if(!type.includes('text/html'))return response;
+  let html=await response.text();
+  if(!html.includes('report-builder.js'))html=html.replace('</body>','<script src="./report-builder.js?v=81"></script></body>');
+  const headers=new Headers(response.headers);
+  headers.delete('content-length');
+  return new Response(html,{status:response.status,statusText:response.statusText,headers});
+}
+
 async function networkFirst(request){
   try{
     const fresh=await fetch(request,{cache:'no-store'});
     const cache=await caches.open(RUNTIME_CACHE);
     cache.put(request,fresh.clone());
-    return fresh;
+    return withReportBuilder(fresh);
   }catch(err){
-    return (await caches.match(request)) || (await caches.match('./index.html'));
+    const cached=(await caches.match(request)) || (await caches.match('./index.html'));
+    return withReportBuilder(cached);
   }
 }
 
