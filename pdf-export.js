@@ -18,7 +18,7 @@ const THEME={
 };
 
 function getJsPDF(){
-  return window.jspdf&&window.jspdf.jsPDF;
+  return (window.jspdf&&window.jspdf.jsPDF)||window.jsPDF||null;
 }
 function clean(v){
   return String(v??'').replace(/\u00a0/g,' ').replace(/[ \t]+/g,' ').replace(/\s*\n\s*/g,' ').trim();
