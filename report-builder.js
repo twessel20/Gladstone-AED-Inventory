@@ -81,7 +81,7 @@ function executiveSummaryPage(units,year,quarter,mode,groupName,title,subtitle,g
     ?'<div class="report-box critical-findings"><h3>Critical Failure Findings</h3><ul>'+h.failures.map(x=>'<li>'+safe(x)+'</li>').join('')+'</ul></div>'
     :'';
   const attentionBlock=h.issues.length
-    ?'<div class="report-box"><h3>'+(h.health==='CRITICAL FAIL'?'Additional Findings / Attention Items':'Attention Items')+'</h3><ul>'+h.issues.slice(0,12).map(x=>'<li>'+safe(x)+'</li>').join('')+(h.issues.length>12?'<li>+'+(h.issues.length-12)+' additional item(s) detailed in this report.</li>':'')+'</ul></div>'
+    ?'<div class="report-box"><h3>'+(h.health==='CRITICAL FAIL'?'Additional Findings / Attention Items':'Attention Items')+'</h3><ul>'+h.issues.slice(0,6).map(x=>'<li>'+safe(x)+'</li>').join('')+(h.issues.length>6?'<li>+'+(h.issues.length-6)+' additional item(s) detailed in this report.</li>':'')+'</ul></div>'
     :'<div class="report-box"><h3>Attention Items</h3><p>None identified from the recorded inventory data.</p></div>';
   const split=Math.ceil(units.length/2),left=units.slice(0,split),right=units.slice(split);
   const listCol=(arr,offset)=>'<div class="packet-aed-list-col">'+arr.map((a,i)=>'<div><span class="packet-aed-num">'+(offset+i+1)+'.</span><span class="packet-aed-name"><b>'+safe(a.location)+'</b>'+(a.descriptor?'<span class="packet-aed-desc"> — '+safe(a.descriptor)+'</span>':'')+'</span><span class="packet-aed-serial">'+safe(a.serial)+'</span></div>').join('')+'</div>';
