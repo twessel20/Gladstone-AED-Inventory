@@ -28,31 +28,97 @@ function executiveSummary(units,year,quarter,mode,groupName){const h=healthData(
 function pdfClean(v){return String(v??'').replace(/\u00a0/g,' ').replace(/[ \t]+/g,' ').replace(/\s*\n\s*/g,' ').trim()}
 async function imageToDataUrl(img){if(!img)return '';if(/^data:image\//i.test(img.src||''))return img.src;await (img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r}));try{const canvas=document.createElement('canvas');canvas.width=img.naturalWidth||img.width||1;canvas.height=img.naturalHeight||img.height||1;canvas.getContext('2d').drawImage(img,0,0);return canvas.toDataURL('image/png')}catch(e){return img.src||''}}
 async function reportPdfBlob(source,filename){
-  if(typeof html2pdf!=='function')throw new Error('PDF generator is not available.');
   const element=source instanceof Element?source:document.querySelector(source);
   if(!element)throw new Error('Report content is unavailable.');
+  const JsPDF=(window.jspdf&&window.jspdf.jsPDF)||window.jsPDF;
+  const capture=window.html2canvas;
+  if(!JsPDF||typeof capture!=='function')throw new Error('PDF rendering engine is not available.');
+
   await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
-  const clone=element.cloneNode(true);
-  clone.removeAttribute('id');
-  clone.classList.add('pdf-render-sheet');
-  clone.querySelectorAll('.report-toolbar').forEach(x=>x.remove());
-  clone.querySelectorAll('[style*="page-break-after"],[style*="break-after"]').forEach(x=>{x.style.pageBreakAfter='auto';x.style.breakAfter='auto'});
-  const originalLogo=element.querySelector('.report-header img');
-  const logoData=await imageToDataUrl(originalLogo);
-  clone.querySelectorAll('img').forEach(img=>{if(/gfd-patch/i.test(img.getAttribute('src')||'')&&logoData)img.src=logoData});
-  const title=pdfClean(clone.querySelector('.report-title h1')?.textContent||'AED Report');
-  const subtitle=pdfClean(clone.querySelector('.report-title p')?.textContent||'');
-  const headerHtml='<div class="pdf-repeat-header">'+(logoData?'<img src="'+logoData+'" alt="Gladstone Fire EMS">':'')+'<div><div class="pdf-repeat-kicker">GLADSTONE FIRE / EMS</div><div class="pdf-repeat-title">'+safe(title)+'</div><div class="pdf-repeat-subtitle">'+safe(subtitle)+'</div></div></div>';
-  const aedSections=[...clone.children].filter(x=>x.tagName==='SECTION'&&x.classList.contains('report-box'));
-  aedSections.forEach(sec=>{sec.classList.add('pdf-aed-page');sec.insertAdjacentHTML('afterbegin',headerHtml)});
-  const att=clone.querySelector('.certification-attestation'),sig=clone.querySelector('.overall-signature-block');
-  if(att&&sig){const wrap=document.createElement('section');wrap.className='pdf-cert-page';wrap.innerHTML=headerHtml;att.parentNode.insertBefore(wrap,att);wrap.appendChild(att);wrap.appendChild(sig)}
-  const mount=document.createElement('div');mount.className='pdf-render-mount';mount.appendChild(clone);document.body.appendChild(mount);
+
+  const originalHeader=element.querySelector('.report-header');
+  const executive=[...element.children].find(x=>x.tagName==='SECTION'&&!x.classList.contains('report-box'));
+  const aedSections=[...element.children].filter(x=>x.tagName==='SECTION'&&x.classList.contains('report-box'));
+  const att=element.querySelector('.certification-attestation');
+  const sig=element.querySelector('.overall-signature-block');
+  const foot=element.querySelector('.report-foot');
+  if(!originalHeader)throw new Error('Report header is unavailable.');
+
+  const logoData=await imageToDataUrl(originalHeader.querySelector('img'));
+  const headerClone=()=>{
+    const h=originalHeader.cloneNode(true);
+    h.querySelectorAll('img').forEach(img=>{if(logoData)img.src=logoData});
+    return h;
+  };
+
+  const mount=document.createElement('div');
+  mount.className='pdf-capture-mount';
+  document.body.appendChild(mount);
+
+  const makePage=(kind='detail')=>{
+    const page=document.createElement('div');
+    page.className='pdf-capture-page pdf-capture-'+kind;
+    page.appendChild(headerClone());
+    mount.appendChild(page);
+    return page;
+  };
+
+  if(executive){
+    const p=makePage('cover');
+    const x=executive.cloneNode(true);
+    x.style.pageBreakAfter='auto';
+    x.style.breakAfter='auto';
+    p.appendChild(x);
+  }
+
+  aedSections.forEach(sec=>{
+    const p=makePage('aed');
+    const x=sec.cloneNode(true);
+    x.style.margin='0';
+    x.style.breakInside='auto';
+    x.style.pageBreakInside='auto';
+    p.appendChild(x);
+  });
+
+  if(att||sig){
+    const p=makePage('cert');
+    if(att)p.appendChild(att.cloneNode(true));
+    if(sig)p.appendChild(sig.cloneNode(true));
+    if(foot){
+      const f=foot.cloneNode(true);
+      f.querySelectorAll('.report-toolbar').forEach(x=>x.remove());
+      p.appendChild(f);
+    }
+  }
+
+  const pages=[...mount.querySelectorAll('.pdf-capture-page')];
+  if(!pages.length){mount.remove();throw new Error('No report pages were available to render.');}
+
   try{
-    const images=[...clone.querySelectorAll('img')];await Promise.all(images.map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));
-    const opt={margin:[0.25,0.28,0.28,0.28],filename,image:{type:'jpeg',quality:0.98},html2canvas:{scale:1.65,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',scrollX:0,scrollY:0,windowWidth:1000},jsPDF:{unit:'in',format:'letter',orientation:'portrait'},pagebreak:{mode:['css'],before:['.pdf-aed-page','.pdf-cert-page'],avoid:['.certification-attestation','.overall-signature-block','.report-header','.pdf-repeat-header']}};
-    const worker=html2pdf().set(opt).from(clone).toPdf();const blob=await worker.outputPdf('blob');if(!blob||blob.size<1500)throw new Error('The PDF rendered empty. Please try again.');return blob;
-  }finally{mount.remove()}
+    const imgs=[...mount.querySelectorAll('img')];
+    await Promise.all(imgs.map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));
+
+    const doc=new JsPDF({unit:'in',format:'letter',orientation:'portrait',compress:true});
+    const pageW=8.5,pageH=11,margin=.26,maxW=pageW-margin*2,maxH=pageH-margin*2;
+
+    for(let i=0;i<pages.length;i++){
+      const node=pages[i];
+      const canvas=await capture(node,{scale:2,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:960,width:node.scrollWidth,height:node.scrollHeight});
+      const data=canvas.toDataURL('image/jpeg',0.985);
+      const aspect=canvas.width/canvas.height;
+      let w=maxW,h=w/aspect;
+      if(h>maxH){h=maxH;w=h*aspect}
+      const x=(pageW-w)/2,y=margin;
+      if(i>0)doc.addPage();
+      doc.addImage(data,'JPEG',x,y,w,h,undefined,'FAST');
+    }
+
+    const blob=doc.output('blob');
+    if(!blob||blob.size<1500)throw new Error('The PDF rendered empty. Please try again.');
+    return blob;
+  }finally{
+    mount.remove();
+  }
 }
 async function previewGeneratedPdf(source,filename){
   const blob=await reportPdfBlob(source,filename),url=URL.createObjectURL(blob);
