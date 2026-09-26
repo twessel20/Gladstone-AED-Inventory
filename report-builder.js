@@ -60,14 +60,12 @@ function quarterDateRange(year,quarter){
   const f=d=>d.toLocaleDateString(undefined,{month:'long',day:'numeric',year:'numeric'});
   return f(start)+' – '+f(end)
 }
-function coverPage(title,subtitle,scope,year,quarter,count,generated,sig){
-  const cert='<div class="packet-cover-cert"><div class="packet-cover-cert-copy"><div class="packet-cover-cert-label">Certification & Attestation</div><p>This report is certified as an accurate representation of the physical AED inspection/check data documented by the listed auditor(s). To the best of the auditor/report preparer\'s knowledge, it accurately reflects the recorded AED condition, operational status, component expiration information, findings, and corrective actions documented at the time of inspection.</p></div>'+
-    '<div class="packet-cover-signature"><div class="packet-cover-signature-meta"><b>'+safe(sig?.name||'Auditor / Report Preparer')+'</b>'+(sig?.employeeNumber?' <span>· Employee #'+safe(sig.employeeNumber)+'</span>':'')+'</div>'+(sig?.signature?'<img src="'+sig.signature+'" alt="Auditor / Report Preparer signature">':'')+'<div class="muted">Certified '+dateFmt(sig?.date||'')+'</div></div></div>';
+function coverPage(title,subtitle,scope,year,quarter,count,generated){
   return '<section class="packet-page packet-cover-page">'+
     '<div class="packet-cover-hero"><img class="packet-cover-logo" src="gfd-patch.jpg" alt="Gladstone Fire EMS"><div class="packet-kicker">GLADSTONE FIRE / EMS</div><h1>'+safe(title)+'</h1><p class="packet-cover-subtitle">'+safe(subtitle)+'</p></div>'+
     '<div class="packet-cover-body"><p class="packet-cover-description">This packet summarizes AED readiness, quarterly inspection completion, component expiration status, deployments, shock-delivery activity, and documented return-to-service events for the selected reporting scope.</p>'+
     '<div class="report-grid packet-cover-grid"><div class="report-box"><h3>Report Information</h3><div class="kv"><b>Group / Scope</b><div>'+safe(scope)+'</div></div><div class="kv"><b>Reporting Period</b><div>Q'+quarter+' '+year+'</div></div><div class="kv"><b>Date Range</b><div>'+safe(quarterDateRange(year,quarter))+'</div></div><div class="kv"><b>AEDs Included</b><div>'+count+'</div></div></div>'+
-    '<div class="report-box"><h3>Packet Structure</h3><div class="kv"><b>Page 2</b><div>Executive Summary & Overall Health</div></div><div class="kv"><b>Following Pages</b><div>One AED per page</div></div><div class="kv"><b>Certification</b><div>Signed and certified on this cover</div></div></div></div>'+cert+'</div>'+
+    '<div class="report-box"><h3>Packet Structure</h3><div class="kv"><b>Page 2</b><div>Executive Summary & Overall Health</div></div><div class="kv"><b>Following Pages</b><div>One AED per page</div></div><div class="kv"><b>Final Report Page</b><div>Certification & Attestation</div></div><div class="kv"><b>After Certification</b><div>Appendix / Supporting Documentation only</div></div></div></div></div>'+
     packetFooterHTML(generated)+'</section>'
 }
 function executiveSummaryPage(units,year,quarter,mode,groupName,title,subtitle,generated){
@@ -222,12 +220,14 @@ function build(){
     subtitle=mode==='group'?'Gladstone Fire / EMS · Group: '+groupName+' · Q'+quarter+' '+year: 'Gladstone Fire / EMS · Q'+quarter+' '+year;
   const area=$id('reportPrintArea');if(!area){alert('Report print area is unavailable.');return}
   const generated='Generated '+new Date().toLocaleString()+'.';
-  const cover=coverPage(title,subtitle,scope,year,quarter,units.length,generated,sig);
+  const cover=coverPage(title,subtitle,scope,year,quarter,units.length,generated);
   const exec=executiveSummaryPage(units,year,quarter,mode,groupName,title,subtitle,generated);
   const details=units.map(a=>'<section class="packet-page packet-aed-page">'+pageHeaderHTML(title,scope,year,quarter,'AED DETAIL · Location: '+a.location+(a.descriptor?' — '+a.descriptor:'')+' · Serial: '+a.serial)+reportSection(a,year,quarter)+packetFooterHTML(generated)+'</section>').join('');
+  const cert='<section class="packet-page packet-cert-page">'+pageHeaderHTML(title,scope,year,quarter,'CERTIFICATION & ATTESTATION')+'<div class="packet-cert-body">'+(typeof certificationAttestationHTML==='function'?certificationAttestationHTML():'')+(typeof overallSignatureHTML==='function'?overallSignatureHTML(sig):'')+'<p class="packet-cert-note">This certification page marks the end of the certified report body. Any page appended after this page is considered Appendix / Supporting Documentation.</p></div>'+packetFooterHTML(generated)+'</section>';
+  const appendix='';
   const slug=String(mode==='group'?groupName:title).replace(/[^a-z0-9]+/ig,'-').replace(/^-+|-+$/g,'').toLowerCase()||'aed-report',
     pdfFilename=slug+'-q'+quarter+'-'+year+'.pdf',summary=title+' · Q'+quarter+' '+year+' · '+units.length+' AED'+(units.length===1?'':'s');
-  area.innerHTML='<div class="report-sheet packet-report" id="generatedReportSheet">'+cover+exec+details+'<div class="report-toolbar"><button type="button" class="primary" id="musterPreviewPdf">Preview PDF</button><button type="button" id="musterPdf">Open PDF</button><button type="button" id="musterSharePdf">Share PDF</button><button type="button" id="musterClose">Close</button></div></div>';
+  area.innerHTML='<div class="report-sheet packet-report" id="generatedReportSheet">'+cover+exec+details+cert+appendix+'<div class="report-toolbar"><button type="button" class="primary" id="musterPreviewPdf">Preview PDF</button><button type="button" id="musterPdf">Open PDF</button><button type="button" id="musterSharePdf">Share PDF</button><button type="button" id="musterClose">Close</button></div></div>';
   area.style.display='block';document.querySelectorAll('main>.view').forEach(v=>v.style.display='none');area.scrollIntoView({behavior:'smooth',block:'start'});
   const sheet=$id('generatedReportSheet');
   $id('musterPreviewPdf').onclick=async()=>{const b=$id('musterPreviewPdf');b.disabled=true;b.textContent='Building Preview…';try{await window.GFDAEDPdfV2.previewElement(sheet,pdfFilename)}catch(e){alert(e.message||'Unable to preview PDF.')}finally{b.disabled=false;b.textContent='Preview PDF'}};
