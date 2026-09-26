@@ -50,8 +50,8 @@ function healthData(units,year,quarter){
       :'All AEDs in this report are in service with no expired components, no missing expiration dates, and no component expirations within the next 30 days.';
   return {oos,expired,due30,due180,missing,checksComplete,deployments,shocks,issues:[...new Set(issues)],failures:[...new Set(failures)],health,healthText}
 }
-function pageHeaderHTML(title,subtitle){
-  return '<div class="report-header packet-header"><img src="gfd-patch.jpg" alt="Gladstone Fire EMS"><div class="report-title"><h1>'+safe(title)+'</h1><p>'+safe(subtitle)+'</p></div></div>'
+function pageHeaderHTML(title,scope,year,quarter,pageId){
+  return '<div class="report-header packet-header"><img src="gfd-patch.jpg" alt="Gladstone Fire EMS"><div class="report-title"><div class="packet-header-kicker">GLADSTONE FIRE / EMS · AED REPORT</div><h1>'+safe(title)+'</h1><p><b>Scope:</b> '+safe(scope)+' · <b>Period:</b> Q'+quarter+' '+year+' · '+safe(quarterDateRange(year,quarter))+'</p><p class="packet-page-id">'+safe(pageId)+'</p></div></div>'
 }
 function packetFooterHTML(generated){return '<div class="report-foot packet-footer">'+safe(generated)+'</div>'}
 function quarterDateRange(year,quarter){
@@ -79,7 +79,7 @@ function executiveSummaryPage(units,year,quarter,mode,groupName,title,subtitle,g
   const attentionBlock=h.issues.length
     ?'<div class="report-box"><h3>'+(h.health==='CRITICAL FAIL'?'Additional Findings / Attention Items':'Attention Items')+'</h3><ul>'+h.issues.slice(0,12).map(x=>'<li>'+safe(x)+'</li>').join('')+(h.issues.length>12?'<li>+'+(h.issues.length-12)+' additional item(s) detailed in this report.</li>':'')+'</ul></div>'
     :'<div class="report-box"><h3>Attention Items</h3><p>None identified from the recorded inventory data.</p></div>';
-  return '<section class="packet-page packet-executive-page">'+pageHeaderHTML(title,subtitle)+
+  return '<section class="packet-page packet-executive-page">'+pageHeaderHTML(title,scope,year,quarter,'Executive Summary & Overall Health')+
     '<div class="exec-summary packet-exec"><h2>Executive Summary</h2><p><b>Scope:</b> '+safe(scope)+' · Q'+quarter+' '+year+' · '+units.length+' AED'+(units.length===1?'':'s')+'</p>'+
     '<div class="report-grid"><div class="report-box"><h3>Overall Health</h3><div class="health '+healthClass+' packet-health">'+safe(h.health)+'</div><p>'+safe(h.healthText)+'</p></div>'+
     '<div class="report-box"><h3>Quarterly Status</h3><div class="kv"><b>Inspections completed</b><div>'+h.checksComplete+' / '+units.length+'</div></div><div class="kv"><b>Quarter complete</b><div>'+(complete?'Yes':'No')+'</div></div></div></div>'+
@@ -224,7 +224,7 @@ function build(){
   const generated='Generated '+new Date().toLocaleString()+'.';
   const cover=coverPage(title,subtitle,scope,year,quarter,units.length,generated,sig);
   const exec=executiveSummaryPage(units,year,quarter,mode,groupName,title,subtitle,generated);
-  const details=units.map(a=>'<section class="packet-page packet-aed-page">'+pageHeaderHTML(title,subtitle)+reportSection(a,year,quarter)+packetFooterHTML(generated)+'</section>').join('');
+  const details=units.map(a=>'<section class="packet-page packet-aed-page">'+pageHeaderHTML(title,scope,year,quarter,'AED Detail — '+a.location+(a.descriptor?' — '+a.descriptor:'')+' — Serial '+a.serial)+reportSection(a,year,quarter)+packetFooterHTML(generated)+'</section>').join('');
   const slug=String(mode==='group'?groupName:title).replace(/[^a-z0-9]+/ig,'-').replace(/^-+|-+$/g,'').toLowerCase()||'aed-report',
     pdfFilename=slug+'-q'+quarter+'-'+year+'.pdf',summary=title+' · Q'+quarter+' '+year+' · '+units.length+' AED'+(units.length===1?'':'s');
   area.innerHTML='<div class="report-sheet packet-report" id="generatedReportSheet">'+cover+exec+details+'<div class="report-toolbar"><button type="button" class="primary" id="musterPreviewPdf">Preview PDF</button><button type="button" id="musterPdf">Open PDF</button><button type="button" id="musterSharePdf">Share PDF</button><button type="button" id="musterClose">Close</button></div></div>';
