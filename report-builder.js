@@ -42,6 +42,7 @@ async function reportPdfBlob(source,filename){
   const att=element.querySelector('.certification-attestation');
   const sig=element.querySelector('.overall-signature-block');
   const foot=element.querySelector('.report-foot');
+  const generatedText=pdfClean(foot?.childNodes?.[0]?.textContent||foot?.textContent||'');
   if(!originalHeader)throw new Error('Report header is unavailable.');
 
   const logoData=await imageToDataUrl(originalHeader.querySelector('img'));
@@ -57,10 +58,16 @@ async function reportPdfBlob(source,filename){
 
   const makePage=(kind='detail')=>{
     const page=document.createElement('div');
-    page.className='pdf-capture-page pdf-capture-'+kind;
+    page.className='report-sheet pdf-capture-page pdf-capture-'+kind;
     page.appendChild(headerClone());
     mount.appendChild(page);
     return page;
+  };
+  const appendPageFooter=page=>{
+    const f=document.createElement('div');
+    f.className='pdf-page-footer';
+    f.textContent=generatedText||'Gladstone Fire / EMS AED Inventory & Quarterly Audit';
+    page.appendChild(f);
   };
 
   if(executive){
@@ -69,6 +76,7 @@ async function reportPdfBlob(source,filename){
     x.style.pageBreakAfter='auto';
     x.style.breakAfter='auto';
     p.appendChild(x);
+    appendPageFooter(p);
   }
 
   aedSections.forEach(sec=>{
@@ -78,17 +86,14 @@ async function reportPdfBlob(source,filename){
     x.style.breakInside='auto';
     x.style.pageBreakInside='auto';
     p.appendChild(x);
+    appendPageFooter(p);
   });
 
   if(att||sig){
     const p=makePage('cert');
     if(att)p.appendChild(att.cloneNode(true));
     if(sig)p.appendChild(sig.cloneNode(true));
-    if(foot){
-      const f=foot.cloneNode(true);
-      f.querySelectorAll('.report-toolbar').forEach(x=>x.remove());
-      p.appendChild(f);
-    }
+    appendPageFooter(p);
   }
 
   const pages=[...mount.querySelectorAll('.pdf-capture-page')];
@@ -111,6 +116,8 @@ async function reportPdfBlob(source,filename){
       const x=(pageW-w)/2,y=margin;
       if(i>0)doc.addPage();
       doc.addImage(data,'JPEG',x,y,w,h,undefined,'FAST');
+      doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(104,123,138);
+      doc.text('Page '+(i+1)+' of '+pages.length,pageW-margin-.72,pageH-.13);
     }
 
     const blob=doc.output('blob');
