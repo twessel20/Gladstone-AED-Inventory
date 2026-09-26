@@ -1,7 +1,7 @@
-const VERSION='gfd-aed-pwa-v100';
+const VERSION='gfd-aed-pwa-v101';
 const CORE_CACHE=VERSION+'-core';
 const RUNTIME_CACHE=VERSION+'-runtime';
-const CORE=['./','./index.html','./manifest.webmanifest','./pdf-export.js','./report-builder.js','./report-pdf.css','./repository-nav.js','./lifecycle.html'];
+const CORE=['./','./index.html','./manifest.webmanifest','./pdf-export.js','./report-builder.js','./report-pdf.css'];
 
 self.addEventListener('install',event=>{
   self.skipWaiting();
@@ -25,12 +25,8 @@ async function withReportBuilder(response){
   const type=response.headers.get('content-type')||'';
   if(!type.includes('text/html'))return response;
   let html=await response.text();
-  const isMainApp=html.includes('AED Inventory & Quarterly Audit')&&html.includes('id="dash"')&&html.includes('id="audit"');
-  if(isMainApp){
-    if(!html.includes('report-pdf.css'))html=html.replace('</head>','<link rel="stylesheet" href="./report-pdf.css?v=100"></head>');
-    if(!html.includes('report-builder.js'))html=html.replace('</body>','<script src="./report-builder.js?v=100"></script></body>');
-    if(!html.includes('repository-nav.js'))html=html.replace('</body>','<script src="./repository-nav.js?v=100"></script></body>');
-  }
+  if(!html.includes('report-pdf.css'))html=html.replace('</head>','<link rel="stylesheet" href="./report-pdf.css?v=101"></head>');
+  if(!html.includes('report-builder.js'))html=html.replace('</body>','<script src="./report-builder.js?v=101"></script></body>');
   const headers=new Headers(response.headers);
   headers.delete('content-length');
   return new Response(html,{status:response.status,statusText:response.statusText,headers});
@@ -65,7 +61,7 @@ self.addEventListener('fetch',event=>{
     event.respondWith(networkFirst(event.request));
     return;
   }
-  if(url.origin===self.location.origin&&(url.pathname.endsWith('/pdf-export.js')||url.pathname.endsWith('/repository-nav.js'))){
+  if(url.origin===self.location.origin&&url.pathname.endsWith('/pdf-export.js')){
     event.respondWith(networkFirst(event.request));
     return;
   }
