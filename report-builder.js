@@ -224,7 +224,7 @@ function build(){
   const generated='Generated '+new Date().toLocaleString()+'.';
   const cover=coverPage(title,subtitle,scope,year,quarter,units.length,generated,sig);
   const exec=executiveSummaryPage(units,year,quarter,mode,groupName,title,subtitle,generated);
-  const details=units.map(a=>'<section class="packet-page packet-aed-page">'+pageHeaderHTML(title,scope,year,quarter,'AED Detail — '+a.location+(a.descriptor?' — '+a.descriptor:'')+' — Serial '+a.serial)+reportSection(a,year,quarter)+packetFooterHTML(generated)+'</section>').join('');
+  const details=units.map(a=>'<section class="packet-page packet-aed-page">'+pageHeaderHTML(title,scope,year,quarter,'AED DETAIL · Location: '+a.location+(a.descriptor?' — '+a.descriptor:'')+' · Serial: '+a.serial)+reportSection(a,year,quarter)+packetFooterHTML(generated)+'</section>').join('');
   const slug=String(mode==='group'?groupName:title).replace(/[^a-z0-9]+/ig,'-').replace(/^-+|-+$/g,'').toLowerCase()||'aed-report',
     pdfFilename=slug+'-q'+quarter+'-'+year+'.pdf',summary=title+' · Q'+quarter+' '+year+' · '+units.length+' AED'+(units.length===1?'':'s');
   area.innerHTML='<div class="report-sheet packet-report" id="generatedReportSheet">'+cover+exec+details+'<div class="report-toolbar"><button type="button" class="primary" id="musterPreviewPdf">Preview PDF</button><button type="button" id="musterPdf">Open PDF</button><button type="button" id="musterSharePdf">Share PDF</button><button type="button" id="musterClose">Close</button></div></div>';
