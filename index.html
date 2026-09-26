@@ -515,7 +515,7 @@ function aedScannerConfig(){
 let addSerialScanner=null;
 async function stopAddSerialScanner(){if(addSerialScanner){try{await addSerialScanner.stop()}catch(e){}try{addSerialScanner.clear()}catch(e){}addSerialScanner=null}}
 function useAddSerial(raw){
-  let s=String(raw||'').trim();
+  let s=serialFromScan(raw);
   if(!s){$('addScanMsg').textContent='No serial number detected.';return false}
   $('serial').value=s;
   $('addScanMsg').textContent='Serial captured: '+s;
@@ -525,7 +525,7 @@ $('scanAddSerial').onclick=async()=>{
   addScanDlg.showModal();$('addManualSerial').value='';$('addScanMsg').textContent='';await stopAddSerialScanner();
   try{
     addSerialScanner=new Html5Qrcode('addSerialReader',aedScannerConfig());
-    await addSerialScanner.start({facingMode:'environment'},{fps:10,qrbox:{width:280,height:140},aspectRatio:1.777},async decoded=>{
+    await addSerialScanner.start({facingMode:'environment'},{fps:10,qrbox:scanBox,aspectRatio:1.777},async decoded=>{
       if(useAddSerial(decoded)){await stopAddSerialScanner();addScanDlg.close();$('serial').focus()}
     },()=>{});
   }catch(e){$('addScanMsg').textContent='Camera scanner unavailable. You can still type the serial number below.'}
@@ -541,7 +541,7 @@ function openDeploymentForAed(id){
   depForm.reset();$('ddate').value=today();$('shockPersonFields').style.display='none';$('shockBy').required=false;$('shockCityEmployee').required=false;$('shockPhone').required=false;$('daed').value=a.id;syncDeploymentPadFields();depDlg.showModal();return true
 }
 function openDeploymentBySerial(raw){
-  let s=normSerial(raw),a=db.aeds.find(x=>normSerial(x.serial)===s);
+  let parsed=serialFromScan(raw),s=normSerial(parsed),a=db.aeds.find(x=>normSerial(x.serial)===s);
   if(!a){$('deployScanMsg').textContent='No AED found for serial: '+raw;return false}
   if(!isActive(a)){$('deployScanMsg').textContent='AED is inactive and cannot be deployed.';return false}
   $('deployScanMsg').textContent='Matched '+a.location+(a.descriptor?' - '+a.descriptor:'')+' — '+a.serial;
@@ -551,7 +551,7 @@ const startDeploymentScan=async()=>{
   deployScanDlg.showModal();$('deployManualSerial').value='';$('deployScanMsg').textContent='';await stopDeploySerialScanner();
   try{
     deploySerialScanner=new Html5Qrcode('deploySerialReader',aedScannerConfig());
-    await deploySerialScanner.start({facingMode:'environment'},{fps:10,qrbox:{width:280,height:140},aspectRatio:1.777},async decoded=>{
+    await deploySerialScanner.start({facingMode:'environment'},{fps:10,qrbox:scanBox,aspectRatio:1.777},async decoded=>{
       if(openDeploymentBySerial(decoded)){await stopDeploySerialScanner();deployScanDlg.close()}
     },()=>{});
   }catch(e){$('deployScanMsg').textContent='Camera scanner unavailable. You can still type the serial number below.'}
@@ -561,12 +561,26 @@ $('deployFindSerial').onclick=e=>{e.preventDefault();if(openDeploymentBySerial($
 $('closeDeployScan').onclick=async e=>{e.preventDefault();await stopDeploySerialScanner();deployScanDlg.close()}
 let serialScanner=null;
 function normSerial(v){return String(v||'').trim().replace(/[^A-Za-z0-9]/g,'').toUpperCase()}
+function serialFromScan(raw){
+  const text=String(raw||'').trim();
+  if(!text)return '';
+  const paren=text.match(/\(21\)\s*([A-Za-z0-9._-]+)/i);
+  if(paren)return paren[1].toUpperCase();
+  const noPrefix=text.replace(/^\]C1/i,'').replace(/\x1D/g,'');
+  const compact=normSerial(noPrefix);
+  const gs1=compact.match(/^01\d{14}21([A-Z0-9]+)$/);
+  if(gs1)return gs1[1];
+  const known=(db?.aeds||[]).map(a=>String(a.serial||'')).filter(Boolean).sort((a,b)=>b.length-a.length);
+  const match=known.find(s=>compact.endsWith(normSerial(s)));
+  return match||text;
+}
+function scanBox(vw,vh){return{width:Math.min(Math.max(300,Math.floor(vw*.92)),560),height:Math.min(170,Math.max(110,Math.floor(vh*.28)))}}
 function addAedFromSerial(raw){
-  const s=String(raw||'').trim();
+  const s=serialFromScan(raw);
   if(!s)return false;
   aedForm.reset();$('aid').value='';$('aedTitle').textContent='Add AED';$('serial').value=s;$('pedConfig').value='Installed';$('ped').disabled=false;$('status').value='In Service';aedDlg.showModal();setTimeout(()=>$('loc').focus(),100);return true
 }
-function openAedBySerial(raw,allowAdd=false){let s=normSerial(raw);let a=db.aeds.find(x=>normSerial(x.serial)===s);if(!a){if(allowAdd){$('scanMsg').textContent='New AED detected. Opening Add AED...';addAedFromSerial(raw);return true}$('scanMsg').textContent='No AED found for serial: '+raw;return false}
+function openAedBySerial(raw,allowAdd=false){let parsed=serialFromScan(raw),s=normSerial(parsed);let a=db.aeds.find(x=>normSerial(x.serial)===s);if(!a){if(allowAdd){$('scanMsg').textContent='New AED detected. Opening Add AED...';addAedFromSerial(parsed);return true}$('scanMsg').textContent='No AED found for serial: '+raw;return false}
 $('scanMsg').textContent='Matched '+a.location+(a.descriptor?' - '+a.descriptor:'')+' — '+a.serial;
 document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));document.querySelector('[data-v="inv"]').classList.add('on');
 document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));$('inv').classList.add('on');
@@ -574,7 +588,7 @@ $('search').value=a.serial;invFilter='all';document.querySelectorAll('.filter').
 setTimeout(()=>{let row=$('row-'+a.id);if(row){row.classList.add('open');row.scrollIntoView({behavior:'smooth',block:'center'})}},100);
 return true}
 async function stopSerialScanner(){if(serialScanner){try{await serialScanner.stop()}catch(e){}try{serialScanner.clear()}catch(e){}serialScanner=null}}
-const startSerialScan=async(allowAdd=false)=>{scanDlg.dataset.allowAdd=allowAdd?'1':'0';scanDlg.showModal();$('manualSerial').value='';$('scanMsg').textContent='';await stopSerialScanner();try{serialScanner=new Html5Qrcode('serialReader',aedScannerConfig());await serialScanner.start({facingMode:'environment'},{fps:10,qrbox:{width:280,height:140},aspectRatio:1.777},async decoded=>{if(openAedBySerial(decoded,scanDlg.dataset.allowAdd==='1')){await stopSerialScanner();scanDlg.close()}},()=>{})}catch(e){$('scanMsg').textContent='Camera scanner unavailable. You can still type the serial number below.'}}
+const startSerialScan=async(allowAdd=false)=>{scanDlg.dataset.allowAdd=allowAdd?'1':'0';scanDlg.showModal();$('manualSerial').value='';$('scanMsg').textContent='';await stopSerialScanner();try{serialScanner=new Html5Qrcode('serialReader',aedScannerConfig());await serialScanner.start({facingMode:'environment'},{fps:10,qrbox:scanBox,aspectRatio:1.777},async decoded=>{if(openAedBySerial(decoded,scanDlg.dataset.allowAdd==='1')){await stopSerialScanner();scanDlg.close()}},()=>{})}catch(e){$('scanMsg').textContent='Camera scanner unavailable. You can still type the serial number below.'}}
 $('scanSerial').onclick=()=>startSerialScan(false);$('dashQuickScan').onclick=()=>startSerialScan(true);$('dashQuickQuarterly').onclick=()=>{if(typeof goView==='function'){goView('checks')}else{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.v==='checks'));document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id==='checks'))}setTimeout(()=>document.getElementById('checkPriority')?.scrollIntoView({behavior:'smooth',block:'start'}),50)};
 $('findSerial').onclick=e=>{e.preventDefault();if(openAedBySerial($('manualSerial').value,scanDlg.dataset.allowAdd==='1')){stopSerialScanner();scanDlg.close()}}
 $('closeScan').onclick=async e=>{e.preventDefault();await stopSerialScanner();scanDlg.close()}
