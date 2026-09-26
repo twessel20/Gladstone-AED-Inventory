@@ -97,20 +97,20 @@ async function buildFromElement(source,filename='aed-report.pdf'){
     if(explicit.length){
       for(let i=0;i<explicit.length;i++){
         const page=explicit[i];
-        const canvas=await capture(page,{scale:2,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:page.scrollWidth,height:page.scrollHeight});
+        const canvas=await capture(page,{scale:3.5,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:page.scrollWidth,height:page.scrollHeight,imageTimeout:15000});
         if(!canvas.width||!canvas.height)throw new Error('A report page could not be captured.');
-        const img=canvas.toDataURL('image/jpeg',0.985);
+        const img=canvas.toDataURL('image/png');
         const margin=.18,maxW=LETTER.w-margin*2,maxH=LETTER.h-margin*2;
         let w=maxW,h=w*(canvas.height/canvas.width);
         if(h>maxH){h=maxH;w=h*(canvas.width/canvas.height)}
         const x=(LETTER.w-w)/2,y=(LETTER.h-h)/2;
         if(i)doc.addPage();
-        doc.addImage(img,'JPEG',x,y,w,h,undefined,'FAST');
+        doc.addImage(img,'PNG',x,y,w,h,undefined,'NONE');
         doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(104,123,138);
         doc.text('Page '+(i+1)+' of '+explicit.length,7.28,10.83);
       }
     }else{
-      const scale=2;
+      const scale=3.25;
       const full=await capture(clone,{scale,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:clone.scrollWidth,height:clone.scrollHeight});
       if(!full.width||!full.height)throw new Error('The report could not be captured.');
       const cssPageHeight=(width*LETTER.h/LETTER.w)-24;
@@ -120,13 +120,13 @@ async function buildFromElement(source,filename='aed-report.pdf'){
       const slices=slicesCss.map(([a,b])=>[Math.round(a*ratio),Math.round(b*ratio)]);
       for(let i=0;i<slices.length;i++){
         const [y1,y2]=slices[i],part=sliceCanvas(full,y1,y2);
-        const img=part.toDataURL('image/jpeg',0.985);
+        const img=part.toDataURL('image/png');
         const margin=.20,maxW=LETTER.w-margin*2,maxH=LETTER.h-margin*2;
         let w=maxW,h=w*(part.height/part.width);
         if(h>maxH){h=maxH;w=h*(part.width/part.height)}
         const x=(LETTER.w-w)/2,y=margin;
         if(i)doc.addPage();
-        doc.addImage(img,'JPEG',x,y,w,h,undefined,'FAST');
+        doc.addImage(img,'PNG',x,y,w,h,undefined,'NONE');
         doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(104,123,138);
         doc.text('Page '+(i+1)+' of '+slices.length,7.28,10.83);
       }
