@@ -1,4 +1,4 @@
-const VERSION='gfd-aed-pwa-v101';
+const VERSION='gfd-aed-pwa-v102';
 const CORE_CACHE=VERSION+'-core';
 const RUNTIME_CACHE=VERSION+'-runtime';
 const CORE=['./','./index.html','./manifest.webmanifest','./pdf-export.js','./report-builder.js','./report-pdf.css'];
@@ -20,13 +20,21 @@ self.addEventListener('message',event=>{
   if(event.data&&event.data.type==='SKIP_WAITING') self.skipWaiting();
 });
 
-async function withReportBuilder(response){
+async function decorateMainApp(response){
   if(!response||!response.ok)return response;
   const type=response.headers.get('content-type')||'';
   if(!type.includes('text/html'))return response;
   let html=await response.text();
-  if(!html.includes('report-pdf.css'))html=html.replace('</head>','<link rel="stylesheet" href="./report-pdf.css?v=101"></head>');
-  if(!html.includes('report-builder.js'))html=html.replace('</body>','<script src="./report-builder.js?v=101"></script></body>');
+  const isMainApp=html.includes('<title>Gladstone AED Inventory</title>')&&html.includes('data-v="dash"')&&html.includes('data-v="audit"');
+  if(isMainApp){
+    if(!html.includes('report-pdf.css'))html=html.replace('</head>','<link rel="stylesheet" href="./report-pdf.css?v=102"></head>');
+    if(!html.includes('report-builder.js'))html=html.replace('</body>','<script src="./report-builder.js?v=102"></script></body>');
+    if(!html.includes('id="repositoryNav"')){
+      const auditButton='<button class="tab" data-v="audit">Audit Log</button>';
+      const repositoryLink='<a id="repositoryNav" href="./lifecycle.html" style="font:inherit;font-weight:750;border:1px solid var(--l);background:#fff;border-radius:9px;padding:10px 12px;color:var(--n);text-decoration:none;white-space:nowrap">AED Repository</a>';
+      html=html.replace(auditButton,auditButton+repositoryLink);
+    }
+  }
   const headers=new Headers(response.headers);
   headers.delete('content-length');
   return new Response(html,{status:response.status,statusText:response.statusText,headers});
@@ -37,10 +45,10 @@ async function networkFirst(request){
     const fresh=await fetch(request,{cache:'no-store'});
     const cache=await caches.open(RUNTIME_CACHE);
     cache.put(request,fresh.clone());
-    return withReportBuilder(fresh);
+    return decorateMainApp(fresh);
   }catch(err){
     const cached=(await caches.match(request)) || (await caches.match('./index.html'));
-    return withReportBuilder(cached);
+    return decorateMainApp(cached);
   }
 }
 
