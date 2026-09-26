@@ -10,7 +10,7 @@ function canonicalGroup(a){
   if(['X11L528611','X11L529465','X11L528795','X11L529221','X11L529205','X11L528608','X11L528858','X11L528613','X11L528619','X16J868825','X11L528627'].includes(serial))return 'Police Patrol Cars';
   if(['X11L529144','X11L528791','X11L528628','X11L529451','X19D142339'].includes(serial))return 'Police Department / City Hall';
   if(['X11L528801','X11L528610'].includes(serial))return 'Public Works / Animal Control';
-  if(['X19D140932','X20A241496','X19D140968','X11L529367','X11L528800'].includes(serial))return 'Community Center / Parks & Recreation';
+  if(['X19D140932','X20A241496','X19D140968','X11L529367','X11L528800','X17L979521'].includes(serial))return 'Community Center / Parks & Recreation';
   return a?.group||a?.location||'Unassigned';
 }
 function groups(){return [...new Set(allAeds().map(canonicalGroup))].sort((a,b)=>a.localeCompare(b))}
