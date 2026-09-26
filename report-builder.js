@@ -25,30 +25,36 @@ function daysTo(v){if(!v)return null;const d=new Date(String(v).slice(0,10)+'T12
 function reportHasPediatricPads(a){return !!a&&(String(a.serial||'')==='X17L979521'||a.pedConfig!=='N/A')}
 function components(a){const x=[{name:'Adult pads',date:a.adult},{name:'Battery',date:a.battery}];if(reportHasPediatricPads(a))x.splice(1,0,{name:'Pediatric pads',date:a.ped});return x}
 function healthData(units,year,quarter){
-  let oos=0,expired=0,due30=0,due180=0,missing=0,checksComplete=0,deployments=0,shocks=0,issues=[],failures=[];
+  let oos=0,retired=0,expired=0,due30=0,due180=0,missing=0,checksComplete=0,deployments=0,shocks=0,issues=[],failures=[];
   units.forEach(a=>{
     const label=a.location+(a.descriptor?' — '+a.descriptor:'');
-    if(String(a.status||'In Service')!=='In Service'){
-      oos++;const msg=label+': '+(a.status||'Out of Service');issues.push(msg);failures.push(msg)
+    const state=String(a.status||'In Service');
+    const knownInactive=/removed\s*\/\s*retired|retired|destroyed|beyond repair|end[- ]?of[- ]?life/i.test(state);
+    if(knownInactive){
+      retired++;
+    }else{
+      if(state!=='In Service'){
+        oos++;const msg=label+': '+state;issues.push(msg);failures.push(msg)
+      }
+      components(a).forEach(comp=>{
+        const d=daysTo(comp.date);
+        if(d===null){missing++;issues.push(label+': '+comp.name+' expiration not recorded')}
+        else if(d<0){expired++;const msg=label+': '+comp.name+' expired '+dateFmt(comp.date);issues.push(msg);failures.push(msg)}
+        else if(d<=30){due30++;due180++;issues.push(label+': '+comp.name+' expires in '+d+' day'+(d===1?'':'s')+' ('+dateFmt(comp.date)+')')}
+        else if(d<=180){due180++}
+      });
     }
     if(periodChecks(a,year,quarter).length)checksComplete++;
-    components(a).forEach(comp=>{
-      const d=daysTo(comp.date);
-      if(d===null){missing++;issues.push(label+': '+comp.name+' expiration not recorded')}
-      else if(d<0){expired++;const msg=label+': '+comp.name+' expired '+dateFmt(comp.date);issues.push(msg);failures.push(msg)}
-      else if(d<=30){due30++;due180++;issues.push(label+': '+comp.name+' expires in '+d+' day'+(d===1?'':'s')+' ('+dateFmt(comp.date)+')')}
-      else if(d<=180){due180++}
-    });
     (a.deps||[]).filter(d=>periodDate(d.date,year,quarter)).forEach(d=>{deployments++;if(d.shock)shocks++})
   });
   const critical=oos+expired,watch=due30+missing;
   const health=critical?'CRITICAL FAIL':watch?'GOOD WITH ATTENTION':'GOOD';
   const healthText=critical
-    ?'Critical readiness failure identified. One or more AEDs are out of service or contain an expired component.'
+    ?'Critical readiness failure identified in an AED expected to remain available for service.'
     :watch
-      ?'All AEDs remain serviceable, but one or more items require attention because an expiration is within 30 days or an expiration date is missing.'
-      :'All AEDs in this report are in service with no expired components, no missing expiration dates, and no component expirations within the next 30 days.';
-  return {oos,expired,due30,due180,missing,checksComplete,deployments,shocks,issues:[...new Set(issues)],failures:[...new Set(failures)],health,healthText}
+      ?'Operational AEDs remain serviceable, but one or more items require attention because an expiration is within 30 days or an expiration date is missing.'
+      :'Operational AEDs in this report have no current readiness failures, expired required components, missing expiration dates, or component expirations within the next 30 days.';
+  return {oos,retired,expired,due30,due180,missing,checksComplete,deployments,shocks,issues:[...new Set(issues)],failures:[...new Set(failures)],health,healthText}
 }
 function pageHeaderHTML(title,scope,year,quarter,pageId){
   return '<div class="report-header packet-header"><img src="gfd-patch.jpg" alt="Gladstone Fire EMS"><div class="report-title"><div class="packet-header-kicker">GLADSTONE FIRE / EMS · AED REPORT</div><h1>'+safe(title)+'</h1><p><b>Scope:</b> '+safe(scope)+' · <b>Period:</b> Q'+quarter+' '+year+' · '+safe(quarterDateRange(year,quarter))+'</p><p class="packet-page-id">'+safe(pageId)+'</p></div></div>'
@@ -81,7 +87,7 @@ function executiveSummaryPage(units,year,quarter,mode,groupName,title,subtitle,g
     '<div class="exec-summary packet-exec"><h2>Executive Summary</h2><p><b>Scope:</b> '+safe(scope)+' · Q'+quarter+' '+year+' · '+units.length+' AED'+(units.length===1?'':'s')+'</p>'+
     '<div class="report-grid"><div class="report-box"><h3>Overall Health</h3><div class="health '+healthClass+' packet-health">'+safe(h.health)+'</div><p>'+safe(h.healthText)+'</p></div>'+
     '<div class="report-box"><h3>Quarterly Status</h3><div class="kv"><b>Inspections completed</b><div>'+h.checksComplete+' / '+units.length+'</div></div><div class="kv"><b>Quarter complete</b><div>'+(complete?'Yes':'No')+'</div></div></div></div>'+
-    '<div class="report-grid"><div class="report-box"><h3>Readiness</h3><div class="kv"><b>Out of service</b><div>'+h.oos+'</div></div><div class="kv"><b>Expired components</b><div>'+h.expired+'</div></div><div class="kv"><b>Expiration ≤30 days</b><div>'+h.due30+'</div></div><div class="kv"><b>Expiration 31–180 days</b><div>'+Math.max(0,h.due180-h.due30)+'</div></div><div class="kv"><b>Missing expiration dates</b><div>'+h.missing+'</div></div></div>'+
+    '<div class="report-grid"><div class="report-box"><h3>Readiness</h3><div class="kv"><b>Out of service</b><div>'+h.oos+'</div></div><div class="kv"><b>Retired / end-of-life</b><div>'+h.retired+'</div></div><div class="kv"><b>Expired components</b><div>'+h.expired+'</div></div><div class="kv"><b>Expiration ≤30 days</b><div>'+h.due30+'</div></div><div class="kv"><b>Expiration 31–180 days</b><div>'+Math.max(0,h.due180-h.due30)+'</div></div><div class="kv"><b>Missing expiration dates</b><div>'+h.missing+'</div></div></div>'+
     '<div class="report-box"><h3>Activity This Quarter</h3><div class="kv"><b>Deployments</b><div>'+h.deployments+'</div></div><div class="kv"><b>Shock-delivery events</b><div>'+h.shocks+'</div></div></div></div>'+
     failureBlock+attentionBlock+
     '<p class="muted" style="margin-top:14px">Overall health is generated from current AED status, recorded component expiration dates, quarterly inspection records, and deployment history contained in this report.</p></div>'+
