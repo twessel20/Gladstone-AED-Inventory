@@ -46,6 +46,9 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
 .brand-patch{display:none}
 .report-list{display:grid;gap:10px}.report-row h3{margin:0 0 4px}
 .report-sheet{background:#fff;border:1px solid var(--l);border-radius:16px;padding:26px;box-shadow:0 8px 24px #16324714}
+#generatedReportSheet>section.report-box{break-before:page;page-break-before:always}
+#generatedReportSheet>section.report-box:first-of-type{break-before:auto;page-break-before:auto}
+#generatedReportSheet .certification-attestation,#generatedReportSheet .overall-signature-block{break-inside:avoid;page-break-inside:avoid}
 .report-header{display:flex;gap:20px;align-items:center;border-bottom:3px solid var(--n);padding-bottom:16px;margin-bottom:18px}
 .report-header img{width:110px;height:auto}.report-title h1{margin:0;color:var(--n);font-size:1.55rem}.report-title p{margin:4px 0;color:var(--m)}
 .report-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.report-box{border:1px solid var(--l);border-radius:13px;padding:15px}.report-box h3{margin:0 0 9px;color:var(--n)}
