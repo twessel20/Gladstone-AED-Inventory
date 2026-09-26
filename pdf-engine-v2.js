@@ -98,15 +98,24 @@ async function buildFromElement(source,filename='aed-report.pdf'){
     const doc=new JsPDF({unit:'in',format:'letter',orientation:'portrait',compress:true});
 
     if(explicit.length){
+      const margin=.18,maxW=LETTER.w-margin*2,maxH=LETTER.h-margin*2,targetRatio=maxH/maxW;
+      explicit.forEach(page=>{
+        const pageWidth=Math.max(1,page.getBoundingClientRect().width||page.scrollWidth||width);
+        page.style.boxSizing='border-box';
+        page.style.width=pageWidth+'px';
+        page.style.minHeight='0';
+        page.style.height=Math.floor(pageWidth*targetRatio)+'px';
+        page.style.maxHeight=Math.floor(pageWidth*targetRatio)+'px';
+        page.style.overflow='hidden';
+      });
+      await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
       for(let i=0;i<explicit.length;i++){
         const page=explicit[i];
-        const canvas=await capture(page,{scale:2.5,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:page.scrollWidth,height:page.scrollHeight,imageTimeout:15000});
+        const canvas=await capture(page,{scale:2.5,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:page.clientWidth,height:page.clientHeight,imageTimeout:15000});
         if(!canvas.width||!canvas.height)throw new Error('A report page could not be captured.');
         const img=canvas.toDataURL('image/png');
-        const margin=.18,maxW=LETTER.w-margin*2,maxH=LETTER.h-margin*2;
-        let w=maxW,h=w*(canvas.height/canvas.width);
-        if(h>maxH){h=maxH;w=h*(canvas.width/canvas.height)}
-        const x=(LETTER.w-w)/2,y=(LETTER.h-h)/2;
+        const w=maxW,h=maxH;
+        const x=margin,y=margin;
         if(i)doc.addPage();
         doc.addImage(img,'PNG',x,y,w,h,undefined,'FAST');
         canvas.width=1;canvas.height=1;
