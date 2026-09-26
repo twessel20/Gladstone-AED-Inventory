@@ -83,14 +83,15 @@ function executiveSummaryPage(units,year,quarter,mode,groupName,title,subtitle,g
   const attentionBlock=h.issues.length
     ?'<div class="report-box"><h3>'+(h.health==='CRITICAL FAIL'?'Additional Findings / Attention Items':'Attention Items')+'</h3><ul>'+h.issues.slice(0,12).map(x=>'<li>'+safe(x)+'</li>').join('')+(h.issues.length>12?'<li>+'+(h.issues.length-12)+' additional item(s) detailed in this report.</li>':'')+'</ul></div>'
     :'<div class="report-box"><h3>Attention Items</h3><p>None identified from the recorded inventory data.</p></div>';
+  const included='<div class="report-box packet-included-aeds"><h3>AEDs Included</h3><div class="packet-aed-list">'+units.map(a=>'<div><b>'+safe(a.location)+'</b><span>'+safe(a.serial)+'</span></div>').join('')+'</div></div>';
   return '<section class="packet-page packet-executive-page">'+pageHeaderHTML(title,scope,year,quarter,'Executive Summary & Overall Health')+
     '<div class="exec-summary packet-exec"><h2>Executive Summary</h2><p><b>Scope:</b> '+safe(scope)+' · Q'+quarter+' '+year+' · '+units.length+' AED'+(units.length===1?'':'s')+'</p>'+
     '<div class="report-grid"><div class="report-box"><h3>Overall Health</h3><div class="health '+healthClass+' packet-health">'+safe(h.health)+'</div><p>'+safe(h.healthText)+'</p></div>'+
     '<div class="report-box"><h3>Quarterly Status</h3><div class="kv"><b>Inspections completed</b><div>'+h.checksComplete+' / '+units.length+'</div></div><div class="kv"><b>Quarter complete</b><div>'+(complete?'Yes':'No')+'</div></div></div></div>'+
     '<div class="report-grid"><div class="report-box"><h3>Readiness</h3><div class="kv"><b>Out of service</b><div>'+h.oos+'</div></div><div class="kv"><b>Retired / end-of-life</b><div>'+h.retired+'</div></div><div class="kv"><b>Expired components</b><div>'+h.expired+'</div></div><div class="kv"><b>Expiration ≤30 days</b><div>'+h.due30+'</div></div><div class="kv"><b>Expiration 31–180 days</b><div>'+Math.max(0,h.due180-h.due30)+'</div></div><div class="kv"><b>Missing expiration dates</b><div>'+h.missing+'</div></div></div>'+
     '<div class="report-box"><h3>Activity This Quarter</h3><div class="kv"><b>Deployments</b><div>'+h.deployments+'</div></div><div class="kv"><b>Shock-delivery events</b><div>'+h.shocks+'</div></div></div></div>'+
-    failureBlock+attentionBlock+
-    '<p class="muted" style="margin-top:14px">Overall health is generated from current AED status, recorded component expiration dates, quarterly inspection records, and deployment history contained in this report.</p></div>'+
+    failureBlock+attentionBlock+included+
+    '<p class="muted" style="margin-top:10px">Overall health is generated from current AED status, recorded component expiration dates, quarterly inspection records, and deployment history contained in this report.</p></div>'+
     packetFooterHTML(generated)+'</section>'
 }
 function pdfClean(v){return String(v??'').replace(/\u00a0/g,' ').replace(/[ \t]+/g,' ').replace(/\s*\n\s*/g,' ').trim()}
