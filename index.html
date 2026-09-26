@@ -46,9 +46,18 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
 .brand-patch{display:none}
 .report-list{display:grid;gap:10px}.report-row h3{margin:0 0 4px}
 .report-sheet{background:#fff;border:1px solid var(--l);border-radius:16px;padding:26px;box-shadow:0 8px 24px #16324714}
-#generatedReportSheet>section.report-box{break-before:page;page-break-before:always}
-#generatedReportSheet>section.report-box:first-of-type{break-before:auto;page-break-before:auto}
 #generatedReportSheet .certification-attestation,#generatedReportSheet .overall-signature-block{break-inside:avoid;page-break-inside:avoid}
+.pdf-render-mount{position:fixed;left:-20000px;top:0;width:1000px;background:#fff;z-index:-1}
+.pdf-render-sheet{width:940px!important;max-width:940px!important;margin:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:24px!important;background:#fff!important}
+.pdf-render-sheet>section.report-box,.pdf-render-sheet>.pdf-cert-page{break-before:page;page-break-before:always}
+.pdf-repeat-header{display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--n);padding:0 0 12px;margin:0 0 16px}
+.pdf-repeat-header img{width:72px;height:72px;object-fit:contain;flex:0 0 auto}
+.pdf-repeat-kicker{font-size:.72rem;letter-spacing:.12em;font-weight:800;color:var(--b);margin-bottom:3px}
+.pdf-repeat-title{font-size:1.18rem;font-weight:850;color:var(--n);line-height:1.15}
+.pdf-repeat-subtitle{font-size:.78rem;color:var(--m);margin-top:3px}
+.pdf-aed-page{border:0!important;border-radius:0!important;padding:0!important;margin:0!important;box-shadow:none!important}
+.pdf-cert-page{margin:0;padding:0}
+.pdf-cert-page .certification-attestation{margin-top:0}
 .report-header{display:flex;gap:20px;align-items:center;border-bottom:3px solid var(--n);padding-bottom:16px;margin-bottom:18px}
 .report-header img{width:110px;height:auto}.report-title h1{margin:0;color:var(--n);font-size:1.55rem}.report-title p{margin:4px 0;color:var(--m)}
 .report-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.report-box{border:1px solid var(--l);border-radius:13px;padding:15px}.report-box h3{margin:0 0 9px;color:var(--n)}
