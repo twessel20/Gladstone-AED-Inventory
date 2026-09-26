@@ -4,13 +4,21 @@ const $id=id=>document.getElementById(id);
 const safe=v=>typeof esc==='function'?esc(v):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const dateFmt=v=>typeof fmt==='function'?fmt(v):(v||'N/A');
 function tracked(){return (db?.aeds||[]).filter(a=>typeof isInventoryTracked==='function'?isInventoryTracked(a):true)}
-function groups(){return [...new Set(tracked().map(a=>a.group||a.location||'Unassigned'))].sort((a,b)=>a.localeCompare(b))}
+function canonicalGroup(a){
+  const serial=String(a?.serial||'');
+  if(['X11L528611','X11L529465','X11L528795','X11L529221','X11L529205','X11L528608','X11L528858','X11L528613','X11L528619','X16J868825','X11L528627'].includes(serial))return 'Police Patrol Cars';
+  if(['X11L529144','X11L528791','X11L528628','X11L529451','X19D142339'].includes(serial))return 'Police Department / City Hall';
+  if(['X11L528801','X11L528610'].includes(serial))return 'Public Works / Animal Control';
+  if(['X19D140932','X20A241496','X19D140968','X11L529367','X11L528800'].includes(serial))return 'Community Center / Parks & Recreation';
+  return a?.group||a?.location||'Unassigned';
+}
+function groups(){return [...new Set(tracked().map(canonicalGroup))].sort((a,b)=>a.localeCompare(b))}
 function period(){return {year:Number($id('reportYear')?.value||new Date().getFullYear()),quarter:Number($id('reportQuarter')?.value||1)}}
 function periodChecks(a,year,quarter){return (a.checks||[]).filter(c=>Number(c.year)===year&&Number(c.quarter)===quarter).sort((x,y)=>String(y.date||'').localeCompare(String(x.date||'')))}
 function periodDate(v,year,quarter){if(!v)return false;const d=new Date(String(v).slice(0,10)+'T12:00:00');return !isNaN(d)&&d.getFullYear()===year&&(Math.floor(d.getMonth()/3)+1)===quarter}
 function selectedIds(){return [...document.querySelectorAll('.muster-aed:checked')].map(x=>x.value)}
 function renderPicker(){const mode=$id('musterMode')?.value||'individual',wrap=$id('musterPicker');if(!wrap)return;if(mode==='group'){wrap.innerHTML='<label>Group<select id="musterGroup">'+groups().map(g=>'<option value="'+safe(g)+'">'+safe(g)+'</option>').join('')+'</select></label>'}else if(mode==='individual'){wrap.innerHTML='<label>AED<select id="musterIndividual">'+tracked().map(a=>'<option value="'+a.id+'">'+safe(a.location)+(a.descriptor?' — '+safe(a.descriptor):'')+' · '+safe(a.serial)+'</option>').join('')+'</select></label>'}else{wrap.innerHTML='<div class="card" style="max-height:320px;overflow:auto"><div class="bar" style="margin-bottom:6px"><b>Select AEDs</b><div class="actions" style="margin-top:0"><button type="button" id="musterAll">All</button><button type="button" id="musterNone">None</button></div></div>'+tracked().map(a=>'<label class="check"><input class="muster-aed" type="checkbox" value="'+a.id+'"><span>'+safe(a.location)+(a.descriptor?' — '+safe(a.descriptor):'')+' <span class="muted">'+safe(a.serial)+'</span></span></label>').join('')+'</div>';$id('musterAll').onclick=()=>document.querySelectorAll('.muster-aed').forEach(x=>x.checked=true);$id('musterNone').onclick=()=>document.querySelectorAll('.muster-aed').forEach(x=>x.checked=false)}}
-function choose(){const mode=$id('musterMode').value;if(mode==='group'){const g=$id('musterGroup').value;return tracked().filter(a=>(a.group||a.location||'Unassigned')===g)}if(mode==='individual'){const id=$id('musterIndividual').value;return tracked().filter(a=>a.id===id)}const ids=new Set(selectedIds());return tracked().filter(a=>ids.has(a.id))}
+function choose(){const mode=$id('musterMode').value;if(mode==='group'){const g=$id('musterGroup').value;return tracked().filter(a=>canonicalGroup(a)===g)}if(mode==='individual'){const id=$id('musterIndividual').value;return tracked().filter(a=>a.id===id)}const ids=new Set(selectedIds());return tracked().filter(a=>ids.has(a.id))}
 function status(a){return safe(a.status||'In Service')}
 function daysTo(v){if(!v)return null;const d=new Date(String(v).slice(0,10)+'T12:00:00'),n=new Date();n.setHours(12,0,0,0);return isNaN(d)?null:Math.ceil((d-n)/86400000)}
 function components(a){const x=[{name:'Adult pads',date:a.adult},{name:'Battery',date:a.battery}];if(a.pedConfig!=='N/A')x.splice(1,0,{name:'Pediatric pads',date:a.ped});return x}
