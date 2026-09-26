@@ -597,8 +597,11 @@ function serialFromScan(raw){
   const gs1=compact.match(/^01\d{14}21([A-Z0-9]+)$/);
   if(gs1)return gs1[1];
   const known=(db?.aeds||[]).map(a=>String(a.serial||'')).filter(Boolean).sort((a,b)=>b.length-a.length);
-  const match=known.find(s=>compact.endsWith(normSerial(s)));
-  return match||text;
+  const match=known.find(s=>compact.includes(normSerial(s)));
+  if(match)return match;
+  const sn=text.match(/(?:S\/N|SN|SERIAL(?:\s*(?:NO|NUMBER))?)\s*[:#-]?\s*([A-Za-z0-9._-]{6,})/i);
+  if(sn)return sn[1].toUpperCase();
+  return text;
 }
 function scanBox(vw,vh){return{width:Math.min(Math.max(300,Math.floor(vw*.92)),560),height:Math.min(170,Math.max(110,Math.floor(vh*.28)))}}
 function addAedFromSerial(raw){
