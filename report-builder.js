@@ -54,13 +54,19 @@ function pageHeaderHTML(title,subtitle){
   return '<div class="report-header packet-header"><img src="gfd-patch.jpg" alt="Gladstone Fire EMS"><div class="report-title"><h1>'+safe(title)+'</h1><p>'+safe(subtitle)+'</p></div></div>'
 }
 function packetFooterHTML(generated){return '<div class="report-foot packet-footer">'+safe(generated)+'</div>'}
+function quarterDateRange(year,quarter){
+  const q=Number(quarter),y=Number(year),ranges={1:[[0,1],[2,31]],2:[[3,1],[5,30]],3:[[6,1],[8,30]],4:[[9,1],[11,31]]},r=ranges[q]||ranges[1];
+  const start=new Date(y,r[0][0],r[0][1]),end=new Date(y,r[1][0],r[1][1]);
+  const f=d=>d.toLocaleDateString(undefined,{month:'long',day:'numeric',year:'numeric'});
+  return f(start)+' – '+f(end)
+}
 function coverPage(title,subtitle,scope,year,quarter,count,generated,sig){
   const cert='<div class="packet-cover-cert"><div class="packet-cover-cert-copy"><div class="packet-cover-cert-label">Certification & Attestation</div><p>This report is certified as an accurate representation of the physical AED inspection/check data documented by the listed auditor(s). To the best of the auditor/report preparer\'s knowledge, it accurately reflects the recorded AED condition, operational status, component expiration information, findings, and corrective actions documented at the time of inspection.</p></div>'+
     '<div class="packet-cover-signature"><div class="packet-cover-signature-meta"><b>'+safe(sig?.name||'Auditor / Report Preparer')+'</b>'+(sig?.employeeNumber?' <span>· Employee #'+safe(sig.employeeNumber)+'</span>':'')+'</div>'+(sig?.signature?'<img src="'+sig.signature+'" alt="Auditor / Report Preparer signature">':'')+'<div class="muted">Certified '+dateFmt(sig?.date||'')+'</div></div></div>';
   return '<section class="packet-page packet-cover-page">'+
     '<div class="packet-cover-hero"><img class="packet-cover-logo" src="gfd-patch.jpg" alt="Gladstone Fire EMS"><div class="packet-kicker">GLADSTONE FIRE / EMS</div><h1>'+safe(title)+'</h1><p class="packet-cover-subtitle">'+safe(subtitle)+'</p></div>'+
     '<div class="packet-cover-body"><p class="packet-cover-description">This packet summarizes AED readiness, quarterly inspection completion, component expiration status, deployments, shock-delivery activity, and documented return-to-service events for the selected reporting scope.</p>'+
-    '<div class="report-grid packet-cover-grid"><div class="report-box"><h3>Report Information</h3><div class="kv"><b>Group / Scope</b><div>'+safe(scope)+'</div></div><div class="kv"><b>Reporting Period</b><div>Q'+quarter+' '+year+'</div></div><div class="kv"><b>AEDs Included</b><div>'+count+'</div></div></div>'+
+    '<div class="report-grid packet-cover-grid"><div class="report-box"><h3>Report Information</h3><div class="kv"><b>Group / Scope</b><div>'+safe(scope)+'</div></div><div class="kv"><b>Reporting Period</b><div>Q'+quarter+' '+year+'</div></div><div class="kv"><b>Date Range</b><div>'+safe(quarterDateRange(year,quarter))+'</div></div><div class="kv"><b>AEDs Included</b><div>'+count+'</div></div></div>'+
     '<div class="report-box"><h3>Packet Structure</h3><div class="kv"><b>Page 2</b><div>Executive Summary & Overall Health</div></div><div class="kv"><b>Following Pages</b><div>One AED per page</div></div><div class="kv"><b>Certification</b><div>Signed and certified on this cover</div></div></div></div>'+cert+'</div>'+
     packetFooterHTML(generated)+'</section>'
 }
