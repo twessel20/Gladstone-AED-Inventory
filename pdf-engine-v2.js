@@ -131,9 +131,12 @@ async function buildFromElement(source,filename='aed-report.pdf'){
         doc.text('Page '+(i+1)+' of '+slices.length,7.28,10.83);
       }
     }
-    const blob=doc.output('blob');
-    if(!blob||blob.size<1200)throw new Error('PDF generation failed.');
-    return blob;
+    const buffer=doc.output('arraybuffer');
+    if(!buffer||buffer.byteLength<1200)throw new Error('PDF generation failed.');
+    const bytes=new Uint8Array(buffer);
+    const sig=String.fromCharCode(...bytes.slice(0,5));
+    if(sig!=='%PDF-')throw new Error('Generated file is not a valid PDF.');
+    return new Blob([buffer],{type:'application/pdf'});
   }finally{mount.remove()}
 }
 
@@ -173,9 +176,25 @@ async function previewHtml(html,filename,title,summary){showPreview(await buildF
 async function openElement(source,filename){const b=await buildFromElement(source,filename),u=URL.createObjectURL(b);window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),120000)}
 async function openHtml(html,filename){const b=await buildFromHtml(html,filename),u=URL.createObjectURL(b);window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),120000)}
 async function shareBlob(blob,filename,title,summary){
-  const file=new File([blob],fileName(filename),{type:'application/pdf'});
-  if(navigator.share&&(!navigator.canShare||navigator.canShare({files:[file]}))){await navigator.share({title:title||filename,text:summary||'',files:[file]});return}
-  const u=URL.createObjectURL(blob);window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),120000)
+  if(!blob)throw new Error('PDF file is unavailable.');
+  const buffer=await blob.arrayBuffer();
+  const bytes=new Uint8Array(buffer);
+  const sig=String.fromCharCode(...bytes.slice(0,5));
+  if(sig!=='%PDF-')throw new Error('The generated attachment is not a valid PDF.');
+  let name=fileName(filename||'aed-report.pdf');
+  if(!/\.pdf$/i.test(name))name+='.pdf';
+  const cleanBlob=new Blob([buffer],{type:'application/pdf'});
+  const file=new File([cleanBlob],name,{type:'application/pdf',lastModified:Date.now()});
+  if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+    await navigator.share({title:title||name,text:summary||'',files:[file]});
+    return;
+  }
+  if(navigator.share&&!navigator.canShare){
+    try{await navigator.share({title:title||name,text:summary||'',files:[file]});return}catch(e){if(e&&e.name==='AbortError')throw e}
+  }
+  const u=URL.createObjectURL(cleanBlob);
+  const a=document.createElement('a');a.href=u;a.download=name;a.rel='noopener';document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(u),120000)
 }
 async function shareElement(source,filename,title,summary){return shareBlob(await buildFromElement(source,filename),filename,title,summary)}
 async function shareHtml(html,filename,title,summary){return shareBlob(await buildFromHtml(html,filename),filename,title,summary)}
