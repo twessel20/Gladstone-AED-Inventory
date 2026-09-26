@@ -55,10 +55,10 @@ function pageHeaderHTML(title,subtitle){
 }
 function packetFooterHTML(generated){return '<div class="report-foot packet-footer">'+safe(generated)+'</div>'}
 function coverPage(title,subtitle,scope,year,quarter,count,generated){
-  return '<section class="packet-page packet-cover-page">'+pageHeaderHTML(title,subtitle)+
-    '<div class="packet-cover-body"><div class="packet-kicker">AED PROGRAM REPORT</div><h2>'+safe(title)+'</h2>'+
-    '<p class="packet-cover-description">This packet summarizes AED readiness, quarterly inspection completion, component expiration status, deployments, shock-delivery activity, and documented return-to-service events for the selected reporting scope.</p>'+
-    '<div class="report-grid packet-cover-grid"><div class="report-box"><h3>Report Scope</h3><div class="kv"><b>Group / Scope</b><div>'+safe(scope)+'</div></div><div class="kv"><b>Reporting Period</b><div>Q'+quarter+' '+year+'</div></div><div class="kv"><b>AEDs Included</b><div>'+count+'</div></div></div>'+
+  return '<section class="packet-page packet-cover-page">'+
+    '<div class="packet-cover-hero"><img class="packet-cover-logo" src="gfd-patch.jpg" alt="Gladstone Fire EMS"><div class="packet-kicker">GLADSTONE FIRE / EMS</div><h1>'+safe(title)+'</h1><p class="packet-cover-subtitle">'+safe(subtitle)+'</p></div>'+
+    '<div class="packet-cover-body"><p class="packet-cover-description">This packet summarizes AED readiness, quarterly inspection completion, component expiration status, deployments, shock-delivery activity, and documented return-to-service events for the selected reporting scope.</p>'+
+    '<div class="report-grid packet-cover-grid"><div class="report-box"><h3>Report Information</h3><div class="kv"><b>Group / Scope</b><div>'+safe(scope)+'</div></div><div class="kv"><b>Reporting Period</b><div>Q'+quarter+' '+year+'</div></div><div class="kv"><b>AEDs Included</b><div>'+count+'</div></div></div>'+
     '<div class="report-box"><h3>Packet Structure</h3><div class="kv"><b>Page 2</b><div>Executive Summary & Overall Health</div></div><div class="kv"><b>Following Pages</b><div>One AED per page</div></div><div class="kv"><b>Final Page</b><div>Certification & Attestation</div></div></div></div></div>'+
     packetFooterHTML(generated)+'</section>'
 }
