@@ -84,7 +84,7 @@ function executiveSummaryPage(units,year,quarter,mode,groupName,title,subtitle,g
     ?'<div class="report-box"><h3>'+(h.health==='CRITICAL FAIL'?'Additional Findings / Attention Items':'Attention Items')+'</h3><ul>'+h.issues.slice(0,12).map(x=>'<li>'+safe(x)+'</li>').join('')+(h.issues.length>12?'<li>+'+(h.issues.length-12)+' additional item(s) detailed in this report.</li>':'')+'</ul></div>'
     :'<div class="report-box"><h3>Attention Items</h3><p>None identified from the recorded inventory data.</p></div>';
   const split=Math.ceil(units.length/2),left=units.slice(0,split),right=units.slice(split);
-  const listCol=(arr,offset)=>'<div class="packet-aed-list-col">'+arr.map((a,i)=>'<div><span class="packet-aed-num">'+(offset+i+1)+'.</span><b>'+safe(a.location)+'</b><span class="packet-aed-serial">'+safe(a.serial)+'</span></div>').join('')+'</div>';
+  const listCol=(arr,offset)=>'<div class="packet-aed-list-col">'+arr.map((a,i)=>'<div><span class="packet-aed-num">'+(offset+i+1)+'.</span><span class="packet-aed-name"><b>'+safe(a.location)+'</b>'+(a.descriptor?'<span class="packet-aed-desc"> — '+safe(a.descriptor)+'</span>':'')+'</span><span class="packet-aed-serial">'+safe(a.serial)+'</span></div>').join('')+'</div>';
   const included='<div class="report-box packet-included-aeds"><h3>AEDs Included</h3><div class="packet-aed-list">'+listCol(left,0)+listCol(right,split)+'</div></div>';
   return '<section class="packet-page packet-executive-page">'+pageHeaderHTML(title,scope,year,quarter,'Executive Summary & Overall Health')+
     '<div class="exec-summary packet-exec"><h2>Executive Summary</h2><p><b>Scope:</b> '+safe(scope)+' · Q'+quarter+' '+year+' · '+units.length+' AED'+(units.length===1?'':'s')+'</p>'+
