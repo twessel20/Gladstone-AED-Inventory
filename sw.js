@@ -1,4 +1,4 @@
-const VERSION='gfd-aed-pwa-v111';
+const VERSION='gfd-aed-pwa-v112';
 const CORE_CACHE=VERSION+'-core';
 const RUNTIME_CACHE=VERSION+'-runtime';
 const CORE=['./','./index.html','./manifest.webmanifest','./pdf-export.js','./report-builder.js','./report-pdf.css'];
@@ -27,8 +27,8 @@ async function decorateMainApp(response){
   let html=await response.text();
   const isMainApp=html.includes('<title>Gladstone AED Inventory</title>')&&html.includes('data-v="dash"')&&html.includes('data-v="audit"');
   if(isMainApp){
-    if(!html.includes('report-pdf.css'))html=html.replace('</head>','<link rel="stylesheet" href="./report-pdf.css?v=111"></head>');
-    if(!html.includes('report-builder.js'))html=html.replace('</body>','<script src="./report-builder.js?v=111"></script></body>');
+    if(!html.includes('report-pdf.css'))html=html.replace('</head>','<link rel="stylesheet" href="./report-pdf.css?v=112"></head>');
+    if(!html.includes('report-builder.js'))html=html.replace('</body>','<script src="./report-builder.js?v=112"></script></body>');
     if(!html.includes('id="repositoryNav"')){
       const auditButton='<button class="tab" data-v="audit">Audit Log</button>';
       const repositoryLink='<a id="repositoryNav" href="./lifecycle.html" style="font:inherit;font-weight:750;border:1px solid var(--l);background:#fff;border-radius:9px;padding:10px 12px;color:var(--n);text-decoration:none;white-space:nowrap">AED Repository</a>';
