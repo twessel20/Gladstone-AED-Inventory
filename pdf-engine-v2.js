@@ -3,6 +3,7 @@
 
 const LETTER={w:8.5,h:11};
 const PREVIEW_ID='pdfPreviewDlg';
+const renderCache=new WeakMap();
 
 function getJsPDF(){return (window.jspdf&&window.jspdf.jsPDF)||window.jsPDF||null}
 function getCanvas(){return window.html2canvas||null}
@@ -84,6 +85,8 @@ function sliceCanvas(sourceCanvas,y1,y2){
 
 async function buildFromElement(source,filename='aed-report.pdf'){
   if(!(source instanceof Element))throw new Error('Report content is unavailable.');
+  const cached=renderCache.get(source);
+  if(cached&&cached.filename===fileName(filename)&&cached.blob)return cached.blob;
   const JsPDF=getJsPDF(),capture=getCanvas();
   if(!JsPDF||!capture)throw new Error('PDF engine is not available.');
   const {mount,clone,width}=mountClone(source);
@@ -97,7 +100,7 @@ async function buildFromElement(source,filename='aed-report.pdf'){
     if(explicit.length){
       for(let i=0;i<explicit.length;i++){
         const page=explicit[i];
-        const canvas=await capture(page,{scale:3.5,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:page.scrollWidth,height:page.scrollHeight,imageTimeout:15000});
+        const canvas=await capture(page,{scale:2.5,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:page.scrollWidth,height:page.scrollHeight,imageTimeout:15000});
         if(!canvas.width||!canvas.height)throw new Error('A report page could not be captured.');
         const img=canvas.toDataURL('image/png');
         const margin=.18,maxW=LETTER.w-margin*2,maxH=LETTER.h-margin*2;
@@ -105,12 +108,13 @@ async function buildFromElement(source,filename='aed-report.pdf'){
         if(h>maxH){h=maxH;w=h*(canvas.width/canvas.height)}
         const x=(LETTER.w-w)/2,y=(LETTER.h-h)/2;
         if(i)doc.addPage();
-        doc.addImage(img,'PNG',x,y,w,h,undefined,'NONE');
+        doc.addImage(img,'PNG',x,y,w,h,undefined,'FAST');
+        canvas.width=1;canvas.height=1;
         doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(104,123,138);
         doc.text('Page '+(i+1)+' of '+explicit.length,7.28,10.83);
       }
     }else{
-      const scale=3.25;
+      const scale=2.5;
       const full=await capture(clone,{scale,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:clone.scrollWidth,height:clone.scrollHeight});
       if(!full.width||!full.height)throw new Error('The report could not be captured.');
       const cssPageHeight=(width*LETTER.h/LETTER.w)-24;
@@ -126,7 +130,8 @@ async function buildFromElement(source,filename='aed-report.pdf'){
         if(h>maxH){h=maxH;w=h*(part.width/part.height)}
         const x=(LETTER.w-w)/2,y=margin;
         if(i)doc.addPage();
-        doc.addImage(img,'PNG',x,y,w,h,undefined,'NONE');
+        doc.addImage(img,'PNG',x,y,w,h,undefined,'FAST');
+        part.width=1;part.height=1;
         doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(104,123,138);
         doc.text('Page '+(i+1)+' of '+slices.length,7.28,10.83);
       }
@@ -136,7 +141,9 @@ async function buildFromElement(source,filename='aed-report.pdf'){
     const bytes=new Uint8Array(buffer);
     const sig=String.fromCharCode(...bytes.slice(0,5));
     if(sig!=='%PDF-')throw new Error('Generated file is not a valid PDF.');
-    return new Blob([buffer],{type:'application/pdf'});
+    const blob=new Blob([buffer],{type:'application/pdf'});
+    renderCache.set(source,{filename:fileName(filename),blob});
+    return blob;
   }finally{mount.remove()}
 }
 
@@ -173,8 +180,8 @@ function showPreview(blob,filename='aed-report.pdf',title='AED Report',summary='
 
 async function previewElement(source,filename,title,summary){showPreview(await buildFromElement(source,filename),filename,title,summary)}
 async function previewHtml(html,filename,title,summary){showPreview(await buildFromHtml(html,filename),filename,title,summary)}
-async function openElement(source,filename){const b=await buildFromElement(source,filename),u=URL.createObjectURL(b);window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),120000)}
-async function openHtml(html,filename){const b=await buildFromHtml(html,filename),u=URL.createObjectURL(b);window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),120000)}
+async function openElement(source,filename,title,summary){showPreview(await buildFromElement(source,filename),filename,title||filename,summary||'')}
+async function openHtml(html,filename,title,summary){showPreview(await buildFromHtml(html,filename),filename,title||filename,summary||'')}
 async function shareBlob(blob,filename,title,summary){
   if(!blob)throw new Error('PDF file is unavailable.');
   const buffer=await blob.arrayBuffer();
