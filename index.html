@@ -137,10 +137,24 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
   .signature-block img{width:100%;max-width:none;max-height:150px}
 }
 @media(max-width:950px) and (orientation:landscape){
-  dialog#checkDlg{width:min(96vw,980px);max-height:94vh;overflow:auto}
-  #checkDlg .signature-pad{height:240px;max-width:none}
+  dialog#checkDlg{width:min(98vw,1100px);max-height:96vh;overflow:auto}
+  .signature-pad{height:300px;max-width:none}
+  #checkDlg .signature-pad{height:320px}
   #checkDlg .card:has(.signature-pad){padding:16px}
   .signature-block img{max-height:170px}
+}
+.signature-fullscreen-btn{margin-left:4px}
+#signatureFullscreenDlg{width:100vw;max-width:none;height:100vh;max-height:none;margin:0;border:0;border-radius:0;padding:0;background:#f4f7f9}
+#signatureFullscreenDlg::backdrop{background:#0008}
+.signature-fullscreen-shell{height:100%;display:flex;flex-direction:column;padding:calc(10px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left));box-sizing:border-box}
+.signature-fullscreen-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+.signature-fullscreen-head h2{margin:0;color:var(--n);font-size:1.05rem}
+.signature-fullscreen-canvas{display:block;width:100%;height:100%;min-height:0;flex:1;border:2px solid var(--n);border-radius:12px;background:#fff;touch-action:none}
+.signature-fullscreen-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:8px}
+@media(max-width:950px) and (orientation:landscape){
+  #signatureFullscreenDlg .signature-fullscreen-shell{padding:8px 10px}
+  #signatureFullscreenDlg .signature-fullscreen-head{margin-bottom:6px}
+  #signatureFullscreenDlg .signature-fullscreen-canvas{min-height:calc(100vh - 105px)}
 }
 @media print{body{background:#fff}header,nav,main>.view:not(#reportPrintArea),dialog{display:none!important}main{padding:0;max-width:none}#reportPrintArea{display:block!important}#reportPrintArea .report-sheet{box-shadow:none;border:0;border-radius:0;padding:0}.report-toolbar{display:none!important}}
 
@@ -179,9 +193,42 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
 <dialog id="qrDlg"><h2 id="qrTitle">AED QR Code</h2><div style="text-align:center"><img id="qrImg" alt="AED QR Code" style="width:240px;height:240px;max-width:80vw;border:10px solid white;border-radius:12px"><p id="qrLabel" class="muted"></p></div><div class="card install"><b>Print or place this QR code on the AED/cabinet.</b><br><span class="muted">Scanning it with the iPhone Camera opens this exact AED in the app.</span></div><div class="da"><button onclick="window.print()">Print</button><button class="primary" onclick="qrDlg.close()">Done</button></div></dialog>
 <dialog id="reportDlg" style="width:min(96vw,920px);max-height:92vh"><div id="reportModalContent"></div><div class="da"><button onclick="reportDlg.close()">Close</button></div></dialog>
 <dialog id="installDlg"><h2>Add AED Audit to iPhone</h2><div class="card install"><b>Safari → Share → Add to Home Screen → Add</b></div><p class="muted">It will launch from your Home Screen like an app. After the first load, the service worker keeps the app shell available offline.</p><div class="da"><button class="primary" onclick="installDlg.close()">Got it</button></div></dialog><dialog id="syncDlg"><h2>Cloud Sync</h2><div id="syncState" class="card"><b>Status:</b> Authentication required</div><p class="muted">Cloud inventory access is protected by your signed-in account.</p><div class="actions"><button type="button" class="primary" id="syncNow">Sync Now</button><button type="button" id="syncInitialize" style="display:none">Use This Device as Master</button></div><div class="da"><button type="button" onclick="syncDlg.close()">Close</button></div></dialog>
+<dialog id="signatureFullscreenDlg"><div class="signature-fullscreen-shell"><div class="signature-fullscreen-head"><h2 id="signatureFullscreenTitle">Signature</h2><button type="button" id="signatureFullscreenCancel">Cancel</button></div><canvas id="signatureFullscreenCanvas" class="signature-fullscreen-canvas" width="1200" height="500" aria-label="Full screen signature pad"></canvas><div class="signature-fullscreen-actions"><button type="button" id="signatureFullscreenClear">Clear</button><button type="button" class="primary" id="signatureFullscreenUse">Use Signature</button></div></div></dialog>
 <div id="updateBanner" class="update-banner"><div class="text"><b>App updated</b><div class="muted">The latest version has been installed automatically.</div></div></div>
 <script>
 const KEY='gfd-aed-v2', $=x=>document.getElementById(x), today=()=>new Date().toISOString().slice(0,10);
+let fullscreenSignatureTarget=null,fullscreenSignatureDirty=false;
+function setupSignatureFullscreen(){
+  const dlg=$('signatureFullscreenDlg'),canvas=$('signatureFullscreenCanvas'),clear=$('signatureFullscreenClear'),use=$('signatureFullscreenUse'),cancel=$('signatureFullscreenCancel');
+  if(!dlg||!canvas||canvas.dataset.bound==='1')return;
+  canvas.dataset.bound='1';
+  const ctx=canvas.getContext('2d');ctx.lineWidth=4;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#172838';
+  let drawing=false,moved=false;
+  const sizeCanvas=()=>{
+    const r=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);
+    if(r.width<20||r.height<20)return;
+    const saved=canvas.toDataURL('image/png');
+    canvas.width=Math.max(800,Math.round(r.width*dpr));canvas.height=Math.max(300,Math.round(r.height*dpr));
+    ctx.lineWidth=4*dpr;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#172838';
+    if(fullscreenSignatureDirty){const img=new Image();img.onload=()=>ctx.drawImage(img,0,0,canvas.width,canvas.height);img.src=saved}
+    else if(fullscreenSignatureTarget?.dataId){const v=$(fullscreenSignatureTarget.dataId)?.value||'';if(v){const img=new Image();img.onload=()=>ctx.drawImage(img,0,0,canvas.width,canvas.height);img.src=v}}
+  };
+  const point=e=>{const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*(canvas.width/r.width),y:(e.clientY-r.top)*(canvas.height/r.height)}};
+  canvas.addEventListener('pointerdown',e=>{drawing=true;moved=false;const p=point(e);ctx.beginPath();ctx.moveTo(p.x,p.y);canvas.setPointerCapture?.(e.pointerId);e.preventDefault()});
+  canvas.addEventListener('pointermove',e=>{if(!drawing)return;const p=point(e);ctx.lineTo(p.x,p.y);ctx.stroke();moved=true;fullscreenSignatureDirty=true;e.preventDefault()});
+  const end=e=>{if(!drawing)return;drawing=false;if(moved)fullscreenSignatureDirty=true;e.preventDefault()};
+  canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);
+  clear.onclick=()=>{ctx.clearRect(0,0,canvas.width,canvas.height);fullscreenSignatureDirty=true};
+  cancel.onclick=()=>dlg.close();
+  use.onclick=()=>{if(!fullscreenSignatureTarget)return;const data=canvas.toDataURL('image/png');const hidden=$(fullscreenSignatureTarget.dataId);if(hidden)hidden.value=data;restoreSignatureCanvas(fullscreenSignatureTarget.canvasId,fullscreenSignatureTarget.dataId,data);dlg.close()};
+  dlg.addEventListener('close',()=>{fullscreenSignatureTarget=null;fullscreenSignatureDirty=false});
+  window.addEventListener('resize',()=>{if(dlg.open)setTimeout(sizeCanvas,60)});
+  window.addEventListener('orientationchange',()=>{if(dlg.open)setTimeout(sizeCanvas,180)});
+  window.openSignatureFullscreen=(canvasId,dataId,title='Signature')=>{
+    fullscreenSignatureTarget={canvasId,dataId};fullscreenSignatureDirty=false;$('signatureFullscreenTitle').textContent=title;
+    dlg.showModal();setTimeout(()=>{const r=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.max(800,Math.round(r.width*dpr));canvas.height=Math.max(300,Math.round(r.height*dpr));ctx.lineWidth=4*dpr;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#172838';ctx.clearRect(0,0,canvas.width,canvas.height);const v=$(dataId)?.value||'';if(v){const img=new Image();img.onload=()=>ctx.drawImage(img,0,0,canvas.width,canvas.height);img.src=v}},60)
+  };
+}
 function bindSignatureCanvas(canvasId,dataId,clearId){
   const canvas=$(canvasId),data=$(dataId),clear=$(clearId);if(!canvas||!data)return;
   const ctx=canvas.getContext('2d');ctx.lineWidth=2.2;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#172838';let drawing=false,moved=false;
@@ -191,6 +238,12 @@ function bindSignatureCanvas(canvasId,dataId,clearId){
   const end=e=>{if(!drawing)return;drawing=false;if(moved)data.value=canvas.toDataURL('image/png');e.preventDefault()};
   canvas.addEventListener('pointerdown',start);canvas.addEventListener('pointermove',move);canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);
   if(clear)clear.addEventListener('click',()=>clearSignatureCanvas(canvasId,dataId));
+  setupSignatureFullscreen();
+  if(clear&&clear.parentElement&&!clear.parentElement.querySelector('.signature-fullscreen-btn')){
+    const full=document.createElement('button');full.type='button';full.className='signature-fullscreen-btn';full.textContent='Full Screen Signature';
+    full.onclick=()=>window.openSignatureFullscreen(canvasId,dataId,canvas.getAttribute('aria-label')||'Signature');
+    clear.parentElement.appendChild(full);
+  }
 }
 function clearSignatureCanvas(canvasId,dataId){const canvas=$(canvasId),data=$(dataId);if(canvas){const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height)}if(data)data.value=''}
 function restoreSignatureCanvas(canvasId,dataId,value){clearSignatureCanvas(canvasId,dataId);if(!value)return;const canvas=$(canvasId),data=$(dataId);if(!canvas||!data)return;data.value=value;const img=new Image();img.onload=()=>{const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height)};img.src=value}
