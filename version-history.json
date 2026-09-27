@@ -1,0 +1,3166 @@
+{
+  "application": "Gladstone Fire / EMS AED Inventory & Quarterly Audit",
+  "generated_from": "GitHub commit history",
+  "first_commit": "2026-09-23T18:25:12Z",
+  "latest_commit": "2026-09-27T15:07:18Z",
+  "commit_count": 451,
+  "commits": [
+    {
+      "sha": "39c02c94c8765f8ac0b750d4bc2a9a1c98ecb6b3",
+      "shortSha": "39c02c9",
+      "date": "2026-09-27T15:07:18Z",
+      "message": "Bump AED app cache for repository PDF header standardization",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/39c02c94c8765f8ac0b750d4bc2a9a1c98ecb6b3"
+    },
+    {
+      "sha": "d75bfaea12ed7dbd1a271da3d42aee0015645c4f",
+      "shortSha": "d75bfae",
+      "date": "2026-09-27T15:07:07Z",
+      "message": "Record AED repository PDF header update as v166",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d75bfaea12ed7dbd1a271da3d42aee0015645c4f"
+    },
+    {
+      "sha": "ecbee9ffacc77b506f5fd2e8c75986064359cc5b",
+      "shortSha": "ecbee9f",
+      "date": "2026-09-27T15:06:43Z",
+      "message": "Repeat AED repository header and metadata on every PDF page",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/ecbee9ffacc77b506f5fd2e8c75986064359cc5b"
+    },
+    {
+      "sha": "648eb44b9e923c600db92b010e9d6364274a2054",
+      "shortSha": "648eb44",
+      "date": "2026-09-27T15:05:56Z",
+      "message": "Fix version history CSV filename",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/648eb44b9e923c600db92b010e9d6364274a2054"
+    },
+    {
+      "sha": "6784ffb409f12446cd86636349e6c04a0a651995",
+      "shortSha": "6784ffb",
+      "date": "2026-09-27T15:05:41Z",
+      "message": "Add app version history view and exportable change register",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/6784ffb409f12446cd86636349e6c04a0a651995"
+    },
+    {
+      "sha": "d253fe68c0ca32971c98465c0519fe01bfcd9cdb",
+      "shortSha": "d253fe6",
+      "date": "2026-09-27T15:02:55Z",
+      "message": "Bump AED app cache for expanded audit exports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d253fe68c0ca32971c98465c0519fe01bfcd9cdb"
+    },
+    {
+      "sha": "22775b07c6bef5fdde1dc655f44a28d88c5c5d8f",
+      "shortSha": "22775b0",
+      "date": "2026-09-27T15:02:47Z",
+      "message": "Add Excel CSV and JSON audit log exports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/22775b07c6bef5fdde1dc655f44a28d88c5c5d8f"
+    },
+    {
+      "sha": "08f8010701640b0bb337b93cb3a5e5d4545e1b45",
+      "shortSha": "08f8010",
+      "date": "2026-09-27T15:01:44Z",
+      "message": "Repeat audit PDF header and clean page-by-page data layout",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/08f8010701640b0bb337b93cb3a5e5d4545e1b45"
+    },
+    {
+      "sha": "56aa85136dcca3afd9e0507f1da9422e87dfd24c",
+      "shortSha": "56aa851",
+      "date": "2026-09-27T14:57:28Z",
+      "message": "Bump AED app cache for header account menu",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/56aa85136dcca3afd9e0507f1da9422e87dfd24c"
+    },
+    {
+      "sha": "91e28a57cfa4c8c849e5f6c4ec7b809385baba50",
+      "shortSha": "91e28a5",
+      "date": "2026-09-27T14:57:19Z",
+      "message": "Move signed-in user menu to subtle header control",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/91e28a57cfa4c8c849e5f6c4ec7b809385baba50"
+    },
+    {
+      "sha": "f8ee46845fef157f4db8bc1906f642836ac570ea",
+      "shortSha": "f8ee468",
+      "date": "2026-09-27T14:56:18Z",
+      "message": "Bump AED app cache for stable group view state",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/f8ee46845fef157f4db8bc1906f642836ac570ea"
+    },
+    {
+      "sha": "4c89a9a327804389e710579c00ca1b41715a4b7f",
+      "shortSha": "4c89a9a",
+      "date": "2026-09-27T14:56:12Z",
+      "message": "Keep AED group and row state stable during live refreshes",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/4c89a9a327804389e710579c00ca1b41715a4b7f"
+    },
+    {
+      "sha": "4015bfaf814a0c46e8c53f2b808068bef6ea49fb",
+      "shortSha": "4015bfa",
+      "date": "2026-09-27T14:54:09Z",
+      "message": "Match repository nav styling and force fresh PDF viewer assets",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/4015bfaf814a0c46e8c53f2b808068bef6ea49fb"
+    },
+    {
+      "sha": "a4a70df27df31cbfd48a9ee543d3d28874fc9945",
+      "shortSha": "a4a70df",
+      "date": "2026-09-27T14:53:52Z",
+      "message": "Bust stale PDF viewer asset cache",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a4a70df27df31cbfd48a9ee543d3d28874fc9945"
+    },
+    {
+      "sha": "5a7542086ed99641c7dca004df14c00a8039c1b4",
+      "shortSha": "5a75420",
+      "date": "2026-09-27T14:51:47Z",
+      "message": "Bump AED app cache for navigation tab styling",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/5a7542086ed99641c7dca004df14c00a8039c1b4"
+    },
+    {
+      "sha": "d8804436aa96fc42cd7727dbee1310f29f1d3239",
+      "shortSha": "d880443",
+      "date": "2026-09-27T14:51:40Z",
+      "message": "Standardize main navigation tab styling",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d8804436aa96fc42cd7727dbee1310f29f1d3239"
+    },
+    {
+      "sha": "c146f333c7f34290653735266955ecec4ab97bb9",
+      "shortSha": "c146f33",
+      "date": "2026-09-27T14:50:57Z",
+      "message": "Bump AED app cache for full-screen PDF page navigation",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c146f333c7f34290653735266955ecec4ab97bb9"
+    },
+    {
+      "sha": "3e88359489a350703f19acd931dd5b3793b53521",
+      "shortSha": "3e88359",
+      "date": "2026-09-27T14:50:50Z",
+      "message": "Use full-screen scrollable PDF preview with page navigation",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/3e88359489a350703f19acd931dd5b3793b53521"
+    },
+    {
+      "sha": "98ea65ced710a46a41b0fd3ec2c1b04d9080ee6f",
+      "shortSha": "98ea65c",
+      "date": "2026-09-27T14:48:26Z",
+      "message": "Bump AED app cache for page-by-page PDF preview",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/98ea65ced710a46a41b0fd3ec2c1b04d9080ee6f"
+    },
+    {
+      "sha": "bcf84102e1e6d9d819c72594c00a287a45e7e1ca",
+      "shortSha": "bcf8410",
+      "date": "2026-09-27T14:48:20Z",
+      "message": "Render PDF preview as scrollable page images on iOS and iPad",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/bcf84102e1e6d9d819c72594c00a287a45e7e1ca"
+    },
+    {
+      "sha": "1cae30595d1873b4125725bd3798c36eb30c2e33",
+      "shortSha": "1cae305",
+      "date": "2026-09-27T14:46:25Z",
+      "message": "Bump AED app cache for PDF preview scrolling fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/1cae30595d1873b4125725bd3798c36eb30c2e33"
+    },
+    {
+      "sha": "0a99bf4abd0237b4472315cb02838534969c4515",
+      "shortSha": "0a99bf4",
+      "date": "2026-09-27T14:46:20Z",
+      "message": "Fix scrollable multi-page PDF preview on mobile and iPad",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/0a99bf4abd0237b4472315cb02838534969c4515"
+    },
+    {
+      "sha": "777846612214ed6f5f6a77221251c90fe3b13c5e",
+      "shortSha": "7778466",
+      "date": "2026-09-27T14:43:17Z",
+      "message": "Bump AED app cache for portrait PDF pagination fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/777846612214ed6f5f6a77221251c90fe3b13c5e"
+    },
+    {
+      "sha": "7ce9d7627daa17ebb61e98e75b20d14936a14e2b",
+      "shortSha": "7ce9d76",
+      "date": "2026-09-27T14:43:10Z",
+      "message": "Force centered portrait PDF layout and improve long report pagination",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/7ce9d7627daa17ebb61e98e75b20d14936a14e2b"
+    },
+    {
+      "sha": "a5ceb41374e6442558138af9331b8d820e67107a",
+      "shortSha": "a5ceb41",
+      "date": "2026-09-27T14:37:20Z",
+      "message": "Cache AED repository export workflow",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a5ceb41374e6442558138af9331b8d820e67107a"
+    },
+    {
+      "sha": "6dcfbce22fb8f7d0b43a4041584e905cd5a92ef9",
+      "shortSha": "6dcfbce",
+      "date": "2026-09-27T14:37:07Z",
+      "message": "Add AED repository period exports and PDF actions",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/6dcfbce22fb8f7d0b43a4041584e905cd5a92ef9"
+    },
+    {
+      "sha": "6112a2bcc06c731d280529bf0ad86ff704d4cdbf",
+      "shortSha": "6112a2b",
+      "date": "2026-09-27T14:36:27Z",
+      "message": "Add audit log export filters and PDF actions",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/6112a2bcc06c731d280529bf0ad86ff704d4cdbf"
+    },
+    {
+      "sha": "8beee9203f4404a9c677a3e68e1b7c431f05a80b",
+      "shortSha": "8beee92",
+      "date": "2026-09-27T14:35:57Z",
+      "message": "Add reusable PDF print action for records exports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/8beee9203f4404a9c677a3e68e1b7c431f05a80b"
+    },
+    {
+      "sha": "f7605f61fcff6df2466a5b720aa0b9a860541bfc",
+      "shortSha": "f7605f6",
+      "date": "2026-09-27T14:32:06Z",
+      "message": "Bump AED app cache for PDF save workflow",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/f7605f61fcff6df2466a5b720aa0b9a860541bfc"
+    },
+    {
+      "sha": "25bc46312607052910acc0668452866637873fc0",
+      "shortSha": "25bc463",
+      "date": "2026-09-27T14:31:59Z",
+      "message": "Use Preview Save Share PDF report workflow",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/25bc46312607052910acc0668452866637873fc0"
+    },
+    {
+      "sha": "9160a473e7a7a6eabc345f220d3c9911473faab4",
+      "shortSha": "9160a47",
+      "date": "2026-09-27T14:31:39Z",
+      "message": "Add Save PDF action and remove print from PDF preview",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/9160a473e7a7a6eabc345f220d3c9911473faab4"
+    },
+    {
+      "sha": "7ceccef528401a894ab9f0dbd58234ec1dcd8354",
+      "shortSha": "7ceccef",
+      "date": "2026-09-27T14:25:53Z",
+      "message": "Bump AED app cache for portrait quarterly form layout",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/7ceccef528401a894ab9f0dbd58234ec1dcd8354"
+    },
+    {
+      "sha": "4f4376819e49aedd5d7db5ded6dc8637c70d5708",
+      "shortSha": "4f43768",
+      "date": "2026-09-27T14:25:46Z",
+      "message": "Improve quarterly inspection form on portrait mobile and iPad",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/4f4376819e49aedd5d7db5ded6dc8637c70d5708"
+    },
+    {
+      "sha": "0016e1d8f992b605486e3ce1e5191679a5b8ff17",
+      "shortSha": "0016e1d",
+      "date": "2026-09-27T14:24:15Z",
+      "message": "Bump AED app cache for collapsed group reset behavior",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/0016e1d8f992b605486e3ce1e5191679a5b8ff17"
+    },
+    {
+      "sha": "a4ff0b21165a465fef54ee3f39724d0a7775aaa5",
+      "shortSha": "a4ff0b2",
+      "date": "2026-09-27T14:24:08Z",
+      "message": "Reset AED groups to collapsed when switching tabs",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a4ff0b21165a465fef54ee3f39724d0a7775aaa5"
+    },
+    {
+      "sha": "56c09b764093fd79bd5af1ef8e19a0c8c07bd7aa",
+      "shortSha": "56c09b7",
+      "date": "2026-09-27T14:15:35Z",
+      "message": "Bump AED app cache version for inventory UI update",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/56c09b764093fd79bd5af1ef8e19a0c8c07bd7aa"
+    },
+    {
+      "sha": "777b00240a87e98eea2b37d3c2b7abe6a3ee0be8",
+      "shortSha": "777b002",
+      "date": "2026-09-27T14:15:26Z",
+      "message": "Collapse inventory groups by default and standardize header capitalization",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/777b00240a87e98eea2b37d3c2b7abe6a3ee0be8"
+    },
+    {
+      "sha": "a21404226d55a918bab2a300a02c6c20df201fc3",
+      "shortSha": "a214042",
+      "date": "2026-09-26T23:40:34Z",
+      "message": "Refresh AED PWA cache for Atkins-Johnson Farm unit",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a21404226d55a918bab2a300a02c6c20df201fc3"
+    },
+    {
+      "sha": "be12227f44c3fcce7f0470120cf7ec21c0ad5a8f",
+      "shortSha": "be12227",
+      "date": "2026-09-26T23:40:16Z",
+      "message": "Bump AED assets for Atkins-Johnson Farm unit",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/be12227f44c3fcce7f0470120cf7ec21c0ad5a8f"
+    },
+    {
+      "sha": "72ddf9f365b1a700236b25c045a80c1c954f9e40",
+      "shortSha": "72ddf9f",
+      "date": "2026-09-26T23:39:47Z",
+      "message": "Add Atkins-Johnson Farm AED behind desk",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/72ddf9f365b1a700236b25c045a80c1c954f9e40"
+    },
+    {
+      "sha": "e9e65a1b8ee4c4e13d2d885cbf57bda56b6470cd",
+      "shortSha": "e9e65a1",
+      "date": "2026-09-26T23:23:44Z",
+      "message": "Refresh AED PWA cache for normalized packet PDF layout",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/e9e65a1b8ee4c4e13d2d885cbf57bda56b6470cd"
+    },
+    {
+      "sha": "1b5db11893c0e353f8e5f8372569d3c6abb6dbd0",
+      "shortSha": "1b5db11",
+      "date": "2026-09-26T23:23:26Z",
+      "message": "Bump AED assets for normalized packet PDF layout",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/1b5db11893c0e353f8e5f8372569d3c6abb6dbd0"
+    },
+    {
+      "sha": "e0dd932c667bd94538c3966a4e60ea7c4ad976eb",
+      "shortSha": "e0dd932",
+      "date": "2026-09-26T23:22:52Z",
+      "message": "Normalize all AED packet pages to consistent full-width Letter PDF layout",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/e0dd932c667bd94538c3966a4e60ea7c4ad976eb"
+    },
+    {
+      "sha": "ef2fddc5116f9e9fe7193189800c10d1ef59cc80",
+      "shortSha": "ef2fddc",
+      "date": "2026-09-26T23:21:32Z",
+      "message": "Restore full-width executive PDF page layout",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/ef2fddc5116f9e9fe7193189800c10d1ef59cc80"
+    },
+    {
+      "sha": "029be08c76805cc21bd16567669d657e8baca115",
+      "shortSha": "029be08",
+      "date": "2026-09-26T23:21:12Z",
+      "message": "Keep executive PDF page full width by compacting findings",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/029be08c76805cc21bd16567669d657e8baca115"
+    },
+    {
+      "sha": "0f9c367524a94ca1c6fd14b3c4b5203a9b6955db",
+      "shortSha": "0f9c367",
+      "date": "2026-09-26T23:14:35Z",
+      "message": "Refresh AED PWA cache for full-screen signatures",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/0f9c367524a94ca1c6fd14b3c4b5203a9b6955db"
+    },
+    {
+      "sha": "66ce28ccc579bdc9ff7a99e520a898018e8ec131",
+      "shortSha": "66ce28c",
+      "date": "2026-09-26T23:14:18Z",
+      "message": "Bump AED assets for full-screen signatures",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/66ce28ccc579bdc9ff7a99e520a898018e8ec131"
+    },
+    {
+      "sha": "94279a2652d25dfc96d94990331d72e4fdb51fd0",
+      "shortSha": "94279a2",
+      "date": "2026-09-26T23:13:39Z",
+      "message": "Add landscape full-screen signing for all AED signatures",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/94279a2652d25dfc96d94990331d72e4fdb51fd0"
+    },
+    {
+      "sha": "38da0728ce1741b24e2ff186adee393da5896e22",
+      "shortSha": "38da072",
+      "date": "2026-09-26T23:09:48Z",
+      "message": "Refresh AED PWA cache for secure login",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/38da0728ce1741b24e2ff186adee393da5896e22"
+    },
+    {
+      "sha": "cdcad7fb58cdadb0d422e029ba7531afac755c12",
+      "shortSha": "cdcad7f",
+      "date": "2026-09-26T23:09:30Z",
+      "message": "Bump AED assets for secure login",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/cdcad7fb58cdadb0d422e029ba7531afac755c12"
+    },
+    {
+      "sha": "69e037f5dc67ccae97ddf6bcbb5c9b1424d3e48c",
+      "shortSha": "69e037f",
+      "date": "2026-09-26T23:08:40Z",
+      "message": "Add secure username password login and session-based AED sync",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/69e037f5dc67ccae97ddf6bcbb5c9b1424d3e48c"
+    },
+    {
+      "sha": "5079e4f7ed594458703f3d87b4dee2b6fda31b2e",
+      "shortSha": "5079e4f",
+      "date": "2026-09-26T23:04:22Z",
+      "message": "Refresh AED PWA cache for report list descriptors",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/5079e4f7ed594458703f3d87b4dee2b6fda31b2e"
+    },
+    {
+      "sha": "cae3e200091fecf7a7cfafc143d772b4199950f7",
+      "shortSha": "cae3e20",
+      "date": "2026-09-26T23:04:04Z",
+      "message": "Bump AED assets for report list descriptors",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/cae3e200091fecf7a7cfafc143d772b4199950f7"
+    },
+    {
+      "sha": "41f5828a6b3d1d16af1ae501ee93ab16553a92b1",
+      "shortSha": "41f5828",
+      "date": "2026-09-26T23:03:15Z",
+      "message": "Style concise AED descriptors in report list",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/41f5828a6b3d1d16af1ae501ee93ab16553a92b1"
+    },
+    {
+      "sha": "8bf60cb8b8efb5d48acdc06c68e33f67fb97f0da",
+      "shortSha": "8bf60cb",
+      "date": "2026-09-26T23:02:57Z",
+      "message": "Add concise AED descriptors to executive list",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/8bf60cb8b8efb5d48acdc06c68e33f67fb97f0da"
+    },
+    {
+      "sha": "f32ded0e8647963681cd57d512225e1c81341209",
+      "shortSha": "f32ded0",
+      "date": "2026-09-26T22:58:22Z",
+      "message": "Refresh AED PWA cache for numeric report list",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/f32ded0e8647963681cd57d512225e1c81341209"
+    },
+    {
+      "sha": "2fc17e8f6a2978b0ecacbd83344e7f08f96da2a2",
+      "shortSha": "2fc17e8",
+      "date": "2026-09-26T22:58:04Z",
+      "message": "Bump AED assets for numeric report list",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/2fc17e8f6a2978b0ecacbd83344e7f08f96da2a2"
+    },
+    {
+      "sha": "c530f4a3ee11ef5b2ed48466279abccf530aa683",
+      "shortSha": "c530f4a",
+      "date": "2026-09-26T22:57:31Z",
+      "message": "Style numeric two-column AED report list",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c530f4a3ee11ef5b2ed48466279abccf530aa683"
+    },
+    {
+      "sha": "f5a8bf5da666aa623be95de9ee12131c4991c698",
+      "shortSha": "f5a8bf5",
+      "date": "2026-09-26T22:57:13Z",
+      "message": "List AEDs numerically down left then right column",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/f5a8bf5da666aa623be95de9ee12131c4991c698"
+    },
+    {
+      "sha": "7ebaebba7105b1e10568565f3e35da1227f4952a",
+      "shortSha": "7ebaebb",
+      "date": "2026-09-26T22:53:55Z",
+      "message": "Refresh AED PWA cache for executive AED list",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/7ebaebba7105b1e10568565f3e35da1227f4952a"
+    },
+    {
+      "sha": "f680b94b3eaeb79f5d229055c84d9c8e7fbf2ed8",
+      "shortSha": "f680b94",
+      "date": "2026-09-26T22:53:36Z",
+      "message": "Bump AED assets for executive AED list",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/f680b94b3eaeb79f5d229055c84d9c8e7fbf2ed8"
+    },
+    {
+      "sha": "9e25754f0a1c86678f0fd8fc5674c5efcf76f35e",
+      "shortSha": "9e25754",
+      "date": "2026-09-26T22:53:06Z",
+      "message": "Style compact AED list on executive page",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/9e25754f0a1c86678f0fd8fc5674c5efcf76f35e"
+    },
+    {
+      "sha": "3b11c0659401ceddb62ecdbd6426d4f9f8f66466",
+      "shortSha": "3b11c06",
+      "date": "2026-09-26T22:52:48Z",
+      "message": "Add compact AED list to executive summary page",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/3b11c0659401ceddb62ecdbd6426d4f9f8f66466"
+    },
+    {
+      "sha": "d3a3f7ba9e4488d1adc71b0bd969d67afa60d9e1",
+      "shortSha": "d3a3f7b",
+      "date": "2026-09-26T22:47:23Z",
+      "message": "Refresh AED PWA cache for AJ Barn rename",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d3a3f7ba9e4488d1adc71b0bd969d67afa60d9e1"
+    },
+    {
+      "sha": "749099c8c9c991dba6b8d749be83eb58fe0f33ad",
+      "shortSha": "749099c",
+      "date": "2026-09-26T22:47:05Z",
+      "message": "Bump AED assets for AJ Barn rename",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/749099c8c9c991dba6b8d749be83eb58fe0f33ad"
+    },
+    {
+      "sha": "e3dbaefdf0dba82a49382ea08c158f7d823b9730",
+      "shortSha": "e3dbaef",
+      "date": "2026-09-26T22:46:18Z",
+      "message": "Rename AJ Barn Event Venue in AED reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/e3dbaefdf0dba82a49382ea08c158f7d823b9730"
+    },
+    {
+      "sha": "4741c13aef54731fcb7ca8c1545b4d53681d62ab",
+      "shortSha": "4741c13",
+      "date": "2026-09-26T22:46:00Z",
+      "message": "Rename Atkins Farm AED to AJ Barn Event Venue",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/4741c13aef54731fcb7ca8c1545b4d53681d62ab"
+    },
+    {
+      "sha": "51b0acdceefaf312e5d1b6b58dc605ec1b1605ea",
+      "shortSha": "51b0acd",
+      "date": "2026-09-26T22:45:24Z",
+      "message": "Refresh AED PWA cache for stable PDF open and share",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/51b0acdceefaf312e5d1b6b58dc605ec1b1605ea"
+    },
+    {
+      "sha": "4a673c350cf22751a75d20ebb8a08696d696f967",
+      "shortSha": "4a673c3",
+      "date": "2026-09-26T22:45:07Z",
+      "message": "Bump AED assets for stable PDF open and share",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/4a673c350cf22751a75d20ebb8a08696d696f967"
+    },
+    {
+      "sha": "d7e3ede9d3ed539b0d6d8096466db2866fc0f650",
+      "shortSha": "d7e3ede",
+      "date": "2026-09-26T22:44:18Z",
+      "message": "Prevent AED PDF open and share crashes with cached lower-memory rendering",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d7e3ede9d3ed539b0d6d8096466db2866fc0f650"
+    },
+    {
+      "sha": "e1ff0d275e30d10db6bd1b853f120083cba935a0",
+      "shortSha": "e1ff0d2",
+      "date": "2026-09-26T22:38:09Z",
+      "message": "Refresh AED PWA cache for retired health logic",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/e1ff0d275e30d10db6bd1b853f120083cba935a0"
+    },
+    {
+      "sha": "56909bdccfe5b42fdfcf673da4132630f9bd0d29",
+      "shortSha": "56909bd",
+      "date": "2026-09-26T22:37:51Z",
+      "message": "Bump AED assets for retired health logic",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/56909bdccfe5b42fdfcf673da4132630f9bd0d29"
+    },
+    {
+      "sha": "ca5e47069d8614f4048878584f796a00819cb9cb",
+      "shortSha": "ca5e470",
+      "date": "2026-09-26T22:37:19Z",
+      "message": "Exclude retired AEDs from critical report health",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/ca5e47069d8614f4048878584f796a00819cb9cb"
+    },
+    {
+      "sha": "76bf453569f39aa9100ada86c5223f198c3d58f5",
+      "shortSha": "76bf453",
+      "date": "2026-09-26T22:36:27Z",
+      "message": "Fix AED PDF email sharing with validated binary attachments",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/76bf453569f39aa9100ada86c5223f198c3d58f5"
+    },
+    {
+      "sha": "d478405b8d5641655660667222329722a62791a5",
+      "shortSha": "d478405",
+      "date": "2026-09-26T22:34:55Z",
+      "message": "Refresh AED PWA cache for corrected preview logo",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d478405b8d5641655660667222329722a62791a5"
+    },
+    {
+      "sha": "386f3d3cae27f88e82673cb3216ee6b11f553bfc",
+      "shortSha": "386f3d3",
+      "date": "2026-09-26T22:34:38Z",
+      "message": "Bump AED assets for corrected preview logo ratio",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/386f3d3cae27f88e82673cb3216ee6b11f553bfc"
+    },
+    {
+      "sha": "d24d9109890ab150912311377be8c06d6d58edfa",
+      "shortSha": "d24d910",
+      "date": "2026-09-26T22:34:15Z",
+      "message": "Fix cover logo distortion in narrow PDF preview",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d24d9109890ab150912311377be8c06d6d58edfa"
+    },
+    {
+      "sha": "b0c44eb8e978e306a53d5336506448a37d8be14d",
+      "shortSha": "b0c44eb",
+      "date": "2026-09-26T22:31:42Z",
+      "message": "Refresh AED PWA cache for corrected cover logo",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/b0c44eb8e978e306a53d5336506448a37d8be14d"
+    },
+    {
+      "sha": "9b0b34d2144e7d1c1516f0f09b369e0ad9546cc8",
+      "shortSha": "9b0b34d",
+      "date": "2026-09-26T22:31:28Z",
+      "message": "Bump AED assets for corrected cover logo ratio",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/9b0b34d2144e7d1c1516f0f09b369e0ad9546cc8"
+    },
+    {
+      "sha": "0f56ac7eef686da4644a789901f16c37a8838617",
+      "shortSha": "0f56ac7",
+      "date": "2026-09-26T22:31:00Z",
+      "message": "Preserve native aspect ratio for AED cover logo",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/0f56ac7eef686da4644a789901f16c37a8838617"
+    },
+    {
+      "sha": "5b9556914fc70cedaf312bf849e2d6b01e449ce3",
+      "shortSha": "5b95569",
+      "date": "2026-09-26T22:30:30Z",
+      "message": "Refresh AED PWA cache for larger cover logo",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/5b9556914fc70cedaf312bf849e2d6b01e449ce3"
+    },
+    {
+      "sha": "24dc3d74050917b5cbd866c671cbf83147a69894",
+      "shortSha": "24dc3d7",
+      "date": "2026-09-26T22:30:16Z",
+      "message": "Bump AED assets for larger cover logo",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/24dc3d74050917b5cbd866c671cbf83147a69894"
+    },
+    {
+      "sha": "392fdb73c70f75a6810dd2b2efeebae96897a65f",
+      "shortSha": "392fdb7",
+      "date": "2026-09-26T22:29:59Z",
+      "message": "Enlarge AED report cover logo",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/392fdb73c70f75a6810dd2b2efeebae96897a65f"
+    },
+    {
+      "sha": "a9c55a0493aa172c76abb485a9112923d897e61b",
+      "shortSha": "a9c55a0",
+      "date": "2026-09-26T22:27:51Z",
+      "message": "Refresh AED PWA cache for sharp PDF output",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a9c55a0493aa172c76abb485a9112923d897e61b"
+    },
+    {
+      "sha": "1811042955144d33048cdac7469690abcc6f5f84",
+      "shortSha": "1811042",
+      "date": "2026-09-26T22:27:38Z",
+      "message": "Bump AED assets for high-resolution PDF output",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/1811042955144d33048cdac7469690abcc6f5f84"
+    },
+    {
+      "sha": "a9a8e63a8583bdb7ca0c7332c9fbfeec2d0921ef",
+      "shortSha": "a9a8e63",
+      "date": "2026-09-26T22:27:14Z",
+      "message": "Improve AED PDF print sharpness with high-resolution PNG capture",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a9a8e63a8583bdb7ca0c7332c9fbfeec2d0921ef"
+    },
+    {
+      "sha": "36b643738961eccab76268c87dca8eb4a8cc34c5",
+      "shortSha": "36b6437",
+      "date": "2026-09-26T22:20:09Z",
+      "message": "Refresh AED PWA cache for report actions",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/36b643738961eccab76268c87dca8eb4a8cc34c5"
+    },
+    {
+      "sha": "265e4667e49a4a0d410ba75d6fdc383025f6a59b",
+      "shortSha": "265e466",
+      "date": "2026-09-26T22:19:54Z",
+      "message": "Bump AED report action assets",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/265e4667e49a4a0d410ba75d6fdc383025f6a59b"
+    },
+    {
+      "sha": "aafb3583ff17bc9e098dba96caf8b79a1eb6a891",
+      "shortSha": "aafb358",
+      "date": "2026-09-26T22:19:36Z",
+      "message": "Right-align appendix designation on AED cover",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/aafb3583ff17bc9e098dba96caf8b79a1eb6a891"
+    },
+    {
+      "sha": "3e3b301b14b9a6cdff07b1d5af7c919b1754c2c3",
+      "shortSha": "3e3b301",
+      "date": "2026-09-26T22:19:17Z",
+      "message": "Add print and share controls to AED PDF preview",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/3e3b301b14b9a6cdff07b1d5af7c919b1754c2c3"
+    },
+    {
+      "sha": "8aa8a129bc053b7e3814969b50d2885e198aaa58",
+      "shortSha": "8aa8a12",
+      "date": "2026-09-26T22:19:05Z",
+      "message": "Right-align appendix note on AED report cover",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/8aa8a129bc053b7e3814969b50d2885e198aaa58"
+    },
+    {
+      "sha": "5f3955d395e67d8f326f853c2b4c3e9182851ca3",
+      "shortSha": "5f3955d",
+      "date": "2026-09-26T22:17:59Z",
+      "message": "Add top and bottom PDF actions to all report views",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/5f3955d395e67d8f326f853c2b4c3e9182851ca3"
+    },
+    {
+      "sha": "c3ef186f340ebd19f7e7e8a4430bcf6c3e33df86",
+      "shortSha": "c3ef186",
+      "date": "2026-09-26T22:17:29Z",
+      "message": "Add top and bottom PDF actions to generated AED packets",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c3ef186f340ebd19f7e7e8a4430bcf6c3e33df86"
+    },
+    {
+      "sha": "020f1a9d973bcf398f4cbc220f78da010dd0853e",
+      "shortSha": "020f1a9",
+      "date": "2026-09-26T22:15:19Z",
+      "message": "Refresh AED PWA cache for inspection comments",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/020f1a9d973bcf398f4cbc220f78da010dd0853e"
+    },
+    {
+      "sha": "3e903fb650c3af6bca1e538710030f713828cd51",
+      "shortSha": "3e903fb",
+      "date": "2026-09-26T22:15:04Z",
+      "message": "Bump AED assets for inspection comments in reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/3e903fb650c3af6bca1e538710030f713828cd51"
+    },
+    {
+      "sha": "34e7f32a55e13dd84ebff83056126e4390f95232",
+      "shortSha": "34e7f32",
+      "date": "2026-09-26T22:14:31Z",
+      "message": "Show inspection comments inside quarterly inspection findings",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/34e7f32a55e13dd84ebff83056126e4390f95232"
+    },
+    {
+      "sha": "001b3e1071e849772896447c962dc03fc1bd02eb",
+      "shortSha": "001b3e1",
+      "date": "2026-09-26T22:14:17Z",
+      "message": "Include inspection comments in quarterly report boxes",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/001b3e1071e849772896447c962dc03fc1bd02eb"
+    },
+    {
+      "sha": "1b2ac5c6d4f90b2e5e1ef8cb3645bb9ebf5a0f83",
+      "shortSha": "1b2ac5c",
+      "date": "2026-09-26T22:06:57Z",
+      "message": "Refresh AED PWA cache for certification cleanup",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/1b2ac5c6d4f90b2e5e1ef8cb3645bb9ebf5a0f83"
+    },
+    {
+      "sha": "cbb622d55426f319fee5cb85fd470ca303183abf",
+      "shortSha": "cbb622d",
+      "date": "2026-09-26T22:06:43Z",
+      "message": "Bump AED certification page assets",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/cbb622d55426f319fee5cb85fd470ca303183abf"
+    },
+    {
+      "sha": "d4aee9928e826233339212ab2899c7ac7f3ed7f2",
+      "shortSha": "d4aee99",
+      "date": "2026-09-26T22:06:23Z",
+      "message": "Remove repeated report metadata from certification page",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d4aee9928e826233339212ab2899c7ac7f3ed7f2"
+    },
+    {
+      "sha": "a15cda4f204dcd88db1774d180e4080dcd0bd6b4",
+      "shortSha": "a15cda4",
+      "date": "2026-09-26T22:03:22Z",
+      "message": "Refresh AED PWA cache for cover date range",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a15cda4f204dcd88db1774d180e4080dcd0bd6b4"
+    },
+    {
+      "sha": "6c6fc36facef5ba6b8d782d94d6adc183335d752",
+      "shortSha": "6c6fc36",
+      "date": "2026-09-26T22:03:10Z",
+      "message": "Bump AED cover date range assets",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/6c6fc36facef5ba6b8d782d94d6adc183335d752"
+    },
+    {
+      "sha": "963f0a6ac63a84dd7668b8421d1a5ab045f962bb",
+      "shortSha": "963f0a6",
+      "date": "2026-09-26T22:02:52Z",
+      "message": "Style AED cover quarter date range",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/963f0a6ac63a84dd7668b8421d1a5ab045f962bb"
+    },
+    {
+      "sha": "9b8c8f4eb1b7cdd550fd90986e12a36d9dd4107a",
+      "shortSha": "9b8c8f4",
+      "date": "2026-09-26T22:02:32Z",
+      "message": "Add quarter date range under AED cover subtitle",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/9b8c8f4eb1b7cdd550fd90986e12a36d9dd4107a"
+    },
+    {
+      "sha": "49f0a5c83cf9582328679e7473997cdba9ebf724",
+      "shortSha": "49f0a5c",
+      "date": "2026-09-26T22:02:06Z",
+      "message": "Refresh AED PWA cache for certification identifiers",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/49f0a5c83cf9582328679e7473997cdba9ebf724"
+    },
+    {
+      "sha": "4cf89bd329690e9240970fbb0581ce4c380e2f50",
+      "shortSha": "4cf89bd",
+      "date": "2026-09-26T22:01:54Z",
+      "message": "Bump AED assets for certification report identifiers",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/4cf89bd329690e9240970fbb0581ce4c380e2f50"
+    },
+    {
+      "sha": "f8199538e898c61eba5ebe34b9b68c599a6eafe4",
+      "shortSha": "f819953",
+      "date": "2026-09-26T22:01:34Z",
+      "message": "Add certified report summary to certification page",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/f8199538e898c61eba5ebe34b9b68c599a6eafe4"
+    },
+    {
+      "sha": "650b2761f67372410c13daa27d7edfc4154ae8c8",
+      "shortSha": "650b276",
+      "date": "2026-09-26T22:01:12Z",
+      "message": "Identify certified AED report on certification page",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/650b2761f67372410c13daa27d7edfc4154ae8c8"
+    },
+    {
+      "sha": "f018889ed8ca88cb5223b93a96559c700ebc07fd",
+      "shortSha": "f018889",
+      "date": "2026-09-26T22:00:33Z",
+      "message": "Refresh AED PWA cache for certification page order",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/f018889ed8ca88cb5223b93a96559c700ebc07fd"
+    },
+    {
+      "sha": "c3c18b3ace6cd9ddf6348857439f529e676379a2",
+      "shortSha": "c3c18b3",
+      "date": "2026-09-26T22:00:10Z",
+      "message": "Bump AED assets for final certification page",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c3c18b3ace6cd9ddf6348857439f529e676379a2"
+    },
+    {
+      "sha": "cd09e774d71d9e4665d205b26e129844dbba052e",
+      "shortSha": "cd09e77",
+      "date": "2026-09-26T21:59:54Z",
+      "message": "Style final AED certification and appendix convention",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/cd09e774d71d9e4665d205b26e129844dbba052e"
+    },
+    {
+      "sha": "167d9d67473ac22bbfc4552484aa1106d503c6eb",
+      "shortSha": "167d9d6",
+      "date": "2026-09-26T21:59:36Z",
+      "message": "Move AED certification to final report page",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/167d9d67473ac22bbfc4552484aa1106d503c6eb"
+    },
+    {
+      "sha": "c2ba3b956278aab0ce9b296fd2512a5fe8b28d62",
+      "shortSha": "c2ba3b9",
+      "date": "2026-09-26T21:55:54Z",
+      "message": "Refresh AED PWA cache for detail page identifiers",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c2ba3b956278aab0ce9b296fd2512a5fe8b28d62"
+    },
+    {
+      "sha": "92ac4f5116fa73417f42bb039e6c0cba609c5cc6",
+      "shortSha": "92ac4f5",
+      "date": "2026-09-26T21:55:44Z",
+      "message": "Bump AED assets for detail page identifiers",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/92ac4f5116fa73417f42bb039e6c0cba609c5cc6"
+    },
+    {
+      "sha": "aab46f878266ca653e28181b7b1a136c04d1d3e5",
+      "shortSha": "aab46f8",
+      "date": "2026-09-26T21:55:20Z",
+      "message": "Simplify AED detail page identifiers",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/aab46f878266ca653e28181b7b1a136c04d1d3e5"
+    },
+    {
+      "sha": "638e0bec99915753edd63eccb5ccd541862b1e87",
+      "shortSha": "638e0be",
+      "date": "2026-09-26T21:54:58Z",
+      "message": "Style AED packet report identifiers",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/638e0bec99915753edd63eccb5ccd541862b1e87"
+    },
+    {
+      "sha": "d04165827940429c64bb8f4791ce6004ca385b3d",
+      "shortSha": "d041658",
+      "date": "2026-09-26T21:54:32Z",
+      "message": "Add report scope and page identifiers to AED packet headers",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d04165827940429c64bb8f4791ce6004ca385b3d"
+    },
+    {
+      "sha": "4761041d5017701f7aef14c7260818bd041054eb",
+      "shortSha": "4761041",
+      "date": "2026-09-26T21:52:55Z",
+      "message": "Refresh AED PWA cache for report cover date range",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/4761041d5017701f7aef14c7260818bd041054eb"
+    },
+    {
+      "sha": "b6a5dfebcb08562ee797e0f7117287edbfc00d51",
+      "shortSha": "b6a5dfe",
+      "date": "2026-09-26T21:52:42Z",
+      "message": "Bump AED report assets for quarter date range",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/b6a5dfebcb08562ee797e0f7117287edbfc00d51"
+    },
+    {
+      "sha": "420b3e38150d2efe21b0d847f787ca85baeceb75",
+      "shortSha": "420b3e3",
+      "date": "2026-09-26T21:52:29Z",
+      "message": "Add quarter date range to AED report cover",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/420b3e38150d2efe21b0d847f787ca85baeceb75"
+    },
+    {
+      "sha": "afc5c11d75dc6ff511fce46da792abe98398fbf2",
+      "shortSha": "afc5c11",
+      "date": "2026-09-26T21:51:56Z",
+      "message": "Refresh AED PWA cache for cover certification",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/afc5c11d75dc6ff511fce46da792abe98398fbf2"
+    },
+    {
+      "sha": "deebfef0692171810a66a9120d7f4fa9a3f17bff",
+      "shortSha": "deebfef",
+      "date": "2026-09-26T21:51:45Z",
+      "message": "Bump AED cover certification assets",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/deebfef0692171810a66a9120d7f4fa9a3f17bff"
+    },
+    {
+      "sha": "9ce985b5e21bd74fb7738dc71fb04d52529783ff",
+      "shortSha": "9ce985b",
+      "date": "2026-09-26T21:51:26Z",
+      "message": "Style cover certification and auditor signature",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/9ce985b5e21bd74fb7738dc71fb04d52529783ff"
+    },
+    {
+      "sha": "62853badd24395c5838c980cef75b8aa2b5762f0",
+      "shortSha": "62853ba",
+      "date": "2026-09-26T21:51:07Z",
+      "message": "Move AED report certification and signature to cover",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/62853badd24395c5838c980cef75b8aa2b5762f0"
+    },
+    {
+      "sha": "255efa883869546bf38b13929991ecc1ff050a4f",
+      "shortSha": "255efa8",
+      "date": "2026-09-26T21:48:10Z",
+      "message": "Refresh AED PWA cache for cover redesign",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/255efa883869546bf38b13929991ecc1ff050a4f"
+    },
+    {
+      "sha": "ff29fc6f26ca963395d867af670c99007efc48a4",
+      "shortSha": "ff29fc6",
+      "date": "2026-09-26T21:47:58Z",
+      "message": "Bump AED report cover assets",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/ff29fc6f26ca963395d867af670c99007efc48a4"
+    },
+    {
+      "sha": "ce4e268cefc0509f1757d1bc6323066191b2d94c",
+      "shortSha": "ce4e268",
+      "date": "2026-09-26T21:47:33Z",
+      "message": "Style centered AED report cover page",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/ce4e268cefc0509f1757d1bc6323066191b2d94c"
+    },
+    {
+      "sha": "6fb251e970224f0e50407446bc7d47f00822b35c",
+      "shortSha": "6fb251e",
+      "date": "2026-09-26T21:47:17Z",
+      "message": "Center logo and simplify AED report cover page",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/6fb251e970224f0e50407446bc7d47f00822b35c"
+    },
+    {
+      "sha": "6b005970fb9f8d188570c366d92ad6f77bcb8e71",
+      "shortSha": "6b00597",
+      "date": "2026-09-26T21:44:02Z",
+      "message": "Cache rebuilt AED PDF packet engine",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/6b005970fb9f8d188570c366d92ad6f77bcb8e71"
+    },
+    {
+      "sha": "66a12338e078369848a954929891c8ac012a7c0b",
+      "shortSha": "66a1233",
+      "date": "2026-09-26T21:43:33Z",
+      "message": "Bump rebuilt AED PDF packet engine",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/66a12338e078369848a954929891c8ac012a7c0b"
+    },
+    {
+      "sha": "b9dbd488a49a5c1b1c0eaf0d3b6e36c646c936c5",
+      "shortSha": "b9dbd48",
+      "date": "2026-09-26T21:42:20Z",
+      "message": "Capture each generated packet page as one PDF page",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/b9dbd488a49a5c1b1c0eaf0d3b6e36c646c936c5"
+    },
+    {
+      "sha": "f247a4d595233bfb22491996df6f5ca98fbaf8fa",
+      "shortSha": "f247a4d",
+      "date": "2026-09-26T21:41:52Z",
+      "message": "Style generated AED report as page-by-page packet",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/f247a4d595233bfb22491996df6f5ca98fbaf8fa"
+    },
+    {
+      "sha": "bbfa92c80af2bd8369f31626fccf03227d1b07d6",
+      "shortSha": "bbfa92c",
+      "date": "2026-09-26T21:41:24Z",
+      "message": "Structure AED reports as formal packet pages",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/bbfa92c80af2bd8369f31626fccf03227d1b07d6"
+    },
+    {
+      "sha": "20442c220f7bff8695a96828f7b5fc7e17d22da7",
+      "shortSha": "20442c2",
+      "date": "2026-09-26T21:39:57Z",
+      "message": "Route all AED reports through rebuilt visual PDF engine",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/20442c220f7bff8695a96828f7b5fc7e17d22da7"
+    },
+    {
+      "sha": "676cb30f76944f9d162ffe3acedf580219fd3e64",
+      "shortSha": "676cb30",
+      "date": "2026-09-26T21:38:36Z",
+      "message": "Rebuild AED PDF engine from generated report visuals",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/676cb30f76944f9d162ffe3acedf580219fd3e64"
+    },
+    {
+      "sha": "d015b619ff1a3293f9242eadca76f14ff767694c",
+      "shortSha": "d015b61",
+      "date": "2026-09-26T20:50:54Z",
+      "message": "Refresh AED PWA cache for multi-page report fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d015b619ff1a3293f9242eadca76f14ff767694c"
+    },
+    {
+      "sha": "61e051f1b2a52231dc321a1e9fc971c125eb4ffa",
+      "shortSha": "61e051f",
+      "date": "2026-09-26T20:50:52Z",
+      "message": "Bump AED report assets for multi-page PDF fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/61e051f1b2a52231dc321a1e9fc971c125eb4ffa"
+    },
+    {
+      "sha": "5bd2ee8f7853e34ccaf49254d51df3dca91b54ac",
+      "shortSha": "5bd2ee8",
+      "date": "2026-09-26T20:50:43Z",
+      "message": "Fix generated reports to use full multi-page PDF exporter",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/5bd2ee8f7853e34ccaf49254d51df3dca91b54ac"
+    },
+    {
+      "sha": "4c4af96248642e6c44e6d71787689cbc71b79914",
+      "shortSha": "4c4af96",
+      "date": "2026-09-26T19:44:11Z",
+      "message": "Refresh AED PWA cache for PDF-only reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/4c4af96248642e6c44e6d71787689cbc71b79914"
+    },
+    {
+      "sha": "b1032a2f1fcf19cffba065221fa07547e3de3c58",
+      "shortSha": "b1032a2",
+      "date": "2026-09-26T19:44:03Z",
+      "message": "Bump AED assets for PDF-only reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/b1032a2f1fcf19cffba065221fa07547e3de3c58"
+    },
+    {
+      "sha": "504508cb44b9df0fac7d0cc289db7c59f5238138",
+      "shortSha": "504508c",
+      "date": "2026-09-26T19:43:44Z",
+      "message": "Remove legacy print report paths",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/504508cb44b9df0fac7d0cc289db7c59f5238138"
+    },
+    {
+      "sha": "1d7b2a18b4fb6e2cf2a993e1dce9c224eb8aba53",
+      "shortSha": "1d7b2a1",
+      "date": "2026-09-26T19:43:08Z",
+      "message": "Standardize all AED report exports as PDF",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/1d7b2a18b4fb6e2cf2a993e1dce9c224eb8aba53"
+    },
+    {
+      "sha": "649f9bf89411e24cb856cf5a7e12fd6bf5326a4e",
+      "shortSha": "649f9bf",
+      "date": "2026-09-26T19:42:08Z",
+      "message": "Refresh AED PWA cache for Atkins group merge",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/649f9bf89411e24cb856cf5a7e12fd6bf5326a4e"
+    },
+    {
+      "sha": "d0d428912f7b1f846bc5b2735162d9e18b839016",
+      "shortSha": "d0d4289",
+      "date": "2026-09-26T19:42:00Z",
+      "message": "Bump AED assets for Atkins group merge",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d0d428912f7b1f846bc5b2735162d9e18b839016"
+    },
+    {
+      "sha": "37ddcf77f318d74f786d33ffd4f75c583af40202",
+      "shortSha": "37ddcf7",
+      "date": "2026-09-26T19:41:46Z",
+      "message": "Include Atkins Farm in Parks and Recreation reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/37ddcf77f318d74f786d33ffd4f75c583af40202"
+    },
+    {
+      "sha": "f43a105c02b660f6c807fb3e8d374ed2cf6b47e4",
+      "shortSha": "f43a105",
+      "date": "2026-09-26T19:41:35Z",
+      "message": "Move Atkins Farm AED into Parks and Recreation group",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/f43a105c02b660f6c807fb3e8d374ed2cf6b47e4"
+    },
+    {
+      "sha": "7722b4cf4f06a2775158493cefc961d3d8974b76",
+      "shortSha": "7722b4c",
+      "date": "2026-09-26T19:40:05Z",
+      "message": "Refresh AED PWA cache for PDF engine fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/7722b4cf4f06a2775158493cefc961d3d8974b76"
+    },
+    {
+      "sha": "8c6751a4113737d2bff9543d3ab0b4337752e6a3",
+      "shortSha": "8c6751a",
+      "date": "2026-09-26T19:39:56Z",
+      "message": "Bump AED assets for PDF engine fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/8c6751a4113737d2bff9543d3ab0b4337752e6a3"
+    },
+    {
+      "sha": "4dee937732c4ba366193336a379c63b101735b8d",
+      "shortSha": "4dee937",
+      "date": "2026-09-26T19:39:40Z",
+      "message": "Load html2canvas for AED PDF preview renderer",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/4dee937732c4ba366193336a379c63b101735b8d"
+    },
+    {
+      "sha": "9bcb52df8488bd053877891c4e980e2c15ae0fb1",
+      "shortSha": "9bcb52d",
+      "date": "2026-09-26T18:26:38Z",
+      "message": "Refresh AED PWA cache for Atkins pediatric workflow fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/9bcb52df8488bd053877891c4e980e2c15ae0fb1"
+    },
+    {
+      "sha": "fe8ea153d2a78d4dcbe74914340ddc6bdfd9afac",
+      "shortSha": "fe8ea15",
+      "date": "2026-09-26T18:26:30Z",
+      "message": "Bump AED assets for Atkins pediatric workflow fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/fe8ea153d2a78d4dcbe74914340ddc6bdfd9afac"
+    },
+    {
+      "sha": "27d8d3dbd7950c8eb7355036ba94021b5c442471",
+      "shortSha": "27d8d3d",
+      "date": "2026-09-26T18:26:12Z",
+      "message": "Fix pediatric equipment helper in AED reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/27d8d3dbd7950c8eb7355036ba94021b5c442471"
+    },
+    {
+      "sha": "394b4eb79421d7364f84bafcc4b63896b321b398",
+      "shortSha": "394b4eb",
+      "date": "2026-09-26T18:26:01Z",
+      "message": "Fix canonical pediatric equipment helper",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/394b4eb79421d7364f84bafcc4b63896b321b398"
+    },
+    {
+      "sha": "85340d892f063f34f4cba1553363462835c05d85",
+      "shortSha": "85340d8",
+      "date": "2026-09-26T18:25:21Z",
+      "message": "Include Atkins pediatric pads in AED reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/85340d892f063f34f4cba1553363462835c05d85"
+    },
+    {
+      "sha": "779581621e626877d5e38bcc54acce8b1016e4ea",
+      "shortSha": "7795816",
+      "date": "2026-09-26T18:25:03Z",
+      "message": "Fix Atkins Farm pediatric pad workflow",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/779581621e626877d5e38bcc54acce8b1016e4ea"
+    },
+    {
+      "sha": "06a9fc17e62ecd20e9d9b2237c92c52675a7b5b0",
+      "shortSha": "06a9fc1",
+      "date": "2026-09-26T18:03:33Z",
+      "message": "Refresh AED PWA cache for Quick Scan serial fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/06a9fc17e62ecd20e9d9b2237c92c52675a7b5b0"
+    },
+    {
+      "sha": "2780aa1233c6a5067b7583bbcea0e080e841cee1",
+      "shortSha": "2780aa1",
+      "date": "2026-09-26T18:03:26Z",
+      "message": "Bump AED assets for Quick Scan serial fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/2780aa1233c6a5067b7583bbcea0e080e841cee1"
+    },
+    {
+      "sha": "caca7b1774b4f2673126adb246a8eddca820a816",
+      "shortSha": "caca7b1",
+      "date": "2026-09-26T18:03:15Z",
+      "message": "Improve Quick Scan serial matching for Atkins AED",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/caca7b1774b4f2673126adb246a8eddca820a816"
+    },
+    {
+      "sha": "669afeb8142a35bca886e3a517bf6adc644d8eed",
+      "shortSha": "669afeb",
+      "date": "2026-09-26T18:01:25Z",
+      "message": "Refresh AED PWA cache for Atkins pediatric tracking",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/669afeb8142a35bca886e3a517bf6adc644d8eed"
+    },
+    {
+      "sha": "b21aec7d4fd2f512f7264d9aebb3867723f50dcd",
+      "shortSha": "b21aec7",
+      "date": "2026-09-26T18:01:19Z",
+      "message": "Bump AED assets for Atkins pediatric tracking",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/b21aec7d4fd2f512f7264d9aebb3867723f50dcd"
+    },
+    {
+      "sha": "82c38e953056b83ad2b7c6b955612bde5218d40f",
+      "shortSha": "82c38e9",
+      "date": "2026-09-26T18:01:08Z",
+      "message": "Enable pediatric pad tracking for Atkins Farm AED",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/82c38e953056b83ad2b7c6b955612bde5218d40f"
+    },
+    {
+      "sha": "2f9546b2b18dde380adc8cf587d8eb47ca1105ca",
+      "shortSha": "2f9546b",
+      "date": "2026-09-26T16:48:29Z",
+      "message": "Refresh AED PWA cache after newline cleanup",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/2f9546b2b18dde380adc8cf587d8eb47ca1105ca"
+    },
+    {
+      "sha": "44f730985dbaa34dc3866c4d685f3e3c9a2034a7",
+      "shortSha": "44f7309",
+      "date": "2026-09-26T16:48:22Z",
+      "message": "Bump AED assets after newline cleanup",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/44f730985dbaa34dc3866c4d685f3e3c9a2034a7"
+    },
+    {
+      "sha": "a2b9c1aea102f5242862d6620c88a094484e86ed",
+      "shortSha": "a2b9c1a",
+      "date": "2026-09-26T16:48:09Z",
+      "message": "Remove literal newline artifact from AED UI",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a2b9c1aea102f5242862d6620c88a094484e86ed"
+    },
+    {
+      "sha": "dcf108e86fc2fa87019df5e1dbb2d6ce9726cca3",
+      "shortSha": "dcf108e",
+      "date": "2026-09-26T16:44:52Z",
+      "message": "Refresh AED PWA cache for PDF style lock",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/dcf108e86fc2fa87019df5e1dbb2d6ce9726cca3"
+    },
+    {
+      "sha": "5982dd1707ab9a2f1fd7e121ab94e782a10590e4",
+      "shortSha": "5982dd1",
+      "date": "2026-09-26T16:44:46Z",
+      "message": "Bump AED assets for exact generated-report PDF styling",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/5982dd1707ab9a2f1fd7e121ab94e782a10590e4"
+    },
+    {
+      "sha": "e11b65d2b7da697f9ebbc0cff0a60eb79cadb495",
+      "shortSha": "e11b65d",
+      "date": "2026-09-26T16:44:24Z",
+      "message": "Match PDF capture styling to generated report sheet",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/e11b65d2b7da697f9ebbc0cff0a60eb79cadb495"
+    },
+    {
+      "sha": "95e8f6afe7c3b102c2c746ea66db85ac0365281f",
+      "shortSha": "95e8f6a",
+      "date": "2026-09-26T16:44:09Z",
+      "message": "Match PDF capture pages to generated AED report styling",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/95e8f6afe7c3b102c2c746ea66db85ac0365281f"
+    },
+    {
+      "sha": "a11f9b843c6f717374b5a551de4cba6091ce4029",
+      "shortSha": "a11f9b8",
+      "date": "2026-09-26T16:43:16Z",
+      "message": "Style page-by-page AED PDF captures",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a11f9b843c6f717374b5a551de4cba6091ce4029"
+    },
+    {
+      "sha": "afda66a99442ab0c639003213fb8bd9970c50259",
+      "shortSha": "afda66a",
+      "date": "2026-09-26T16:43:04Z",
+      "message": "Render AED PDF packet page by page to match generated report",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/afda66a99442ab0c639003213fb8bd9970c50259"
+    },
+    {
+      "sha": "f3dc30dbc191ff8860ad20623f4bc9a88f1e5797",
+      "shortSha": "f3dc30d",
+      "date": "2026-09-26T16:40:37Z",
+      "message": "Refresh AED PWA cache for PDF preview fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/f3dc30dbc191ff8860ad20623f4bc9a88f1e5797"
+    },
+    {
+      "sha": "94d14b96b3ab26594c5d9e0808dc4595e8b6e950",
+      "shortSha": "94d14b9",
+      "date": "2026-09-26T16:40:31Z",
+      "message": "Bump AED assets for PDF preview fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/94d14b96b3ab26594c5d9e0808dc4595e8b6e950"
+    },
+    {
+      "sha": "dbd45a955ea017d3905c6abd472616722569689c",
+      "shortSha": "dbd45a9",
+      "date": "2026-09-26T16:40:14Z",
+      "message": "Fix PDF preview clean helper reference",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/dbd45a955ea017d3905c6abd472616722569689c"
+    },
+    {
+      "sha": "fb577024c2a320888f7115f29fdbd6579da3f4e6",
+      "shortSha": "fb57702",
+      "date": "2026-09-26T16:38:08Z",
+      "message": "Refresh AED PWA cache for PDF header fixes",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/fb577024c2a320888f7115f29fdbd6579da3f4e6"
+    },
+    {
+      "sha": "5fbb5045421cbdfbb0961c74649a1eac373eabe9",
+      "shortSha": "5fbb504",
+      "date": "2026-09-26T16:38:03Z",
+      "message": "Bump AED assets for repeated PDF headers",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/5fbb5045421cbdfbb0961c74649a1eac373eabe9"
+    },
+    {
+      "sha": "4e4bc1e63fa39313a9220ac9c09df03186d3aff5",
+      "shortSha": "4e4bc1e",
+      "date": "2026-09-26T16:37:52Z",
+      "message": "Style repeated AED PDF page headers",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/4e4bc1e63fa39313a9220ac9c09df03186d3aff5"
+    },
+    {
+      "sha": "a6d6e1b40b4ed2bb2057e856f3f5bd1dc6ec37bd",
+      "shortSha": "a6d6e1b",
+      "date": "2026-09-26T16:37:37Z",
+      "message": "Fix AED PDF headers logos and trailing blank pages",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a6d6e1b40b4ed2bb2057e856f3f5bd1dc6ec37bd"
+    },
+    {
+      "sha": "127f3fcaf6264ba8bee0d6aa4627a7aa5c0614e1",
+      "shortSha": "127f3fc",
+      "date": "2026-09-26T16:33:37Z",
+      "message": "Refresh AED PWA cache for generated-layout PDFs",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/127f3fcaf6264ba8bee0d6aa4627a7aa5c0614e1"
+    },
+    {
+      "sha": "713a384d5effa0d85572de2a6e65263cd0779e4e",
+      "shortSha": "713a384",
+      "date": "2026-09-26T16:33:32Z",
+      "message": "Bump AED assets for generated-layout PDF rendering",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/713a384d5effa0d85572de2a6e65263cd0779e4e"
+    },
+    {
+      "sha": "ce93daf1c237a40a5970ae6bb68cdf6fc584ac2b",
+      "shortSha": "ce93daf",
+      "date": "2026-09-26T16:33:22Z",
+      "message": "Preserve AED packet page breaks in rendered PDFs",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/ce93daf1c237a40a5970ae6bb68cdf6fc584ac2b"
+    },
+    {
+      "sha": "fd92fbc581b02e5dcb83d81d61a19b8e933c3437",
+      "shortSha": "fd92fbc",
+      "date": "2026-09-26T16:33:13Z",
+      "message": "Render PDFs directly from generated AED report layout",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/fd92fbc581b02e5dcb83d81d61a19b8e933c3437"
+    },
+    {
+      "sha": "c4a03fa18fdc4e31731a31b762d9f6348bd38cc2",
+      "shortSha": "c4a03fa",
+      "date": "2026-09-26T16:32:32Z",
+      "message": "Refresh AED PWA cache for PDF redesign",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c4a03fa18fdc4e31731a31b762d9f6348bd38cc2"
+    },
+    {
+      "sha": "0d8d10aad9755e31a6ef8d95d1054279eb0e028c",
+      "shortSha": "0d8d10a",
+      "date": "2026-09-26T16:32:24Z",
+      "message": "Bump AED PDF presentation assets",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/0d8d10aad9755e31a6ef8d95d1054279eb0e028c"
+    },
+    {
+      "sha": "1ff2635fc25cfb14e63dcd7906b650b8333fe251",
+      "shortSha": "1ff2635",
+      "date": "2026-09-26T16:32:14Z",
+      "message": "Polish AED PDF cover and footer consistency",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/1ff2635fc25cfb14e63dcd7906b650b8333fe251"
+    },
+    {
+      "sha": "8c1f7c5b28a45dc5410270343a84eaae1aab45ad",
+      "shortSha": "8c1f7c5",
+      "date": "2026-09-26T16:31:56Z",
+      "message": "Redesign AED PDF packet for professional presentation",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/8c1f7c5b28a45dc5410270343a84eaae1aab45ad"
+    },
+    {
+      "sha": "01ca585439495fed11834efeb2f7a8a6ae3bb970",
+      "shortSha": "01ca585",
+      "date": "2026-09-26T16:27:22Z",
+      "message": "Refresh AED PWA cache for packet PDFs",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/01ca585439495fed11834efeb2f7a8a6ae3bb970"
+    },
+    {
+      "sha": "3ac79977ab373dc3f2fe989ae8196bf9519b74a1",
+      "shortSha": "3ac7997",
+      "date": "2026-09-26T16:27:19Z",
+      "message": "Bump AED PDF packet assets",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/3ac79977ab373dc3f2fe989ae8196bf9519b74a1"
+    },
+    {
+      "sha": "c792997de9e0878824156fcd6a0455bc3f5ac93e",
+      "shortSha": "c792997",
+      "date": "2026-09-26T16:27:10Z",
+      "message": "Format AED PDFs as presentation packets with certification page",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c792997de9e0878824156fcd6a0455bc3f5ac93e"
+    },
+    {
+      "sha": "0decb4b42de7e5c57a5ec670ca162f1f4862fa28",
+      "shortSha": "0decb4b",
+      "date": "2026-09-26T16:22:56Z",
+      "message": "Refresh AED PWA cache for attestation placement",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/0decb4b42de7e5c57a5ec670ca162f1f4862fa28"
+    },
+    {
+      "sha": "fd47dca4e8283dccf80885e0c0e555c55d2ad25e",
+      "shortSha": "fd47dca",
+      "date": "2026-09-26T16:22:51Z",
+      "message": "Bump AED app assets for attestation placement",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/fd47dca4e8283dccf80885e0c0e555c55d2ad25e"
+    },
+    {
+      "sha": "42b2c6a7555e238599d450c2767b855bcb4468bc",
+      "shortSha": "42b2c6a",
+      "date": "2026-09-26T16:22:38Z",
+      "message": "Place certification attestation directly above auditor signature",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/42b2c6a7555e238599d450c2767b855bcb4468bc"
+    },
+    {
+      "sha": "8c36601c4854567ca041d2b90dd75ba322b4708d",
+      "shortSha": "8c36601",
+      "date": "2026-09-26T16:22:19Z",
+      "message": "Add certification attestation to AED reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/8c36601c4854567ca041d2b90dd75ba322b4708d"
+    },
+    {
+      "sha": "55e5860e791238626ceaed9eca57c014edf02697",
+      "shortSha": "55e5860",
+      "date": "2026-09-26T16:19:13Z",
+      "message": "Refresh AED PWA cache for group membership fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/55e5860e791238626ceaed9eca57c014edf02697"
+    },
+    {
+      "sha": "e36f0be747ee2d23f1e66742b37f139bb5740f27",
+      "shortSha": "e36f0be",
+      "date": "2026-09-26T16:19:10Z",
+      "message": "Bump AED report assets for group membership fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/e36f0be747ee2d23f1e66742b37f139bb5740f27"
+    },
+    {
+      "sha": "b50eacfd26587c688aaba3c7cf4aa6788224fcc4",
+      "shortSha": "b50eacf",
+      "date": "2026-09-26T16:19:00Z",
+      "message": "Ensure all AED group members are included in group reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/b50eacfd26587c688aaba3c7cf4aa6788224fcc4"
+    },
+    {
+      "sha": "97eee2afdb29070f65074356f530757cbbfc8043",
+      "shortSha": "97eee2a",
+      "date": "2026-09-26T16:16:35Z",
+      "message": "Refresh AED PWA cache for PDF preview and health colors",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/97eee2afdb29070f65074356f530757cbbfc8043"
+    },
+    {
+      "sha": "b530f1dee5d9e6b535e38014a45299fc5f088863",
+      "shortSha": "b530f1d",
+      "date": "2026-09-26T16:16:33Z",
+      "message": "Bump AED report assets for preview and health colors",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/b530f1dee5d9e6b535e38014a45299fc5f088863"
+    },
+    {
+      "sha": "7eac0710cd8b427e6fc9ac8de03d704cb370f7aa",
+      "shortSha": "7eac071",
+      "date": "2026-09-26T16:16:25Z",
+      "message": "Add report health status colors",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/7eac0710cd8b427e6fc9ac8de03d704cb370f7aa"
+    },
+    {
+      "sha": "d2f66c75d3aad9eca5da69d9e1a39cb6948be6d0",
+      "shortSha": "d2f66c7",
+      "date": "2026-09-26T16:16:12Z",
+      "message": "Align PDF health thresholds with 30-day attention rule",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d2f66c75d3aad9eca5da69d9e1a39cb6948be6d0"
+    },
+    {
+      "sha": "ecf90d0c76ff91490ccd318b89ebc55a1a430ebc",
+      "shortSha": "ecf90d0",
+      "date": "2026-09-26T16:15:51Z",
+      "message": "Add in-app PDF preview and updated health colors",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/ecf90d0c76ff91490ccd318b89ebc55a1a430ebc"
+    },
+    {
+      "sha": "de5f0aa9925c8313245c0ee8f3b5c092da2aab0f",
+      "shortSha": "de5f0aa",
+      "date": "2026-09-26T16:15:36Z",
+      "message": "Add PDF preview and color-coded AED report health",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/de5f0aa9925c8313245c0ee8f3b5c092da2aab0f"
+    },
+    {
+      "sha": "23fdf1eb5ce79e25a1f8e8d249cc0e2f3bca193a",
+      "shortSha": "23fdf1e",
+      "date": "2026-09-26T16:13:57Z",
+      "message": "Refresh AED PWA cache for group report fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/23fdf1eb5ce79e25a1f8e8d249cc0e2f3bca193a"
+    },
+    {
+      "sha": "55c7c46610ee3d5a5836ae22a9333b119cc6628a",
+      "shortSha": "55c7c46",
+      "date": "2026-09-26T16:13:54Z",
+      "message": "Bump AED report assets for group fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/55c7c46610ee3d5a5836ae22a9333b119cc6628a"
+    },
+    {
+      "sha": "7c34f032172dd499012e164901dd61b1354e3da8",
+      "shortSha": "7c34f03",
+      "date": "2026-09-26T16:13:47Z",
+      "message": "Fix AED group reports using canonical group assignments",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/7c34f032172dd499012e164901dd61b1354e3da8"
+    },
+    {
+      "sha": "3cfbe5ef273204b6cc6f00be7c74dcebbacdb4f1",
+      "shortSha": "3cfbe5e",
+      "date": "2026-09-26T15:11:17Z",
+      "message": "Refresh AED PWA cache for universal report signatures",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/3cfbe5ef273204b6cc6f00be7c74dcebbacdb4f1"
+    },
+    {
+      "sha": "08d834198c7a5b24d4dea53f6a0203f727e0bde7",
+      "shortSha": "08d8341",
+      "date": "2026-09-26T15:11:13Z",
+      "message": "Bump AED assets for universal report signatures",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/08d834198c7a5b24d4dea53f6a0203f727e0bde7"
+    },
+    {
+      "sha": "a30217123ca24ba40bafad0ad32dafa19fcddd72",
+      "shortSha": "a302171",
+      "date": "2026-09-26T15:11:03Z",
+      "message": "Clarify signature requirement for all AED reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a30217123ca24ba40bafad0ad32dafa19fcddd72"
+    },
+    {
+      "sha": "e502bdcd0d1dd8c7e35f634ec84b551bcf9385a0",
+      "shortSha": "e502bdc",
+      "date": "2026-09-26T15:10:53Z",
+      "message": "Require signatures on all generated AED reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/e502bdcd0d1dd8c7e35f634ec84b551bcf9385a0"
+    },
+    {
+      "sha": "5e662556df33571e4fe52ffba4575c73ab72e111",
+      "shortSha": "5e66255",
+      "date": "2026-09-26T15:09:53Z",
+      "message": "Refresh AED PWA cache for group update",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/5e662556df33571e4fe52ffba4575c73ab72e111"
+    },
+    {
+      "sha": "c432395db87bba413635d111e61ef274ff14d6c6",
+      "shortSha": "c432395",
+      "date": "2026-09-26T15:09:50Z",
+      "message": "Bump AED app assets for group update",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c432395db87bba413635d111e61ef274ff14d6c6"
+    },
+    {
+      "sha": "39eae6c6b8fd0ba1d7f6d00117747daf777b68a9",
+      "shortSha": "39eae6c",
+      "date": "2026-09-26T15:09:43Z",
+      "message": "Move Happy Rock East AED into Parks and Recreation group",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/39eae6c6b8fd0ba1d7f6d00117747daf777b68a9"
+    },
+    {
+      "sha": "037e16676ab252a2e2e7d4ca02e4c3e989dc4f47",
+      "shortSha": "037e166",
+      "date": "2026-09-26T14:55:11Z",
+      "message": "Refresh AED PWA cache for GS1 barcode scanning",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/037e16676ab252a2e2e7d4ca02e4c3e989dc4f47"
+    },
+    {
+      "sha": "b6c22f35cc9477780310a666888d06241fa69893",
+      "shortSha": "b6c22f3",
+      "date": "2026-09-26T14:55:08Z",
+      "message": "Bump AED app assets for GS1 barcode scanning",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/b6c22f35cc9477780310a666888d06241fa69893"
+    },
+    {
+      "sha": "37eaa345deb055ffeb799d643c655fa9b4c5a99c",
+      "shortSha": "37eaa34",
+      "date": "2026-09-26T14:54:51Z",
+      "message": "Support ZOLL GS1 Code 128 serial barcode scanning",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/37eaa345deb055ffeb799d643c655fa9b4c5a99c"
+    },
+    {
+      "sha": "e5445027881de1c22b8460e938986aa3c0e0ccf1",
+      "shortSha": "e544502",
+      "date": "2026-09-26T14:40:25Z",
+      "message": "Refresh AED PWA cache for draft checks",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/e5445027881de1c22b8460e938986aa3c0e0ccf1"
+    },
+    {
+      "sha": "c1f9266285430b274aeb44854eabcd4be708f16f",
+      "shortSha": "c1f9266",
+      "date": "2026-09-26T14:40:22Z",
+      "message": "Bump AED app assets for draft checks",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c1f9266285430b274aeb44854eabcd4be708f16f"
+    },
+    {
+      "sha": "42817e6a1fa4c2f007b484fd4450c0d7138dc986",
+      "shortSha": "42817e6",
+      "date": "2026-09-26T14:40:14Z",
+      "message": "Add resumable quarterly AED check drafts",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/42817e6a1fa4c2f007b484fd4450c0d7138dc986"
+    },
+    {
+      "sha": "80ad473b077d42096f0bc432ab23271cf640eeba",
+      "shortSha": "80ad473",
+      "date": "2026-09-26T14:37:02Z",
+      "message": "Refresh AED PWA cache for mobile signatures",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/80ad473b077d42096f0bc432ab23271cf640eeba"
+    },
+    {
+      "sha": "a02d9880b356eb7b9d7059f924c8955c0feaa714",
+      "shortSha": "a02d988",
+      "date": "2026-09-26T14:37:00Z",
+      "message": "Bump AED app assets for mobile signature layout",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a02d9880b356eb7b9d7059f924c8955c0feaa714"
+    },
+    {
+      "sha": "9a16dcf1d0f5160edfeb73abec1884f0acf507c5",
+      "shortSha": "9a16dcf",
+      "date": "2026-09-26T14:36:49Z",
+      "message": "Optimize AED auditor signatures for mobile and landscape",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/9a16dcf1d0f5160edfeb73abec1884f0acf507c5"
+    },
+    {
+      "sha": "ebf76b5f9b8d87f05271e759044ab8aff8dbf860",
+      "shortSha": "ebf76b5",
+      "date": "2026-09-26T14:30:53Z",
+      "message": "Refresh AED PWA cache for quick action styling",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/ebf76b5f9b8d87f05271e759044ab8aff8dbf860"
+    },
+    {
+      "sha": "4a7ae70503e0979867487eb845fe274a45568789",
+      "shortSha": "4a7ae70",
+      "date": "2026-09-26T14:30:50Z",
+      "message": "Bump AED app assets for quick action styling",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/4a7ae70503e0979867487eb845fe274a45568789"
+    },
+    {
+      "sha": "1d2fc138a70688b60bbae1f103f07a2e48e428d8",
+      "shortSha": "1d2fc13",
+      "date": "2026-09-26T14:30:43Z",
+      "message": "Style dashboard quick actions with distinct theme colors",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/1d2fc138a70688b60bbae1f103f07a2e48e428d8"
+    },
+    {
+      "sha": "50f09e5804ebd8024dcf97ebfb6ebbc17550c481",
+      "shortSha": "50f09e5",
+      "date": "2026-09-26T14:29:55Z",
+      "message": "Refresh AED PWA cache for quarterly quick action",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/50f09e5804ebd8024dcf97ebfb6ebbc17550c481"
+    },
+    {
+      "sha": "b18e176382ce7658a9a9513430ac6da7290c19db",
+      "shortSha": "b18e176",
+      "date": "2026-09-26T14:29:53Z",
+      "message": "Bump AED app assets for quarterly quick action",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/b18e176382ce7658a9a9513430ac6da7290c19db"
+    },
+    {
+      "sha": "51172a1c64a2685b13622e57bd829638622ea126",
+      "shortSha": "51172a1",
+      "date": "2026-09-26T14:29:46Z",
+      "message": "Add dashboard quarterly check quick action",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/51172a1c64a2685b13622e57bd829638622ea126"
+    },
+    {
+      "sha": "7bdd80196e692ddf7082c3d9b43a918002e25cfa",
+      "shortSha": "7bdd801",
+      "date": "2026-09-26T14:28:50Z",
+      "message": "Refresh AED PWA cache for signature workflow",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/7bdd80196e692ddf7082c3d9b43a918002e25cfa"
+    },
+    {
+      "sha": "089ca4d2946062fe81cc42edcc838f30bf9e06d9",
+      "shortSha": "089ca4d",
+      "date": "2026-09-26T14:28:47Z",
+      "message": "Bump AED app assets after signature workflow correction",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/089ca4d2946062fe81cc42edcc838f30bf9e06d9"
+    },
+    {
+      "sha": "d35df5e6f9e4d946d38fd8d2b6ea17e89a1bfbfa",
+      "shortSha": "d35df5e",
+      "date": "2026-09-26T14:28:30Z",
+      "message": "Remove signatures from custom AED reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d35df5e6f9e4d946d38fd8d2b6ea17e89a1bfbfa"
+    },
+    {
+      "sha": "ddab3fb7e2d381fc56dd922f7874e4829c2dfe93",
+      "shortSha": "ddab3fb",
+      "date": "2026-09-26T14:28:15Z",
+      "message": "Limit report signatures to quarterly and annual reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/ddab3fb7e2d381fc56dd922f7874e4829c2dfe93"
+    },
+    {
+      "sha": "c254b60151374d23a271f7e77d66aadf396f6219",
+      "shortSha": "c254b60",
+      "date": "2026-09-26T14:25:44Z",
+      "message": "Refresh AED PWA cache for signature update",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c254b60151374d23a271f7e77d66aadf396f6219"
+    },
+    {
+      "sha": "0ec30f99d47ea6faf202b03c2507916723b6be0a",
+      "shortSha": "0ec30f9",
+      "date": "2026-09-26T14:25:42Z",
+      "message": "Bump AED report asset versions",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/0ec30f99d47ea6faf202b03c2507916723b6be0a"
+    },
+    {
+      "sha": "9c38dd5ed4d41d3eb22ef835d335fbb61768da0b",
+      "shortSha": "9c38dd5",
+      "date": "2026-09-26T14:25:30Z",
+      "message": "Render overall report signature in PDF",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/9c38dd5ed4d41d3eb22ef835d335fbb61768da0b"
+    },
+    {
+      "sha": "85cc42a787252f940afa757464aa9f8f244c8f00",
+      "shortSha": "85cc42a",
+      "date": "2026-09-26T14:25:10Z",
+      "message": "Require signature on generated AED reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/85cc42a787252f940afa757464aa9f8f244c8f00"
+    },
+    {
+      "sha": "52f89ffdcda423110dffc9543eb1a8eccdb81daf",
+      "shortSha": "52f89ff",
+      "date": "2026-09-26T14:24:52Z",
+      "message": "Require auditor and overall report signatures",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/52f89ffdcda423110dffc9543eb1a8eccdb81daf"
+    },
+    {
+      "sha": "5df009cdde414f4714adc058f4c842386b593123",
+      "shortSha": "5df009c",
+      "date": "2026-09-26T14:19:24Z",
+      "message": "Add repository link safely without app script injection",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/5df009cdde414f4714adc058f4c842386b593123"
+    },
+    {
+      "sha": "532b8108403e93ffe55dbd526eefe969c6302b95",
+      "shortSha": "532b810",
+      "date": "2026-09-26T14:06:01Z",
+      "message": "Emergency rollback repository navigation integration",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/532b8108403e93ffe55dbd526eefe969c6302b95"
+    },
+    {
+      "sha": "e23b9bfcc41251e104d757d15cb6ea78a192445b",
+      "shortSha": "e23b9bf",
+      "date": "2026-09-26T14:03:15Z",
+      "message": "Safely expose AED Repository only in main app navigation",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/e23b9bfcc41251e104d757d15cb6ea78a192445b"
+    },
+    {
+      "sha": "d0ea55b3f0c89d1074ecbef65b98ee80e2b67c62",
+      "shortSha": "d0ea55b",
+      "date": "2026-09-26T14:00:05Z",
+      "message": "Restore stable AED app service worker",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d0ea55b3f0c89d1074ecbef65b98ee80e2b67c62"
+    },
+    {
+      "sha": "0b9830185d55194746439bb9f02a822f5007c202",
+      "shortSha": "0b98301",
+      "date": "2026-09-26T13:57:39Z",
+      "message": "Expose AED Repository inside main app navigation",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/0b9830185d55194746439bb9f02a822f5007c202"
+    },
+    {
+      "sha": "860fea6e57be7b372558660ec0dced1610a817eb",
+      "shortSha": "860fea6",
+      "date": "2026-09-26T13:57:21Z",
+      "message": "Add AED Repository navigation to main app",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/860fea6e57be7b372558660ec0dced1610a817eb"
+    },
+    {
+      "sha": "739b8d4f05093f736ac958fbb9aa695a03d65e7b",
+      "shortSha": "739b8d4",
+      "date": "2026-09-26T13:55:05Z",
+      "message": "Expand AED repository to all AED lifecycle records",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/739b8d4f05093f736ac958fbb9aa695a03d65e7b"
+    },
+    {
+      "sha": "f2b0f1fce0db9c32f3666b27763a44b51a525c84",
+      "shortSha": "f2b0f1f",
+      "date": "2026-09-26T13:51:57Z",
+      "message": "Add AED lifecycle and end-of-life repository",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/f2b0f1fce0db9c32f3666b27763a44b51a525c84"
+    },
+    {
+      "sha": "864ddfc4099d0f5c70b2dca431837e18a3ca313c",
+      "shortSha": "864ddfc",
+      "date": "2026-09-26T13:43:30Z",
+      "message": "Keep manually out-of-service AEDs permanently inactive",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/864ddfc4099d0f5c70b2dca431837e18a3ca313c"
+    },
+    {
+      "sha": "d0cd2a4e37e878c4c54ef9144da103af59d42ad3",
+      "shortSha": "d0cd2a4",
+      "date": "2026-09-24T20:43:59Z",
+      "message": "Force fresh PDF exporter and refresh PWA cache",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d0cd2a4e37e878c4c54ef9144da103af59d42ad3"
+    },
+    {
+      "sha": "8c94cade7a18af7a6d7979f12399ca5b95223a1b",
+      "shortSha": "8c94cad",
+      "date": "2026-09-24T20:15:06Z",
+      "message": "Add written executive narrative to AED PDF reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/8c94cade7a18af7a6d7979f12399ca5b95223a1b"
+    },
+    {
+      "sha": "069390433250d1f9a0cac26ece659913fdafc53f",
+      "shortSha": "0693904",
+      "date": "2026-09-24T19:51:20Z",
+      "message": "Polish AED PDF summary and report card layout",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/069390433250d1f9a0cac26ece659913fdafc53f"
+    },
+    {
+      "sha": "2c0b05ee39b34bbec78517cc970890de9e7858d5",
+      "shortSha": "2c0b05e",
+      "date": "2026-09-24T19:37:08Z",
+      "message": "Add jsPDF global fallback for report export",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/2c0b05ee39b34bbec78517cc970890de9e7858d5"
+    },
+    {
+      "sha": "9f4bb23cd4d59af8492ff9e789b09da8f20a817c",
+      "shortSha": "9f4bb23",
+      "date": "2026-09-24T19:36:46Z",
+      "message": "Load jsPDF engine for validated report exporter",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/9f4bb23cd4d59af8492ff9e789b09da8f20a817c"
+    },
+    {
+      "sha": "558791de98e208d83b107884027cb998749c98f6",
+      "shortSha": "558791d",
+      "date": "2026-09-24T19:28:54Z",
+      "message": "Load validated PDF exporter directly without service worker changes",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/558791de98e208d83b107884027cb998749c98f6"
+    },
+    {
+      "sha": "7da4b6f6387dd96c038e15062e98fcb38e131a47",
+      "shortSha": "7da4b6f",
+      "date": "2026-09-24T19:28:21Z",
+      "message": "Use validated PDF exporter and health rules",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/7da4b6f6387dd96c038e15062e98fcb38e131a47"
+    },
+    {
+      "sha": "b5868ac05d17b2ec1f6439714e332bdb8bb4e61a",
+      "shortSha": "b5868ac",
+      "date": "2026-09-24T19:27:55Z",
+      "message": "Integrate validated themed PDF exporter",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/b5868ac05d17b2ec1f6439714e332bdb8bb4e61a"
+    },
+    {
+      "sha": "26d109a80ff72ec1c3ac5703ad67911c114ba6ba",
+      "shortSha": "26d109a",
+      "date": "2026-09-24T18:22:24Z",
+      "message": "Rollback PDF exporter and restore stable app v96",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/26d109a80ff72ec1c3ac5703ad67911c114ba6ba"
+    },
+    {
+      "sha": "20c27ac9ba98c7b7445d9c7bee3daff1f12f9f54",
+      "shortSha": "20c27ac",
+      "date": "2026-09-24T18:19:31Z",
+      "message": "Use stable data-driven PDF exporter v95",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/20c27ac9ba98c7b7445d9c7bee3daff1f12f9f54"
+    },
+    {
+      "sha": "c25c2251054467261ca3abce9b5028182a884fb7",
+      "shortSha": "c25c225",
+      "date": "2026-09-24T18:02:14Z",
+      "message": "Emergency restore stable app and cache v94",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c25c2251054467261ca3abce9b5028182a884fb7"
+    },
+    {
+      "sha": "4ebeeb6f4d4e3a2bd3aefcfbe118a262f3f27e36",
+      "shortSha": "4ebeeb6",
+      "date": "2026-09-24T17:55:53Z",
+      "message": "Release v93 complete chunked PDF export",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/4ebeeb6f4d4e3a2bd3aefcfbe118a262f3f27e36"
+    },
+    {
+      "sha": "c7e66c6a5a61ff1a1bb55b38e5d05425e9802f93",
+      "shortSha": "c7e66c6",
+      "date": "2026-09-24T17:55:03Z",
+      "message": "Add reliable chunked PDF export for complete AED reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c7e66c6a5a61ff1a1bb55b38e5d05425e9802f93"
+    },
+    {
+      "sha": "b7063d94666f6feb5ff2d74a41277560734df66b",
+      "shortSha": "b7063d9",
+      "date": "2026-09-24T17:37:13Z",
+      "message": "Release v92 mobile and complete group report fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/b7063d94666f6feb5ff2d74a41277560734df66b"
+    },
+    {
+      "sha": "0325ca55476556e082f501f8f23d3fe97c42a840",
+      "shortSha": "0325ca5",
+      "date": "2026-09-24T17:36:56Z",
+      "message": "Fix mobile report sizing and multi-page group PDF flow",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/0325ca55476556e082f501f8f23d3fe97c42a840"
+    },
+    {
+      "sha": "46ae2e9c34de23b74d9df82a3686efc4e4a8881e",
+      "shortSha": "46ae2e9",
+      "date": "2026-09-24T17:31:39Z",
+      "message": "Load fixed report layout and bump PWA cache to v91",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/46ae2e9c34de23b74d9df82a3686efc4e4a8881e"
+    },
+    {
+      "sha": "d1e237683316c4dc16b41766b12c2835f757d96a",
+      "shortSha": "d1e2376",
+      "date": "2026-09-24T17:31:21Z",
+      "message": "Add fixed letter-size report layout for clean PDF rendering",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d1e237683316c4dc16b41766b12c2835f757d96a"
+    },
+    {
+      "sha": "c14e7c779bba7cffffff596964ace7894b590918",
+      "shortSha": "c14e7c7",
+      "date": "2026-09-24T17:04:54Z",
+      "message": "Restore stable PWA cache after PDF rollback",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c14e7c779bba7cffffff596964ace7894b590918"
+    },
+    {
+      "sha": "d2d3f67372eefce3cfd6d768c6d1a74c17787836",
+      "shortSha": "d2d3f67",
+      "date": "2026-09-24T17:04:18Z",
+      "message": "Emergency rollback report builder to stable v88",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d2d3f67372eefce3cfd6d768c6d1a74c17787836"
+    },
+    {
+      "sha": "3944e1ff903915278a8357561a87d166f9a3160a",
+      "shortSha": "3944e1f",
+      "date": "2026-09-24T16:48:56Z",
+      "message": "Switch report PDF sharing to direct jsPDF generator v89",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/3944e1ff903915278a8357561a87d166f9a3160a"
+    },
+    {
+      "sha": "353a895620f8042d63af283e0ed47298b03d6106",
+      "shortSha": "353a895",
+      "date": "2026-09-24T16:48:32Z",
+      "message": "Add reliable native PDF report export and sharing",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/353a895620f8042d63af283e0ed47298b03d6106"
+    },
+    {
+      "sha": "5844e9bf59ff71ded8db4852847e294505a6f303",
+      "shortSha": "5844e9b",
+      "date": "2026-09-24T16:45:06Z",
+      "message": "Bump PWA cache to v88",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/5844e9bf59ff71ded8db4852847e294505a6f303"
+    },
+    {
+      "sha": "a506232f1eab41b364a6640819cfe6d940d21d14",
+      "shortSha": "a506232",
+      "date": "2026-09-24T16:44:43Z",
+      "message": "Use visible report DOM for reliable PDF export and sharing",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a506232f1eab41b364a6640819cfe6d940d21d14"
+    },
+    {
+      "sha": "36bce19f96c6c001513d4f0f429afd5b6874d538",
+      "shortSha": "36bce19",
+      "date": "2026-09-24T16:40:17Z",
+      "message": "Bump PWA cache to v87",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/36bce19f96c6c001513d4f0f429afd5b6874d538"
+    },
+    {
+      "sha": "83c48e325af4241cf71cc154bf7f4c105ff6df93",
+      "shortSha": "83c48e3",
+      "date": "2026-09-24T16:40:04Z",
+      "message": "Fix blank PDF export rendering on iPhone",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/83c48e325af4241cf71cc154bf7f4c105ff6df93"
+    },
+    {
+      "sha": "d65b9a4be95d139005db35620756cf79045c6963",
+      "shortSha": "d65b9a4",
+      "date": "2026-09-24T16:30:40Z",
+      "message": "Bump PWA cache to v86",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d65b9a4be95d139005db35620756cf79045c6963"
+    },
+    {
+      "sha": "54b404dfb1df7bd895a909b8dcb0a4283d0a4155",
+      "shortSha": "54b404d",
+      "date": "2026-09-24T16:30:21Z",
+      "message": "Add first-page executive health summary to AED reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/54b404dfb1df7bd895a909b8dcb0a4283d0a4155"
+    },
+    {
+      "sha": "631b30acf688dbb4f19c1c0b313071a8f5967a53",
+      "shortSha": "631b30a",
+      "date": "2026-09-24T16:21:35Z",
+      "message": "Bump PWA cache to v85",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/631b30acf688dbb4f19c1c0b313071a8f5967a53"
+    },
+    {
+      "sha": "b87e27dc41aafffe79d88bffb63546cd953ee037",
+      "shortSha": "b87e27d",
+      "date": "2026-09-24T16:21:14Z",
+      "message": "Export and share grouped AED reports as PDF files",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/b87e27dc41aafffe79d88bffb63546cd953ee037"
+    },
+    {
+      "sha": "15a5f843c21f1928ee0cfa5450fbc5324519f654",
+      "shortSha": "15a5f84",
+      "date": "2026-09-24T16:20:42Z",
+      "message": "Add PDF generation library for report exports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/15a5f843c21f1928ee0cfa5450fbc5324519f654"
+    },
+    {
+      "sha": "b6bcb02a6725acc8078371c7ba27a56882ab2f6a",
+      "shortSha": "b6bcb02",
+      "date": "2026-09-24T16:09:52Z",
+      "message": "Bump PWA cache to v84",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/b6bcb02a6725acc8078371c7ba27a56882ab2f6a"
+    },
+    {
+      "sha": "25c8c21128526434ba9ea7267933623e300d912c",
+      "shortSha": "25c8c21",
+      "date": "2026-09-24T16:09:29Z",
+      "message": "Add direct sharing to generated AED reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/25c8c21128526434ba9ea7267933623e300d912c"
+    },
+    {
+      "sha": "95cf71b08e59617e6ae05038c71a84cc0be83602",
+      "shortSha": "95cf71b",
+      "date": "2026-09-24T15:58:59Z",
+      "message": "Bump PWA cache to v83",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/95cf71b08e59617e6ae05038c71a84cc0be83602"
+    },
+    {
+      "sha": "3c9c49fc8b02257a0a12bc5884ae83dc425455b6",
+      "shortSha": "3c9c49f",
+      "date": "2026-09-24T15:58:37Z",
+      "message": "Show AED group name on generated group reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/3c9c49fc8b02257a0a12bc5884ae83dc425455b6"
+    },
+    {
+      "sha": "f8fae38f5aafe372e2f6042a066d8b6cf1ca18bf",
+      "shortSha": "f8fae38",
+      "date": "2026-09-24T15:32:17Z",
+      "message": "Bump PWA cache to v82",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/f8fae38f5aafe372e2f6042a066d8b6cf1ca18bf"
+    },
+    {
+      "sha": "0c81bde9b43faaf1a1825f3d4ca8e27e741dcc86",
+      "shortSha": "0c81bde",
+      "date": "2026-09-24T15:31:29Z",
+      "message": "Load report builder cleanly after main app script",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/0c81bde9b43faaf1a1825f3d4ca8e27e741dcc86"
+    },
+    {
+      "sha": "39c036ba7a17b54a377748051b17f2b7cb6aab8c",
+      "shortSha": "39c036b",
+      "date": "2026-09-24T14:51:46Z",
+      "message": "Enable AED report builder and bump PWA to v81",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/39c036ba7a17b54a377748051b17f2b7cb6aab8c"
+    },
+    {
+      "sha": "28ead9a66bbd61da73d375df4ac9c3d792381c84",
+      "shortSha": "28ead9a",
+      "date": "2026-09-24T14:50:58Z",
+      "message": "Add grouped and selected AED report builder",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/28ead9a66bbd61da73d375df4ac9c3d792381c84"
+    },
+    {
+      "sha": "18669a53c8c8fc2aec88d2ddcbc1a9c30a85430b",
+      "shortSha": "18669a5",
+      "date": "2026-09-24T14:01:21Z",
+      "message": "Bump PWA cache to v80",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/18669a53c8c8fc2aec88d2ddcbc1a9c30a85430b"
+    },
+    {
+      "sha": "0442b4eed3955f2c8a8f153bc6a6e11ff4206a52",
+      "shortSha": "0442b4e",
+      "date": "2026-09-24T14:01:08Z",
+      "message": "Support multiple barcode formats in AED scanner",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/0442b4eed3955f2c8a8f153bc6a6e11ff4206a52"
+    },
+    {
+      "sha": "60c3b7dc388a63bfcb831b1686ec93ecf6a68e1a",
+      "shortSha": "60c3b7d",
+      "date": "2026-09-24T13:11:57Z",
+      "message": "Bump PWA cache to v79",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/60c3b7dc388a63bfcb831b1686ec93ecf6a68e1a"
+    },
+    {
+      "sha": "f0e56ab09ce5e9994021868f49edcd3a83d9f536",
+      "shortSha": "f0e56ab",
+      "date": "2026-09-24T13:11:21Z",
+      "message": "Add employee number to quarterly inspections",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/f0e56ab09ce5e9994021868f49edcd3a83d9f536"
+    },
+    {
+      "sha": "8e7dd41c2a81e2201fbacbd026dafb995e195b94",
+      "shortSha": "8e7dd41",
+      "date": "2026-09-24T13:05:37Z",
+      "message": "Bump PWA cache to v78",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/8e7dd41c2a81e2201fbacbd026dafb995e195b94"
+    },
+    {
+      "sha": "6029d999755991494e50f815b68a0b66319cd663",
+      "shortSha": "6029d99",
+      "date": "2026-09-24T13:05:18Z",
+      "message": "Make AED cloud sync near-immediate",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/6029d999755991494e50f815b68a0b66319cd663"
+    },
+    {
+      "sha": "3307f9dec489ed3dcf5b74d4c39fe04f2b7dbe05",
+      "shortSha": "3307f9d",
+      "date": "2026-09-24T12:59:12Z",
+      "message": "Bump PWA cache to v77",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/3307f9dec489ed3dcf5b74d4c39fe04f2b7dbe05"
+    },
+    {
+      "sha": "6d3cf04a632903fdfb962996712b2ab7a48c67db",
+      "shortSha": "6d3cf04",
+      "date": "2026-09-24T12:58:58Z",
+      "message": "Protect offline AED edits during cloud synchronization",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/6d3cf04a632903fdfb962996712b2ab7a48c67db"
+    },
+    {
+      "sha": "61db775e2fc8bd08b127b64bb76a67ea0641c57a",
+      "shortSha": "61db775",
+      "date": "2026-09-24T12:57:26Z",
+      "message": "Bump PWA cache to v76",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/61db775e2fc8bd08b127b64bb76a67ea0641c57a"
+    },
+    {
+      "sha": "646b4583822f627bc66acef8a92b3547497c31a8",
+      "shortSha": "646b458",
+      "date": "2026-09-24T12:57:13Z",
+      "message": "Fix cloud sync polling after saves",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/646b4583822f627bc66acef8a92b3547497c31a8"
+    },
+    {
+      "sha": "d6813a4faafbb0d83b439a02dea48f36997af689",
+      "shortSha": "d6813a4",
+      "date": "2026-09-24T12:56:53Z",
+      "message": "Add secure shared cloud sync for AED inventory",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d6813a4faafbb0d83b439a02dea48f36997af689"
+    },
+    {
+      "sha": "c5e93996d58823994fca525b1ddbaafb4740c755",
+      "shortSha": "c5e9399",
+      "date": "2026-09-24T02:13:11Z",
+      "message": "Bump PWA cache to v75",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c5e93996d58823994fca525b1ddbaafb4740c755"
+    },
+    {
+      "sha": "f1a508cfcb5dbedf0e6858f38f01266897ef8da8",
+      "shortSha": "f1a508c",
+      "date": "2026-09-24T02:12:57Z",
+      "message": "Make attention pills yellow globally",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/f1a508cfcb5dbedf0e6858f38f01266897ef8da8"
+    },
+    {
+      "sha": "faed0f3b27e2499dc99b56c359a0c7b18826bfda",
+      "shortSha": "faed0f3",
+      "date": "2026-09-24T02:10:44Z",
+      "message": "Bump PWA cache to v74",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/faed0f3b27e2499dc99b56c359a0c7b18826bfda"
+    },
+    {
+      "sha": "2477b98bc778df468a9f08f179722456c238f18f",
+      "shortSha": "2477b98",
+      "date": "2026-09-24T02:10:29Z",
+      "message": "Color quarterly priority badge by alert severity",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/2477b98bc778df468a9f08f179722456c238f18f"
+    },
+    {
+      "sha": "e8974beeca5420c78ad63c9d0883be2885a31be4",
+      "shortSha": "e8974be",
+      "date": "2026-09-24T02:08:07Z",
+      "message": "Bump PWA cache to v73",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/e8974beeca5420c78ad63c9d0883be2885a31be4"
+    },
+    {
+      "sha": "5e85a44ab6300093687b38e8b1fd93bad0b0de76",
+      "shortSha": "5e85a44",
+      "date": "2026-09-24T02:07:53Z",
+      "message": "Split dashboard quarterly status into collapsible complete and due sections",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/5e85a44ab6300093687b38e8b1fd93bad0b0de76"
+    },
+    {
+      "sha": "1c5dc4ca3b89e911d3818fc4ea4af2ebff32dccd",
+      "shortSha": "1c5dc4c",
+      "date": "2026-09-24T02:05:23Z",
+      "message": "Bump PWA cache to v72",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/1c5dc4ca3b89e911d3818fc4ea4af2ebff32dccd"
+    },
+    {
+      "sha": "f53012658c101cc11cbfb656708f000a282325da",
+      "shortSha": "f530126",
+      "date": "2026-09-24T02:05:02Z",
+      "message": "Make dashboard quarterly status collapsible",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/f53012658c101cc11cbfb656708f000a282325da"
+    },
+    {
+      "sha": "16264481c54b76e9320effbbac1e757f9dfb44d3",
+      "shortSha": "1626448",
+      "date": "2026-09-24T02:03:47Z",
+      "message": "Bump PWA cache to v71",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/16264481c54b76e9320effbbac1e757f9dfb44d3"
+    },
+    {
+      "sha": "5a9d3ad15b0d06debf22a56e44a8a27a13d97152",
+      "shortSha": "5a9d3ad",
+      "date": "2026-09-24T02:03:30Z",
+      "message": "Simplify dashboard and make expiration watch actionable",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/5a9d3ad15b0d06debf22a56e44a8a27a13d97152"
+    },
+    {
+      "sha": "d1bac4ca78074a5bb50f448ac65514cdb34c52f4",
+      "shortSha": "d1bac4c",
+      "date": "2026-09-24T02:02:10Z",
+      "message": "Bump PWA cache to v70",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d1bac4ca78074a5bb50f448ac65514cdb34c52f4"
+    },
+    {
+      "sha": "0f401ee4c5b5968470bb08503f3b8f55a551a593",
+      "shortSha": "0f401ee",
+      "date": "2026-09-24T02:01:47Z",
+      "message": "Clear stale quarterly out-of-service alerts from deleted tests",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/0f401ee4c5b5968470bb08503f3b8f55a551a593"
+    },
+    {
+      "sha": "e7d4ce980a278002e7a6bba1e754785e3eeebc36",
+      "shortSha": "e7d4ce9",
+      "date": "2026-09-24T01:59:36Z",
+      "message": "Bump PWA cache to v69",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/e7d4ce980a278002e7a6bba1e754785e3eeebc36"
+    },
+    {
+      "sha": "8dc75c56c0591fb293ae6ad93303212ef19de847",
+      "shortSha": "8dc75c5",
+      "date": "2026-09-24T01:59:20Z",
+      "message": "Fix in-service report pill coloring",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/8dc75c56c0591fb293ae6ad93303212ef19de847"
+    },
+    {
+      "sha": "79eab545849de7241abfe296c4566f02ca41f331",
+      "shortSha": "79eab54",
+      "date": "2026-09-24T01:51:27Z",
+      "message": "Bump PWA cache to v68",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/79eab545849de7241abfe296c4566f02ca41f331"
+    },
+    {
+      "sha": "f6fa0ffdd1da9d5fd5b104577b38ed1ed1994b6c",
+      "shortSha": "f6fa0ff",
+      "date": "2026-09-24T01:51:14Z",
+      "message": "Add damaged and destroyed AED views",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/f6fa0ffdd1da9d5fd5b104577b38ed1ed1994b6c"
+    },
+    {
+      "sha": "99f0cbeecfb0f0137f5c03361f3249fb04c0a9f1",
+      "shortSha": "99f0cbe",
+      "date": "2026-09-24T01:46:55Z",
+      "message": "Bump PWA cache to v67",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/99f0cbeecfb0f0137f5c03361f3249fb04c0a9f1"
+    },
+    {
+      "sha": "4814180034576f9e2b945d0a03f93cf651f127db",
+      "shortSha": "4814180",
+      "date": "2026-09-24T01:46:36Z",
+      "message": "Allow quarterly component replacements with new expiration dates",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/4814180034576f9e2b945d0a03f93cf651f127db"
+    },
+    {
+      "sha": "b7737a1991e1f73e88a3634691342c76f2506ed9",
+      "shortSha": "b7737a1",
+      "date": "2026-09-24T01:41:43Z",
+      "message": "Bump PWA cache to v66",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/b7737a1991e1f73e88a3634691342c76f2506ed9"
+    },
+    {
+      "sha": "420eae87f9bcaf0244175e7a239d8373ba862a66",
+      "shortSha": "420eae8",
+      "date": "2026-09-24T01:41:27Z",
+      "message": "Clear stale Car 100 test shock hold",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/420eae87f9bcaf0244175e7a239d8373ba862a66"
+    },
+    {
+      "sha": "c085b93f0d2fde8d68d8a224b05806e2ce48a540",
+      "shortSha": "c085b93",
+      "date": "2026-09-24T01:39:39Z",
+      "message": "Bump PWA cache to v65",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c085b93f0d2fde8d68d8a224b05806e2ce48a540"
+    },
+    {
+      "sha": "9f4b0013096fe6ac8a2954952a1c7174e5cc400e",
+      "shortSha": "9f4b001",
+      "date": "2026-09-24T01:39:23Z",
+      "message": "Reconcile inventory status after deleted shock deployments",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/9f4b0013096fe6ac8a2954952a1c7174e5cc400e"
+    },
+    {
+      "sha": "d73041d0361c17f4522ba26f5982caf1036cd8d2",
+      "shortSha": "d73041d",
+      "date": "2026-09-24T01:36:28Z",
+      "message": "Bump PWA cache to v64",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d73041d0361c17f4522ba26f5982caf1036cd8d2"
+    },
+    {
+      "sha": "3fa2b37df9906215d81842ed538c4e7c1359bf73",
+      "shortSha": "3fa2b37",
+      "date": "2026-09-24T01:36:09Z",
+      "message": "Require reason when deleting deployment entries",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/3fa2b37df9906215d81842ed538c4e7c1359bf73"
+    },
+    {
+      "sha": "bbe1a1ef3643c0240d5d7921f2b37eabde486beb",
+      "shortSha": "bbe1a1e",
+      "date": "2026-09-24T01:34:41Z",
+      "message": "Bump PWA cache to v63",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/bbe1a1ef3643c0240d5d7921f2b37eabde486beb"
+    },
+    {
+      "sha": "cfb206ccdcd8ef37ee994bbeefa1b7e8064c1b54",
+      "shortSha": "cfb206c",
+      "date": "2026-09-24T01:34:24Z",
+      "message": "Add safe deletion for test deployment entries",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/cfb206ccdcd8ef37ee994bbeefa1b7e8064c1b54"
+    },
+    {
+      "sha": "35141973f8521a3fca2b617139522b728d9589df",
+      "shortSha": "3514197",
+      "date": "2026-09-24T01:31:41Z",
+      "message": "Bump PWA cache to v62",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/35141973f8521a3fca2b617139522b728d9589df"
+    },
+    {
+      "sha": "3967c7006c5d6c5673c1807d9abc012336a8cd50",
+      "shortSha": "3967c70",
+      "date": "2026-09-24T01:31:29Z",
+      "message": "Align dashboard expiration counts with inventory filters",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/3967c7006c5d6c5673c1807d9abc012336a8cd50"
+    },
+    {
+      "sha": "686ffbbb9f4fc4e0c48181a1e9b0383a7ca34d36",
+      "shortSha": "686ffbb",
+      "date": "2026-09-24T01:29:27Z",
+      "message": "Bump PWA cache to v61",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/686ffbbb9f4fc4e0c48181a1e9b0383a7ca34d36"
+    },
+    {
+      "sha": "df8dfa0f26695bce6e3f84bfe16b648d48822911",
+      "shortSha": "df8dfa0",
+      "date": "2026-09-24T01:29:16Z",
+      "message": "Prioritize quarterly checks by AED alerts",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/df8dfa0f26695bce6e3f84bfe16b648d48822911"
+    },
+    {
+      "sha": "e1c1dd6c34af6f95e3991efce338af2d6c2b8462",
+      "shortSha": "e1c1dd6",
+      "date": "2026-09-24T01:26:25Z",
+      "message": "Bump PWA cache to v60",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/e1c1dd6c34af6f95e3991efce338af2d6c2b8462"
+    },
+    {
+      "sha": "6f12b093185e7268774a4194aa8342962830bc07",
+      "shortSha": "6f12b09",
+      "date": "2026-09-24T01:26:14Z",
+      "message": "Require replacement of the pad type used during shock",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/6f12b093185e7268774a4194aa8342962830bc07"
+    },
+    {
+      "sha": "49862dbf9a83ea29bee58b5e490cd1e7a4294ca6",
+      "shortSha": "49862db",
+      "date": "2026-09-24T01:20:30Z",
+      "message": "Bump PWA cache to v59",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/49862dbf9a83ea29bee58b5e490cd1e7a4294ca6"
+    },
+    {
+      "sha": "ddbb37abdcef5b5de4c0efc7a6054ba0d7ea27ba",
+      "shortSha": "ddbb37a",
+      "date": "2026-09-24T01:20:18Z",
+      "message": "Require confirmed battery replacement after shock",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/ddbb37abdcef5b5de4c0efc7a6054ba0d7ea27ba"
+    },
+    {
+      "sha": "a6a2e38ad7f0b8733a93dae2731084d3a5f0a187",
+      "shortSha": "a6a2e38",
+      "date": "2026-09-24T01:15:51Z",
+      "message": "Bump PWA cache to v58",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a6a2e38ad7f0b8733a93dae2731084d3a5f0a187"
+    },
+    {
+      "sha": "ef2c6f4c8e40b9e42206fc14c8b986e467a6fd4c",
+      "shortSha": "ef2c6f4",
+      "date": "2026-09-24T01:15:40Z",
+      "message": "Add actionable dashboard stats and shock out-of-service section",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/ef2c6f4c8e40b9e42206fc14c8b986e467a6fd4c"
+    },
+    {
+      "sha": "6d189b5364e7df9263315bb2f96846cc9591728d",
+      "shortSha": "6d189b5",
+      "date": "2026-09-24T01:12:32Z",
+      "message": "Bump PWA cache to v57",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/6d189b5364e7df9263315bb2f96846cc9591728d"
+    },
+    {
+      "sha": "58e342f6aef865fd549dcdf2180947f9e4ec9805",
+      "shortSha": "58e342f",
+      "date": "2026-09-24T01:12:21Z",
+      "message": "Show shock deployment reason on out-of-service AED pills",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/58e342f6aef865fd549dcdf2180947f9e4ec9805"
+    },
+    {
+      "sha": "e137ce031e42e7c613c05f53754ce29f330b028d",
+      "shortSha": "e137ce0",
+      "date": "2026-09-24T01:10:32Z",
+      "message": "Bump PWA cache to v56",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/e137ce031e42e7c613c05f53754ce29f330b028d"
+    },
+    {
+      "sha": "92c38d7355bb92d51940061daa2cc1732de80461",
+      "shortSha": "92c38d7",
+      "date": "2026-09-24T01:10:21Z",
+      "message": "Keep shock out-of-service AEDs visible in inventory tracking",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/92c38d7355bb92d51940061daa2cc1732de80461"
+    },
+    {
+      "sha": "c50d98960a15f1e8e0c425a930664886d57fa52f",
+      "shortSha": "c50d989",
+      "date": "2026-09-24T01:06:29Z",
+      "message": "Bump PWA cache to v55",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c50d98960a15f1e8e0c425a930664886d57fa52f"
+    },
+    {
+      "sha": "253c24e70878dd60f981b77243aaad2ddf22dd9c",
+      "shortSha": "253c24e",
+      "date": "2026-09-24T01:06:18Z",
+      "message": "Enforce shock return-to-service safety workflow",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/253c24e70878dd60f981b77243aaad2ddf22dd9c"
+    },
+    {
+      "sha": "3cd18a5f72f92a945c69a367a7ba3164e16b581c",
+      "shortSha": "3cd18a5",
+      "date": "2026-09-24T01:00:27Z",
+      "message": "Bump PWA cache to v54",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/3cd18a5f72f92a945c69a367a7ba3164e16b581c"
+    },
+    {
+      "sha": "3bbd79cca8874ab842a28d4429d2642a3f32ce14",
+      "shortSha": "3bbd79c",
+      "date": "2026-09-24T01:00:17Z",
+      "message": "Simplify deployment entry and move replacement tracking to return-to-service",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/3bbd79cca8874ab842a28d4429d2642a3f32ce14"
+    },
+    {
+      "sha": "07c80f07110eb4bd3aec16c0f92a5d435da19efe",
+      "shortSha": "07c80f0",
+      "date": "2026-09-24T00:53:11Z",
+      "message": "Use GFD patch as home screen app icon",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/07c80f07110eb4bd3aec16c0f92a5d435da19efe"
+    },
+    {
+      "sha": "66a60a7b74fde990ed5f1c76f3b0c94eed34c0ab",
+      "shortSha": "66a60a7",
+      "date": "2026-09-24T00:46:55Z",
+      "message": "Rename gfd-patch.jpg.jpg to gfd-patch.jpg",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/66a60a7b74fde990ed5f1c76f3b0c94eed34c0ab"
+    },
+    {
+      "sha": "a80841fd506e5324fe1a33388a80c0d6639b5fcf",
+      "shortSha": "a80841f",
+      "date": "2026-09-24T00:45:47Z",
+      "message": "Delete gfd-patch.jpg",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a80841fd506e5324fe1a33388a80c0d6639b5fcf"
+    },
+    {
+      "sha": "c8f5c914006f29304e205042e8a5f096e1cfcfaa",
+      "shortSha": "c8f5c91",
+      "date": "2026-09-24T00:33:02Z",
+      "message": "Add files via upload",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c8f5c914006f29304e205042e8a5f096e1cfcfaa"
+    },
+    {
+      "sha": "0eabe39e145729262ffceefb678802debba24591",
+      "shortSha": "0eabe39",
+      "date": "2026-09-24T00:24:07Z",
+      "message": "Merge pull request #1 from twessel20/logo-cleanup",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/0eabe39e145729262ffceefb678802debba24591"
+    },
+    {
+      "sha": "107fe51328af595f46ed464c05b81161037fcc1e",
+      "shortSha": "107fe51",
+      "date": "2026-09-24T00:13:12Z",
+      "message": "Replace embedded patch images with image asset",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/107fe51328af595f46ed464c05b81161037fcc1e"
+    },
+    {
+      "sha": "e8deac87ea95508b8b063af102c9e912c53b123b",
+      "shortSha": "e8deac8",
+      "date": "2026-09-23T23:03:14Z",
+      "message": "Force clean PWA refresh after app recovery",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/e8deac87ea95508b8b063af102c9e912c53b123b"
+    },
+    {
+      "sha": "50f19c813e83f12bbd20cb5837cf0252bdded0a3",
+      "shortSha": "50f19c8",
+      "date": "2026-09-23T23:00:28Z",
+      "message": "Load deployment correction workflow and refresh PWA cache",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/50f19c813e83f12bbd20cb5837cf0252bdded0a3"
+    },
+    {
+      "sha": "846a5294d59a39eb64ff3364dc2e978752130b07",
+      "shortSha": "846a529",
+      "date": "2026-09-23T23:00:15Z",
+      "message": "Add controlled deployment deletion and correction workflow",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/846a5294d59a39eb64ff3364dc2e978752130b07"
+    },
+    {
+      "sha": "e82fa5bb6115137207894f2259abae6831a4f116",
+      "shortSha": "e82fa5b",
+      "date": "2026-09-23T22:45:26Z",
+      "message": "Make non-city shock provider contact fields optional",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/e82fa5bb6115137207894f2259abae6831a4f116"
+    },
+    {
+      "sha": "574cd6f2a7165a3a3bade7bf92e0b2c7fde2f7f6",
+      "shortSha": "574cd6f",
+      "date": "2026-09-23T22:44:28Z",
+      "message": "Refresh PWA cache for conditional shock contact requirements",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/574cd6f2a7165a3a3bade7bf92e0b2c7fde2f7f6"
+    },
+    {
+      "sha": "6d1235ab59f56f900b331d7d132aa715f8663189",
+      "shortSha": "6d1235a",
+      "date": "2026-09-23T22:44:22Z",
+      "message": "Require phone for city employee shock provider",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/6d1235ab59f56f900b331d7d132aa715f8663189"
+    },
+    {
+      "sha": "488e24c2693f9ee223901eac3966822178b6e536",
+      "shortSha": "488e24c",
+      "date": "2026-09-23T22:43:48Z",
+      "message": "Refresh PWA cache for city employee shock tracking",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/488e24c2693f9ee223901eac3966822178b6e536"
+    },
+    {
+      "sha": "10d8766ef9ec00b5f79f7e3353808971a0326348",
+      "shortSha": "10d8766",
+      "date": "2026-09-23T22:43:41Z",
+      "message": "Track whether shock provider is a city employee",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/10d8766ef9ec00b5f79f7e3353808971a0326348"
+    },
+    {
+      "sha": "b616a3d4605550ecbbcc02ac991e66e7c7166a99",
+      "shortSha": "b616a3d",
+      "date": "2026-09-23T22:43:03Z",
+      "message": "Refresh PWA cache for shock-delivery contact tracking",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/b616a3d4605550ecbbcc02ac991e66e7c7166a99"
+    },
+    {
+      "sha": "5e42c73c5fcfbf064ad3c3fff4ab92ea189a45d5",
+      "shortSha": "5e42c73",
+      "date": "2026-09-23T22:42:55Z",
+      "message": "Track person and contact for shock delivery",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/5e42c73c5fcfbf064ad3c3fff4ab92ea189a45d5"
+    },
+    {
+      "sha": "4b7808921747511c5289a723e5ebae61b878f52c",
+      "shortSha": "4b78089",
+      "date": "2026-09-23T22:39:59Z",
+      "message": "Refresh PWA cache for deployment AED chooser",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/4b7808921747511c5289a723e5ebae61b878f52c"
+    },
+    {
+      "sha": "cdcb24f4832d5d06acffa636afdfdc6f71010973",
+      "shortSha": "cdcb24f",
+      "date": "2026-09-23T22:39:50Z",
+      "message": "Allow deployment quick action to scan or choose AED",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/cdcb24f4832d5d06acffa636afdfdc6f71010973"
+    },
+    {
+      "sha": "bfff2520fa1acc3d5ed06d6aa9ce3f2adcfb6061",
+      "shortSha": "bfff252",
+      "date": "2026-09-23T22:39:07Z",
+      "message": "Refresh PWA cache for dashboard deployment shortcut",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/bfff2520fa1acc3d5ed06d6aa9ce3f2adcfb6061"
+    },
+    {
+      "sha": "f2cb481f7aaa6ec60edfdfa2480cbdf47058741d",
+      "shortSha": "f2cb481",
+      "date": "2026-09-23T22:39:00Z",
+      "message": "Add dashboard quick deployment action",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/f2cb481f7aaa6ec60edfdfa2480cbdf47058741d"
+    },
+    {
+      "sha": "9d58fbd73996fa10177e59d5d0e29ab77b9b92a1",
+      "shortSha": "9d58fbd",
+      "date": "2026-09-23T22:36:50Z",
+      "message": "Refresh PWA cache for return-to-service workflow",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/9d58fbd73996fa10177e59d5d0e29ab77b9b92a1"
+    },
+    {
+      "sha": "66db0fe61509eef4b3dc1bdc619d253380057d34",
+      "shortSha": "66db0fe",
+      "date": "2026-09-23T22:36:40Z",
+      "message": "Add audited return-to-service workflow after shock deployment",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/66db0fe61509eef4b3dc1bdc619d253380057d34"
+    },
+    {
+      "sha": "c577cc01a2e1bf4d1a5a8bd52a6404ea6d7808ee",
+      "shortSha": "c577cc0",
+      "date": "2026-09-23T22:34:39Z",
+      "message": "Refresh PWA cache for shock deployment workflow",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c577cc01a2e1bf4d1a5a8bd52a6404ea6d7808ee"
+    },
+    {
+      "sha": "720b605472a32a497f1b8fa9a29b8bd4cc044218",
+      "shortSha": "720b605",
+      "date": "2026-09-23T22:34:34Z",
+      "message": "Add shock-delivery hold for event data extraction",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/720b605472a32a497f1b8fa9a29b8bd4cc044218"
+    },
+    {
+      "sha": "8e446e2413c918e9bce6bd1946b1856defd830b0",
+      "shortSha": "8e446e2",
+      "date": "2026-09-23T22:32:49Z",
+      "message": "Refresh PWA cache for simplified executive summary",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/8e446e2413c918e9bce6bd1946b1856defd830b0"
+    },
+    {
+      "sha": "da42e94903b47571b13f8cdb496807b7f9ed82f1",
+      "shortSha": "da42e94",
+      "date": "2026-09-23T22:32:40Z",
+      "message": "Simplify executive summary structure and narrative",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/da42e94903b47571b13f8cdb496807b7f9ed82f1"
+    },
+    {
+      "sha": "ace0184883b6201b3dab4c25225b68f852824c4c",
+      "shortSha": "ace0184",
+      "date": "2026-09-23T22:31:38Z",
+      "message": "Refresh PWA cache for deployment label update",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/ace0184883b6201b3dab4c25225b68f852824c4c"
+    },
+    {
+      "sha": "d8a647e39876f8de87c2fc540ef36466837eccf6",
+      "shortSha": "d8a647e",
+      "date": "2026-09-23T22:31:32Z",
+      "message": "Remove GFD label from deployment report number",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d8a647e39876f8de87c2fc540ef36466837eccf6"
+    },
+    {
+      "sha": "326a3946228df92843ce9f80a38a9624af13ff80",
+      "shortSha": "326a394",
+      "date": "2026-09-23T22:25:29Z",
+      "message": "Refresh PWA cache for agency deployment report tracking",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/326a3946228df92843ce9f80a38a9624af13ff80"
+    },
+    {
+      "sha": "0f36068fece047e7320b9d9eb7c1b5c665b8416f",
+      "shortSha": "0f36068",
+      "date": "2026-09-23T22:25:20Z",
+      "message": "Track responsible agency report numbers on AED deployments",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/0f36068fece047e7320b9d9eb7c1b5c665b8416f"
+    },
+    {
+      "sha": "d10d9df289b4b6761007c7ac24a2bbf452374710",
+      "shortSha": "d10d9df",
+      "date": "2026-09-23T22:23:51Z",
+      "message": "Refresh PWA cache for executive report summary",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d10d9df289b4b6761007c7ac24a2bbf452374710"
+    },
+    {
+      "sha": "6e7a2fab23228f3859af10d118347d7d12a45593",
+      "shortSha": "6e7a2fa",
+      "date": "2026-09-23T22:23:45Z",
+      "message": "Add executive AED program summary to exported reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/6e7a2fab23228f3859af10d118347d7d12a45593"
+    },
+    {
+      "sha": "00033edeaf3a6c5471f7a6d1afcd52fbf7a1b9c2",
+      "shortSha": "00033ed",
+      "date": "2026-09-23T22:16:47Z",
+      "message": "Refresh PWA cache for report status color fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/00033edeaf3a6c5471f7a6d1afcd52fbf7a1b9c2"
+    },
+    {
+      "sha": "7e2f0a9cc8b134d42e90f24f36b0cfa779a6c469",
+      "shortSha": "7e2f0a9",
+      "date": "2026-09-23T22:16:41Z",
+      "message": "Fix in-service report status pill color",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/7e2f0a9cc8b134d42e90f24f36b0cfa779a6c469"
+    },
+    {
+      "sha": "30f2cebaaeda9775cf5f4a3fb2f2e5851b35da10",
+      "shortSha": "30f2ceb",
+      "date": "2026-09-23T22:14:27Z",
+      "message": "Refresh PWA cache for smart dashboard scanner",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/30f2cebaaeda9775cf5f4a3fb2f2e5851b35da10"
+    },
+    {
+      "sha": "58903957e1c86ec5328c1a3ecf3fbbeb082af974",
+      "shortSha": "5890395",
+      "date": "2026-09-23T22:14:21Z",
+      "message": "Let dashboard quick scan add new AEDs",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/58903957e1c86ec5328c1a3ecf3fbbeb082af974"
+    },
+    {
+      "sha": "017b1a1a97ee484f6173ab8c62d765aac805ae47",
+      "shortSha": "017b1a1",
+      "date": "2026-09-23T22:12:34Z",
+      "message": "Refresh PWA cache for inventory comments",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/017b1a1a97ee484f6173ab8c62d765aac805ae47"
+    },
+    {
+      "sha": "a93ed8b306aa583d42954023f075ba45c0119cd7",
+      "shortSha": "a93ed8b",
+      "date": "2026-09-23T22:12:29Z",
+      "message": "Show readable AED comments in inventory details",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a93ed8b306aa583d42954023f075ba45c0119cd7"
+    },
+    {
+      "sha": "822024c916238bf180bfe8ff22639bc9e4bae50e",
+      "shortSha": "822024c",
+      "date": "2026-09-23T22:11:43Z",
+      "message": "Refresh PWA cache for inactive AED workflow",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/822024c916238bf180bfe8ff22639bc9e4bae50e"
+    },
+    {
+      "sha": "c278252f7965118a0cccaa0bbc56c3d79ef16229",
+      "shortSha": "c278252",
+      "date": "2026-09-23T22:11:38Z",
+      "message": "Separate inactive AEDs and suppress inactive alerts",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c278252f7965118a0cccaa0bbc56c3d79ef16229"
+    },
+    {
+      "sha": "fc4997dc7ee8dba99e504bc485ce949054a24381",
+      "shortSha": "fc4997d",
+      "date": "2026-09-23T22:07:29Z",
+      "message": "Refresh PWA cache for last-check display",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/fc4997dc7ee8dba99e504bc485ce949054a24381"
+    },
+    {
+      "sha": "eef5534740f135262b1be4d9cfb40671729a9d5f",
+      "shortSha": "eef5534",
+      "date": "2026-09-23T22:07:23Z",
+      "message": "Show last completed check date in inventory",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/eef5534740f135262b1be4d9cfb40671729a9d5f"
+    },
+    {
+      "sha": "c3382db05355e2fb35e5505b0509608f0f20bf3a",
+      "shortSha": "c3382db",
+      "date": "2026-09-23T22:06:41Z",
+      "message": "Refresh PWA cache for dashboard quick scan",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c3382db05355e2fb35e5505b0509608f0f20bf3a"
+    },
+    {
+      "sha": "eaa2a003a22f7c8db25d7608be9cfdb201022e70",
+      "shortSha": "eaa2a00",
+      "date": "2026-09-23T22:06:35Z",
+      "message": "Add dashboard quick scan action",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/eaa2a003a22f7c8db25d7608be9cfdb201022e70"
+    },
+    {
+      "sha": "6a930595c5df12c55ab607371835532fd45df7d3",
+      "shortSha": "6a93059",
+      "date": "2026-09-23T22:05:00Z",
+      "message": "Refresh PWA cache for grouped quarterly view",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/6a930595c5df12c55ab607371835532fd45df7d3"
+    },
+    {
+      "sha": "36f7beb70ebb5b10db683f2ffaf3f138b9889a18",
+      "shortSha": "36f7beb",
+      "date": "2026-09-23T22:04:50Z",
+      "message": "Group quarterly checks using inventory urgency logic",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/36f7beb70ebb5b10db683f2ffaf3f138b9889a18"
+    },
+    {
+      "sha": "9d6bac12a72ebfc285bb8f75fed28c1e0fe949dc",
+      "shortSha": "9d6bac1",
+      "date": "2026-09-23T22:03:18Z",
+      "message": "Refresh PWA cache for unassigned sort rule",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/9d6bac12a72ebfc285bb8f75fed28c1e0fe949dc"
+    },
+    {
+      "sha": "fd7b919e26c5d856a9a6702dc4187f228923a0c4",
+      "shortSha": "fd7b919",
+      "date": "2026-09-23T22:03:13Z",
+      "message": "Pin Unassigned AED group to bottom",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/fd7b919e26c5d856a9a6702dc4187f228923a0c4"
+    },
+    {
+      "sha": "e19dc58c12f914a33baa58cfb1e4da319f6e5bd8",
+      "shortSha": "e19dc58",
+      "date": "2026-09-23T22:01:51Z",
+      "message": "Refresh PWA cache for dynamic urgency sorting",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/e19dc58c12f914a33baa58cfb1e4da319f6e5bd8"
+    },
+    {
+      "sha": "816e570bbf737c1994d3205a2d8ad4e4a5d85b90",
+      "shortSha": "816e570",
+      "date": "2026-09-23T22:01:41Z",
+      "message": "Dynamically prioritize AED groups by urgency",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/816e570bbf737c1994d3205a2d8ad4e4a5d85b90"
+    },
+    {
+      "sha": "c191d0e4e722d307146e73ceec5fba0cb7f6cf7c",
+      "shortSha": "c191d0e",
+      "date": "2026-09-23T21:58:54Z",
+      "message": "Refresh PWA cache for uniform group pills",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c191d0e4e722d307146e73ceec5fba0cb7f6cf7c"
+    },
+    {
+      "sha": "8174390adc9d95f9bcf1c2ead795cf1aeaf7539d",
+      "shortSha": "8174390",
+      "date": "2026-09-23T21:58:44Z",
+      "message": "Standardize group status pill styling",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/8174390adc9d95f9bcf1c2ead795cf1aeaf7539d"
+    },
+    {
+      "sha": "bcf166015e2c19e7c9c391f03e234a8e5996eb69",
+      "shortSha": "bcf1660",
+      "date": "2026-09-23T21:58:01Z",
+      "message": "Refresh PWA cache for individual AED groups",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/bcf166015e2c19e7c9c391f03e234a8e5996eb69"
+    },
+    {
+      "sha": "2e4127c815ef4e12a2b32eaae31f19ee858dbbeb",
+      "shortSha": "2e4127c",
+      "date": "2026-09-23T21:57:52Z",
+      "message": "Replace Other Locations with individual AED groups",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/2e4127c815ef4e12a2b32eaae31f19ee858dbbeb"
+    },
+    {
+      "sha": "9fe86fcf5c9cd2dea269b4a4d508ef271fe3fb54",
+      "shortSha": "9fe86fc",
+      "date": "2026-09-23T21:56:49Z",
+      "message": "Refresh PWA cache for group alert pills",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/9fe86fcf5c9cd2dea269b4a4d508ef271fe3fb54"
+    },
+    {
+      "sha": "115e2f807164ba3783e49a5a607fa671c48374eb",
+      "shortSha": "115e2f8",
+      "date": "2026-09-23T21:56:41Z",
+      "message": "Add group alert pills and prioritize problem AEDs",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/115e2f807164ba3783e49a5a607fa671c48374eb"
+    },
+    {
+      "sha": "d537ff1b0a3ff245d9141b939970dc2dc96c84c1",
+      "shortSha": "d537ff1",
+      "date": "2026-09-23T21:55:33Z",
+      "message": "Refresh PWA cache for Other Locations group",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/d537ff1b0a3ff245d9141b939970dc2dc96c84c1"
+    },
+    {
+      "sha": "dee9b55738d37870d0de14644b726a84ba9a5859",
+      "shortSha": "dee9b55",
+      "date": "2026-09-23T21:55:25Z",
+      "message": "Group all remaining AEDs under Other Locations",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/dee9b55738d37870d0de14644b726a84ba9a5859"
+    },
+    {
+      "sha": "7f8529eaeb3e04b6dbd2dd450a98c383f642d255",
+      "shortSha": "7f8529e",
+      "date": "2026-09-23T21:53:57Z",
+      "message": "Refresh PWA cache after Happy Rock group change",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/7f8529eaeb3e04b6dbd2dd450a98c383f642d255"
+    },
+    {
+      "sha": "19d6a812c81b46266fe6f471a1c60496ac45bf58",
+      "shortSha": "19d6a81",
+      "date": "2026-09-23T21:53:50Z",
+      "message": "Leave Happy Rock East ungrouped",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/19d6a812c81b46266fe6f471a1c60496ac45bf58"
+    },
+    {
+      "sha": "221a4d404460d819a67755f43ef36d367f179da1",
+      "shortSha": "221a4d4",
+      "date": "2026-09-23T21:53:04Z",
+      "message": "Refresh PWA cache for recreation AED grouping",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/221a4d404460d819a67755f43ef36d367f179da1"
+    },
+    {
+      "sha": "c7e0be34fddbee51b461829e03d0d963ec007420",
+      "shortSha": "c7e0be3",
+      "date": "2026-09-23T21:52:59Z",
+      "message": "Group community recreation AEDs with fixed order",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c7e0be34fddbee51b461829e03d0d963ec007420"
+    },
+    {
+      "sha": "c06629d18b57cabfcbf94fad3987491640a4cf28",
+      "shortSha": "c06629d",
+      "date": "2026-09-23T21:47:38Z",
+      "message": "Refresh PWA cache for patrol car grouping",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/c06629d18b57cabfcbf94fad3987491640a4cf28"
+    },
+    {
+      "sha": "047b5ef4d7e84cc760f27d8761ca283f036f37fe",
+      "shortSha": "047b5ef",
+      "date": "2026-09-23T21:47:33Z",
+      "message": "Group patrol car AEDs together",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/047b5ef4d7e84cc760f27d8761ca283f036f37fe"
+    },
+    {
+      "sha": "7f3c52f5836386d91f9fe1b3fc37442aa91a6f1d",
+      "shortSha": "7f3c52f",
+      "date": "2026-09-23T21:46:06Z",
+      "message": "Refresh PWA cache for collapsible inventory groups",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/7f3c52f5836386d91f9fe1b3fc37442aa91a6f1d"
+    },
+    {
+      "sha": "954d44f6b4e1d54886f81b1c5fca3295b06d5831",
+      "shortSha": "954d44f",
+      "date": "2026-09-23T21:46:01Z",
+      "message": "Add collapsible color-coded inventory groups",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/954d44f6b4e1d54886f81b1c5fca3295b06d5831"
+    },
+    {
+      "sha": "e3c17e6958d690a63ac7b74066c5880b1e4b3c7e",
+      "shortSha": "e3c17e6",
+      "date": "2026-09-23T21:44:09Z",
+      "message": "Refresh PWA cache after syntax fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/e3c17e6958d690a63ac7b74066c5880b1e4b3c7e"
+    },
+    {
+      "sha": "a8516f28ef1eb54f8c4b7428058b36e6272ea910",
+      "shortSha": "a8516f2",
+      "date": "2026-09-23T21:44:03Z",
+      "message": "Fix JavaScript syntax error from AED grouping",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a8516f28ef1eb54f8c4b7428058b36e6272ea910"
+    },
+    {
+      "sha": "009440305c342f703e89940799155cc6c0911260",
+      "shortSha": "0094403",
+      "date": "2026-09-23T21:42:02Z",
+      "message": "Refresh PWA cache after grouped inventory fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/009440305c342f703e89940799155cc6c0911260"
+    },
+    {
+      "sha": "024fa7d7e63f120ee4e695b467c518987f9d6993",
+      "shortSha": "024fa7d",
+      "date": "2026-09-23T21:41:53Z",
+      "message": "Fix multi-group inventory rendering regression",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/024fa7d7e63f120ee4e695b467c518987f9d6993"
+    },
+    {
+      "sha": "7b33e5a2a8d22c3d52d4356cbb8b2a083e7e7e75",
+      "shortSha": "7b33e5a",
+      "date": "2026-09-23T21:40:06Z",
+      "message": "Refresh PWA cache for Public Works grouping",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/7b33e5a2a8d22c3d52d4356cbb8b2a083e7e7e75"
+    },
+    {
+      "sha": "3068c4121b5907c00490396cab36b18a7dda2170",
+      "shortSha": "3068c41",
+      "date": "2026-09-23T21:40:01Z",
+      "message": "Group Public Works and Animal Control AEDs",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/3068c4121b5907c00490396cab36b18a7dda2170"
+    },
+    {
+      "sha": "724d6aeb5a4ae536bce652aa1540669227649dbe",
+      "shortSha": "724d6ae",
+      "date": "2026-09-23T21:38:43Z",
+      "message": "Refresh PWA cache for AED grouping",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/724d6aeb5a4ae536bce652aa1540669227649dbe"
+    },
+    {
+      "sha": "2ed871e679cf542f82335763cc492647e153b418",
+      "shortSha": "2ed871e",
+      "date": "2026-09-23T21:38:37Z",
+      "message": "Group Police Department and City Hall AEDs",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/2ed871e679cf542f82335763cc492647e153b418"
+    },
+    {
+      "sha": "fe2b3080b99b7dc07d0b78d1e807a61dc02427fb",
+      "shortSha": "fe2b308",
+      "date": "2026-09-23T21:36:01Z",
+      "message": "Refresh PWA cache for AED location label cleanup",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/fe2b3080b99b7dc07d0b78d1e807a61dc02427fb"
+    },
+    {
+      "sha": "b3059a24ceb60fd663d448b5490e94d56cd42164",
+      "shortSha": "b3059a2",
+      "date": "2026-09-23T21:35:56Z",
+      "message": "Standardize AED location labels and descriptors",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/b3059a24ceb60fd663d448b5490e94d56cd42164"
+    },
+    {
+      "sha": "044d4b211610e7d72c521f1024cccc660d596703",
+      "shortSha": "044d4b2",
+      "date": "2026-09-23T21:30:06Z",
+      "message": "Refresh PWA cache for embedded logo and auto updates",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/044d4b211610e7d72c521f1024cccc660d596703"
+    },
+    {
+      "sha": "3733e06266a0b46db62486ceabb57e0e7b7eb47e",
+      "shortSha": "3733e06",
+      "date": "2026-09-23T21:29:59Z",
+      "message": "Embed official patch and restore automatic updates",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/3733e06266a0b46db62486ceabb57e0e7b7eb47e"
+    },
+    {
+      "sha": "fbf5fca05de180aaae186254d300656056082240",
+      "shortSha": "fbf5fca",
+      "date": "2026-09-23T21:11:20Z",
+      "message": "Refresh PWA cache for Add AED serial scanner",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/fbf5fca05de180aaae186254d300656056082240"
+    },
+    {
+      "sha": "722b60d7e0781ffe560e850883c5d059adc471ad",
+      "shortSha": "722b60d",
+      "date": "2026-09-23T21:11:14Z",
+      "message": "Add serial scanner to Add AED workflow",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/722b60d7e0781ffe560e850883c5d059adc471ad"
+    },
+    {
+      "sha": "68fa3989d3e876788beb5f31520bdb334a2412dc",
+      "shortSha": "68fa398",
+      "date": "2026-09-23T21:10:43Z",
+      "message": "Refresh logo cache and header update",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/68fa3989d3e876788beb5f31520bdb334a2412dc"
+    },
+    {
+      "sha": "a295dbddc8fe445986883c01dd0a944d1e85bf9a",
+      "shortSha": "a295dbd",
+      "date": "2026-09-23T21:10:35Z",
+      "message": "Enlarge header and fix logo asset loading",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a295dbddc8fe445986883c01dd0a944d1e85bf9a"
+    },
+    {
+      "sha": "20b85f2a441d9ba58cd929b34e463a3a6c229413",
+      "shortSha": "20b85f2",
+      "date": "2026-09-23T21:10:03Z",
+      "message": "Refresh PWA cache for deployment serial scanner",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/20b85f2a441d9ba58cd929b34e463a3a6c229413"
+    },
+    {
+      "sha": "3bb6aadff430c0b14db5e177eb4d18f6a5ff5820",
+      "shortSha": "3bb6aad",
+      "date": "2026-09-23T21:09:58Z",
+      "message": "Add serial scanner to deployment workflow",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/3bb6aadff430c0b14db5e177eb4d18f6a5ff5820"
+    },
+    {
+      "sha": "33c332676fec058b24741f9080cf2d14f1772f65",
+      "shortSha": "33c3326",
+      "date": "2026-09-23T21:08:34Z",
+      "message": "Refresh PWA cache for shared logo header",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/33c332676fec058b24741f9080cf2d14f1772f65"
+    },
+    {
+      "sha": "07787d5753b44dfba4e0c6f8d05a7f09941dac0e",
+      "shortSha": "07787d5",
+      "date": "2026-09-23T21:08:27Z",
+      "message": "Add shared Gladstone logo header to all app views",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/07787d5753b44dfba4e0c6f8d05a7f09941dac0e"
+    },
+    {
+      "sha": "1e990b2fa173200ac22c651e4d2e930c2dbe8be7",
+      "shortSha": "1e990b2",
+      "date": "2026-09-23T21:07:11Z",
+      "message": "Refresh PWA cache for user update controls",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/1e990b2fa173200ac22c651e4d2e930c2dbe8be7"
+    },
+    {
+      "sha": "31a81e6156d3f756747ced3161a2d47d44047599",
+      "shortSha": "31a81e6",
+      "date": "2026-09-23T21:07:06Z",
+      "message": "Add user-controlled app update workflow",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/31a81e6156d3f756747ced3161a2d47d44047599"
+    },
+    {
+      "sha": "48a41e69a948b510894249b0bc8a7a0cb1fe4be0",
+      "shortSha": "48a41e6",
+      "date": "2026-09-23T21:06:00Z",
+      "message": "Refresh PWA cache for mobile alignment fix",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/48a41e69a948b510894249b0bc8a7a0cb1fe4be0"
+    },
+    {
+      "sha": "3b6e090b686388fed08db713e97ad0e47172da30",
+      "shortSha": "3b6e090",
+      "date": "2026-09-23T21:05:53Z",
+      "message": "Fix long AED location alignment on mobile",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/3b6e090b686388fed08db713e97ad0e47172da30"
+    },
+    {
+      "sha": "923a739da8dd1103ef4b3a0e15c1d297fd928181",
+      "shortSha": "923a739",
+      "date": "2026-09-23T21:05:18Z",
+      "message": "Refresh PWA cache for report sharing",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/923a739da8dd1103ef4b3a0e15c1d297fd928181"
+    },
+    {
+      "sha": "8ae9cbce148bf968cee1ac564d2b53d258f9331e",
+      "shortSha": "8ae9cbc",
+      "date": "2026-09-23T21:05:13Z",
+      "message": "Add direct report sharing from app",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/8ae9cbce148bf968cee1ac564d2b53d258f9331e"
+    },
+    {
+      "sha": "3808f104a3d75f450cf3f23bac502b1cbb568b34",
+      "shortSha": "3808f10",
+      "date": "2026-09-23T21:01:55Z",
+      "message": "Auto-load PWA updates and add manifest",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/3808f104a3d75f450cf3f23bac502b1cbb568b34"
+    },
+    {
+      "sha": "1764f3b7cda891dd5a4659aa4488b135d16ebd17",
+      "shortSha": "1764f3b",
+      "date": "2026-09-23T21:01:42Z",
+      "message": "Add installable PWA manifest",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/1764f3b7cda891dd5a4659aa4488b135d16ebd17"
+    },
+    {
+      "sha": "a3784082d1413fc674c2979d1f55d7ae52fa3e47",
+      "shortSha": "a378408",
+      "date": "2026-09-23T21:01:40Z",
+      "message": "Improve offline support and automatic PWA updates",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a3784082d1413fc674c2979d1f55d7ae52fa3e47"
+    },
+    {
+      "sha": "0b9039746e7d1ec609a132fc62912acc31cf2168",
+      "shortSha": "0b90397",
+      "date": "2026-09-23T21:00:51Z",
+      "message": "Refresh PWA cache for quarterly and annual reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/0b9039746e7d1ec609a132fc62912acc31cf2168"
+    },
+    {
+      "sha": "4a995fec7ff2431e274a0216af1e6cdb03b07d68",
+      "shortSha": "4a995fe",
+      "date": "2026-09-23T21:00:46Z",
+      "message": "Add quarterly and annual AED summary reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/4a995fec7ff2431e274a0216af1e6cdb03b07d68"
+    },
+    {
+      "sha": "0e6491fd2e297a9971e286bc1d4fc5616fcb424c",
+      "shortSha": "0e6491f",
+      "date": "2026-09-23T20:59:07Z",
+      "message": "Refresh PWA cache for audit form updates",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/0e6491fd2e297a9971e286bc1d4fc5616fcb424c"
+    },
+    {
+      "sha": "2ea3c19aaa2680d87e684fd6714a42800cb5bb66",
+      "shortSha": "2ea3c19",
+      "date": "2026-09-23T20:59:02Z",
+      "message": "Refine AED audit options and expiration tracking",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/2ea3c19aaa2680d87e684fd6714a42800cb5bb66"
+    },
+    {
+      "sha": "7cf6b657a1aef5cc2128c6cd4e4fbcade4cce390",
+      "shortSha": "7cf6b65",
+      "date": "2026-09-23T20:56:31Z",
+      "message": "Cache official patch and branded reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/7cf6b657a1aef5cc2128c6cd4e4fbcade4cce390"
+    },
+    {
+      "sha": "a371eca1eb0812708a2a7cd32a7d7ee1ba0de159",
+      "shortSha": "a371eca",
+      "date": "2026-09-23T20:56:23Z",
+      "message": "Add branded exportable AED inspection reports",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a371eca1eb0812708a2a7cd32a7d7ee1ba0de159"
+    },
+    {
+      "sha": "6b29ce634ac401c90ace19af967966b3ef55fec6",
+      "shortSha": "6b29ce6",
+      "date": "2026-09-23T20:55:32Z",
+      "message": "Add official Gladstone Fire EMS patch",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/6b29ce634ac401c90ace19af967966b3ef55fec6"
+    },
+    {
+      "sha": "968a5e0798af2bba75bc3e037a5cfa882ffb3693",
+      "shortSha": "968a5e0",
+      "date": "2026-09-23T20:39:31Z",
+      "message": "Refresh PWA cache for AED status dispositions",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/968a5e0798af2bba75bc3e037a5cfa882ffb3693"
+    },
+    {
+      "sha": "4445aee0b32979dc70c4b3f4e9c4a6bcce3e7673",
+      "shortSha": "4445aee",
+      "date": "2026-09-23T20:39:14Z",
+      "message": "Add AED out-of-service and retirement dispositions",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/4445aee0b32979dc70c4b3f4e9c4a6bcce3e7673"
+    },
+    {
+      "sha": "55decb2157d2f01a7d9c4a4c1df0d0d0d2d3af9f",
+      "shortSha": "55decb2",
+      "date": "2026-09-23T20:35:11Z",
+      "message": "Refresh PWA cache for serial scanner",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/55decb2157d2f01a7d9c4a4c1df0d0d0d2d3af9f"
+    },
+    {
+      "sha": "0c7cb4d5d1824bee2a98d317a205af32186ce12f",
+      "shortSha": "0c7cb4d",
+      "date": "2026-09-23T20:35:06Z",
+      "message": "Add iPhone serial barcode scanner",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/0c7cb4d5d1824bee2a98d317a205af32186ce12f"
+    },
+    {
+      "sha": "0587f82b8085091eca42d32b826b0e2d95ff4e06",
+      "shortSha": "0587f82",
+      "date": "2026-09-23T20:33:21Z",
+      "message": "Refresh PWA cache for QR deep links",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/0587f82b8085091eca42d32b826b0e2d95ff4e06"
+    },
+    {
+      "sha": "835d9e677fdaffe4831081d9b83c4ddd32938202",
+      "shortSha": "835d9e6",
+      "date": "2026-09-23T20:33:15Z",
+      "message": "Add QR deep links for direct AED access",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/835d9e677fdaffe4831081d9b83c4ddd32938202"
+    },
+    {
+      "sha": "a0220059946e825e61cbe9cc2736e0a3fc78c35f",
+      "shortSha": "a022005",
+      "date": "2026-09-23T20:31:07Z",
+      "message": "Refresh PWA cache for compact list update",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a0220059946e825e61cbe9cc2736e0a3fc78c35f"
+    },
+    {
+      "sha": "5087dcf151b05c9e3b930ae36992afba3cf42c8a",
+      "shortSha": "5087dcf",
+      "date": "2026-09-23T20:31:00Z",
+      "message": "Make AED lists compact and manageable",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/5087dcf151b05c9e3b930ae36992afba3cf42c8a"
+    },
+    {
+      "sha": "7a6063a8f4653bb2eabf99d71959aec13a62e3de",
+      "shortSha": "7a6063a",
+      "date": "2026-09-23T18:27:33Z",
+      "message": "Configure static GitHub Pages site",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/7a6063a8f4653bb2eabf99d71959aec13a62e3de"
+    },
+    {
+      "sha": "a9bf2a1b71e9ef49fe447c38272368ddee6840ef",
+      "shortSha": "a9bf2a1",
+      "date": "2026-09-23T18:27:30Z",
+      "message": "Add offline service worker",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/a9bf2a1b71e9ef49fe447c38272368ddee6840ef"
+    },
+    {
+      "sha": "583b655908db7dd0466fa431d45500902d9794d5",
+      "shortSha": "583b655",
+      "date": "2026-09-23T18:27:20Z",
+      "message": "Publish Gladstone AED inventory PWA",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/583b655908db7dd0466fa431d45500902d9794d5"
+    },
+    {
+      "sha": "1b43e6504836144d472752ed9fe4246f4077c78f",
+      "shortSha": "1b43e65",
+      "date": "2026-09-23T18:25:12Z",
+      "message": "Initial commit",
+      "url": "https://github.com/twessel20/Gladstone-AED-Inventory/commit/1b43e6504836144d472752ed9fe4246f4077c78f"
+    }
+  ]
+}
