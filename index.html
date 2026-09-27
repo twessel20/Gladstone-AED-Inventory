@@ -9,6 +9,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{--n:#123a5a;--b:#1f608e;--bg:#f4f7f9;--ink:#172838;--m:#687b8a;--l:#d9e3ea;--g:#1f754a;--a:#946100;--r:#a32c2c}
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);padding-bottom:env(safe-area-inset-bottom)}
@@ -255,7 +256,7 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
 <section id="checks" class="view"><div class="bar"><div><h2>Quarterly Checks</h2><p class="muted">Priority alerts are listed first so the most urgent AEDs can be handled before routine checks.</p></div></div><div id="checkPriority"></div><div id="checklist"></div></section>
 <section id="deps" class="view"><div class="bar"><div><h2>Deployments</h2><p class="muted">Record use and return-to-service actions.</p></div><div class="actions" style="margin-top:0"><button id="scanDeploySerial">Scan Serial</button><button class="primary" id="newdep">+ Deployment</button></div></div><div id="deplist"></div></section>
 <section id="reports" class="view"><div class="bar"><div><h2>Inspection Reports</h2><p class="muted">Export a complete quarterly report or a full-year summary.</p></div></div><div class="card"><div class="grid"><label>Report Year<select id="reportYear"></select></label><label>Quarter<select id="reportQuarter"><option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option></select></label></div><div class="actions"><button class="primary" id="quarterReportBtn">Quarterly Report</button><button id="annualReportBtn">Annual Summary - All Quarters</button></div></div><div class="card"><h3 style="margin-top:0">Overall Report Signature</h3><p class="muted">Required for every official generated report. No witness signature is required.</p><div class="grid"><label>Auditor / Report Preparer<input id="overallSignerName" placeholder="Name"></label><label>Employee Number<input id="overallSignerEmp" placeholder="Employee #"></label></div><canvas id="overallSigCanvas" class="signature-pad" width="560" height="150" aria-label="Overall report signature pad"></canvas><input type="hidden" id="overallSigData"><div class="actions"><button type="button" id="overallSigClear">Clear Signature</button></div></div><div id="reportlist" class="report-list"></div></section>
-<section id="audit" class="view"><div class="bar"><div><h2>Audit Log</h2><p class="muted">Chronological trace of changes and checks.</p></div></div><div class="card"><h3 style="margin-top:0">Audit Log Export</h3><div class="grid"><label>Scope<select id="auditExportScope"><option value="all">All Records</option><option value="range">Date Range</option><option value="month">Monthly</option><option value="quarter">Quarterly</option><option value="year">Annual</option></select></label><label id="auditYearWrap">Year<input id="auditExportYear" type="number" min="2000" max="2100"></label><label id="auditMonthWrap" style="display:none">Month<input id="auditExportMonth" type="month"></label><label id="auditQuarterWrap" style="display:none">Quarter<select id="auditExportQuarter"><option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option></select></label><label id="auditStartWrap" style="display:none">Start Date<input id="auditExportStart" type="date"></label><label id="auditEndWrap" style="display:none">End Date<input id="auditExportEnd" type="date"></label></div><div class="actions"><button class="primary" id="auditPreviewBtn">Preview PDF</button><button id="auditSaveBtn">Save PDF</button><button id="auditPrintBtn">Print</button><button id="auditShareBtn">Share PDF</button></div></div><div id="auditlist"></div></section>
+<section id="audit" class="view"><div class="bar"><div><h2>Audit Log</h2><p class="muted">Chronological trace of changes and checks.</p></div></div><div class="card"><h3 style="margin-top:0">Audit Log Export</h3><div class="grid"><label>Scope<select id="auditExportScope"><option value="all">All Records</option><option value="range">Date Range</option><option value="month">Monthly</option><option value="quarter">Quarterly</option><option value="year">Annual</option></select></label><label id="auditYearWrap">Year<input id="auditExportYear" type="number" min="2000" max="2100"></label><label id="auditMonthWrap" style="display:none">Month<input id="auditExportMonth" type="month"></label><label id="auditQuarterWrap" style="display:none">Quarter<select id="auditExportQuarter"><option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option></select></label><label id="auditStartWrap" style="display:none">Start Date<input id="auditExportStart" type="date"></label><label id="auditEndWrap" style="display:none">End Date<input id="auditExportEnd" type="date"></label></div><div class="actions"><button class="primary" id="auditPreviewBtn">Preview PDF</button><button id="auditSaveBtn">Save PDF</button><button id="auditPrintBtn">Print</button><button id="auditShareBtn">Share PDF</button></div><div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--l)"><div class="muted" style="font-weight:750;margin-bottom:7px">Data Export</div><div class="actions" style="margin-top:0"><button id="auditExcelBtn">Excel (.xlsx)</button><button id="auditCsvBtn">CSV</button><button id="auditJsonBtn">JSON</button></div></div></div><div id="auditlist"></div></section>
 <section id="reportPrintArea"></section>
 </main>
 <dialog id="aedDlg"><form id="aedForm"><h2 id="aedTitle">AED</h2><input type="hidden" id="aid"><div class="grid"><label>Serial Number<div class="actions" style="margin-top:0"><input id="serial" required style="flex:1;min-width:0"><button type="button" id="scanAddSerial">Scan Serial</button></div></label><label>Location<input id="loc" required></label><label>Location Descriptor<input id="locDesc" placeholder="e.g. Upper Level, Lobby, Time Clock Area"></label><label>Group<input id="group" placeholder="e.g. Police Department / City Hall"></label><label>Adult Pad Expiration<input id="adult" type="date"></label><label>Pediatric Pads<select id="pedConfig"><option value="Installed">Installed</option><option value="N/A">N/A - Not Equipped</option></select></label><label>Pediatric Pad Expiration<input id="ped" type="date"></label><label>Battery Expected Expiration<input id="bat" type="month"></label><label>Current Status<select id="status"><option>In Service</option><option>Out of Service - Repair</option><option>Out of Service - Damage</option><option>Removed / Retired - Beyond Repair</option><option>Removed / Retired - Destroyed</option></select></label><label>Comments<input id="com"></label></div><div class="da"><button type="button" onclick="aedDlg.close()">Cancel</button><button class="primary">Save</button></div></form></dialog>
@@ -713,6 +714,75 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
+function auditExportData(){
+  return auditExportEntries().map(e=>{
+    const a=db.aeds.find(x=>x.id===e.id);
+    return {
+      'Date / Time':e.time?new Date(e.time).toLocaleString():'',
+      'ISO Timestamp':e.time||'',
+      'Event':e.type||'Audit Event',
+      'AED Location':a?.location||'',
+      'Location Descriptor':a?.descriptor||'',
+      'Serial Number':a?.serial||'',
+      'Group':a?.group||'',
+      'Documented By':e.who||'System',
+      'Details':e.detail||'',
+      'AED Record ID':e.id||''
+    };
+  });
+}
+function auditDataBaseName(){
+  const r=auditExportRange();
+  return 'gfd-aed-audit-log-'+r.label.replace(/[^a-z0-9]+/ig,'-').replace(/^-|-$/g,'').toLowerCase();
+}
+function downloadAuditBlob(content,type,extension){
+  const blob=content instanceof Blob?content:new Blob([content],{type});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=auditDataBaseName()+'.'+extension;a.rel='noopener';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),120000);
+}
+function csvEscape(v){
+  const t=String(v??'');
+  return /[",\r\n]/.test(t)?'"'+t.replace(/"/g,'""')+'"':t;
+}
+function exportAuditCsv(){
+  const data=auditExportData();
+  const headers=['Date / Time','ISO Timestamp','Event','AED Location','Location Descriptor','Serial Number','Group','Documented By','Details','AED Record ID'];
+  const lines=[headers.map(csvEscape).join(',')].concat(data.map(row=>headers.map(h=>csvEscape(row[h])).join(',')));
+  downloadAuditBlob('\ufeff'+lines.join('\r\n'),'text/csv;charset=utf-8','csv');
+}
+function exportAuditJson(){
+  const r=auditExportRange(),data=auditExportData();
+  const payload={
+    exportType:'Gladstone Fire / EMS AED Audit Log',
+    reportingPeriod:r.label,
+    generated:new Date().toISOString(),
+    recordCount:data.length,
+    records:data
+  };
+  downloadAuditBlob(JSON.stringify(payload,null,2),'application/json;charset=utf-8','json');
+}
+function exportAuditExcel(){
+  if(!window.XLSX){alert('Excel export library is still loading. Try again in a moment.');return}
+  const r=auditExportRange(),data=auditExportData(),wb=XLSX.utils.book_new();
+  const headers=['Date / Time','ISO Timestamp','Event','AED Location','Location Descriptor','Serial Number','Group','Documented By','Details','AED Record ID'];
+  const ws=XLSX.utils.json_to_sheet(data,{header:headers});
+  ws['!cols']=[{wch:22},{wch:26},{wch:25},{wch:24},{wch:24},{wch:18},{wch:26},{wch:20},{wch:55},{wch:18}];
+  ws['!autofilter']={ref:'A1:J'+Math.max(1,data.length+1)};
+  ws['!freeze']={xSplit:0,ySplit:1,topLeftCell:'A2',activePane:'bottomLeft',state:'frozen'};
+  XLSX.utils.book_append_sheet(wb,ws,'Audit Log');
+  const info=XLSX.utils.aoa_to_sheet([
+    ['Gladstone Fire / EMS','AED Audit Log Export'],
+    ['Reporting Period',r.label],
+    ['Records Included',data.length],
+    ['Generated',new Date().toLocaleString()],
+    ['Scope',r.scope]
+  ]);
+  info['!cols']=[{wch:22},{wch:48}];
+  XLSX.utils.book_append_sheet(wb,info,'Export Info');
+  XLSX.writeFile(wb,auditDataBaseName()+'.xlsx',{compression:true});
+}
 function auditExportHTML(){
   const r=auditExportRange(),raw=auditExportEntries(),generated=new Date();
   const rows=raw.map(e=>{const a=db.aeds.find(x=>x.id===e.id);return{
@@ -762,7 +832,7 @@ function goView(view){const current=document.querySelector('.view.on')?.id||'';i
 function setInventoryFilter(filter){invFilter=filter;$('search').value='';document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('on',x.dataset.f===filter));inv()}
 window.openInventoryTarget=(id,filter='all')=>{goView('inv');setInventoryFilter(filter);setTimeout(()=>{revealInventoryRow(id);let row=$('row-'+id);if(row)row.scrollIntoView({behavior:'smooth',block:'center'})},80)};
 window.dashboardStatAction=kind=>{let tracked=db.aeds.filter(isInventoryTracked);if(kind==='checked'){goView('checks');return}let list=kind==='oos'?tracked.filter(isOutOfService):kind==='expired'?tracked.filter(hasExpiredComponent):kind==='expiring'?tracked.filter(hasDue180Component):tracked;if(list.length===1&&kind!=='all'){openInventoryTarget(list[0].id,kind);return}goView('inv');setInventoryFilter(kind==='all'?'all':kind)};
-window.toggleQStatusSection=section=>{let complete=section==='complete',list=$(complete?'qCompleteList':'qDueList'),chev=$(complete?'qCompleteChev':'qDueChev'),key=complete?'gfd-qstatus-complete-collapsed':'gfd-qstatus-due-collapsed';if(!list)return;let collapsed=list.style.display!=='none';list.style.display=collapsed?'none':'block';chev.textContent=collapsed?'▸':'▾';localStorage.setItem(key,collapsed?'1':'0')};document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>goView(b.dataset.v));$('accountMenuBtn').onclick=e=>{e.stopPropagation();let menu=$('accountMenu'),open=!menu.classList.contains('open');menu.classList.toggle('open',open);$('accountMenuBtn').setAttribute('aria-expanded',open?'true':'false')};document.addEventListener('click',e=>{if(!e.target.closest('.header-account')){$('accountMenu')?.classList.remove('open');$('accountMenuBtn')?.setAttribute('aria-expanded','false')}});$('syncBtn').onclick=()=>{syncDlg.showModal();if(authToken())pullCloudState(false)};$('syncNow').onclick=()=>pullCloudState(true);$('syncInitialize').onclick=initializeCloudFromDevice;$('logoutBtn').onclick=()=>{$('accountMenu')?.classList.remove('open');$('accountMenuBtn')?.setAttribute('aria-expanded','false');logout()};$('loginForm').onsubmit=async e=>{e.preventDefault();const b=$('loginButton'),u=$('loginUsername').value.trim(),p=$('loginPassword').value;b.disabled=true;b.textContent='Signing In…';$('loginError').style.display='none';try{await login(u,p)}catch(err){showLogin(err.message||'Sign in failed')}finally{b.disabled=false;b.textContent='Sign In'}};$('search').oninput=inv;document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('on'));b.classList.add('on');invFilter=b.dataset.f;inv()});$('auditExportScope').onchange=syncAuditExportControls;$('auditPreviewBtn').onclick=previewAuditExport;$('auditSaveBtn').onclick=saveAuditExport;$('auditPrintBtn').onclick=printAuditExport;$('auditShareBtn').onclick=shareAuditExport;const nowAudit=new Date();$('auditExportYear').value=String(nowAudit.getFullYear());$('auditExportMonth').value=String(nowAudit.getFullYear())+'-'+String(nowAudit.getMonth()+1).padStart(2,'0');$('auditExportQuarter').value=String(q(nowAudit));syncAuditExportControls();$('reportYear').onchange=reports;$('reportQuarter').onchange=reports;$('quarterReportBtn').onclick=()=>{let year=Number($('reportYear').value),quarter=Number($('reportQuarter').value),html=attachOverallSignature(buildQuarterReportHTML(year,quarter));if(!html)return;let actions='<div class="report-toolbar report-toolbar-dual"><button class="primary" onclick="previewQuarterReport()">Preview PDF</button><button onclick="saveQuarterReport()">Save PDF</button><button onclick="shareQuarterReport('+year+','+quarter+')">Share PDF</button></div>';$('reportModalContent').innerHTML=actions+html+actions;reportDlg.showModal()};$('annualReportBtn').onclick=()=>{let year=Number($('reportYear').value),html=attachOverallSignature(buildAnnualReportHTML(year));if(!html)return;let actions='<div class="report-toolbar report-toolbar-dual"><button class="primary" onclick="previewAnnualReport()">Preview PDF</button><button onclick="saveAnnualReport()">Save PDF</button><button onclick="shareAnnualReport('+year+')">Share PDF</button></div>';$('reportModalContent').innerHTML=actions+html+actions;reportDlg.showModal()};$('install').onclick=()=>installDlg.showModal();
+window.toggleQStatusSection=section=>{let complete=section==='complete',list=$(complete?'qCompleteList':'qDueList'),chev=$(complete?'qCompleteChev':'qDueChev'),key=complete?'gfd-qstatus-complete-collapsed':'gfd-qstatus-due-collapsed';if(!list)return;let collapsed=list.style.display!=='none';list.style.display=collapsed?'none':'block';chev.textContent=collapsed?'▸':'▾';localStorage.setItem(key,collapsed?'1':'0')};document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>goView(b.dataset.v));$('accountMenuBtn').onclick=e=>{e.stopPropagation();let menu=$('accountMenu'),open=!menu.classList.contains('open');menu.classList.toggle('open',open);$('accountMenuBtn').setAttribute('aria-expanded',open?'true':'false')};document.addEventListener('click',e=>{if(!e.target.closest('.header-account')){$('accountMenu')?.classList.remove('open');$('accountMenuBtn')?.setAttribute('aria-expanded','false')}});$('syncBtn').onclick=()=>{syncDlg.showModal();if(authToken())pullCloudState(false)};$('syncNow').onclick=()=>pullCloudState(true);$('syncInitialize').onclick=initializeCloudFromDevice;$('logoutBtn').onclick=()=>{$('accountMenu')?.classList.remove('open');$('accountMenuBtn')?.setAttribute('aria-expanded','false');logout()};$('loginForm').onsubmit=async e=>{e.preventDefault();const b=$('loginButton'),u=$('loginUsername').value.trim(),p=$('loginPassword').value;b.disabled=true;b.textContent='Signing In…';$('loginError').style.display='none';try{await login(u,p)}catch(err){showLogin(err.message||'Sign in failed')}finally{b.disabled=false;b.textContent='Sign In'}};$('search').oninput=inv;document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('on'));b.classList.add('on');invFilter=b.dataset.f;inv()});$('auditExportScope').onchange=syncAuditExportControls;$('auditPreviewBtn').onclick=previewAuditExport;$('auditSaveBtn').onclick=saveAuditExport;$('auditPrintBtn').onclick=printAuditExport;$('auditShareBtn').onclick=shareAuditExport;$('auditExcelBtn').onclick=exportAuditExcel;$('auditCsvBtn').onclick=exportAuditCsv;$('auditJsonBtn').onclick=exportAuditJson;const nowAudit=new Date();$('auditExportYear').value=String(nowAudit.getFullYear());$('auditExportMonth').value=String(nowAudit.getFullYear())+'-'+String(nowAudit.getMonth()+1).padStart(2,'0');$('auditExportQuarter').value=String(q(nowAudit));syncAuditExportControls();$('reportYear').onchange=reports;$('reportQuarter').onchange=reports;$('quarterReportBtn').onclick=()=>{let year=Number($('reportYear').value),quarter=Number($('reportQuarter').value),html=attachOverallSignature(buildQuarterReportHTML(year,quarter));if(!html)return;let actions='<div class="report-toolbar report-toolbar-dual"><button class="primary" onclick="previewQuarterReport()">Preview PDF</button><button onclick="saveQuarterReport()">Save PDF</button><button onclick="shareQuarterReport('+year+','+quarter+')">Share PDF</button></div>';$('reportModalContent').innerHTML=actions+html+actions;reportDlg.showModal()};$('annualReportBtn').onclick=()=>{let year=Number($('reportYear').value),html=attachOverallSignature(buildAnnualReportHTML(year));if(!html)return;let actions='<div class="report-toolbar report-toolbar-dual"><button class="primary" onclick="previewAnnualReport()">Preview PDF</button><button onclick="saveAnnualReport()">Save PDF</button><button onclick="shareAnnualReport('+year+')">Share PDF</button></div>';$('reportModalContent').innerHTML=actions+html+actions;reportDlg.showModal()};$('install').onclick=()=>installDlg.showModal();
 $('pedConfig').onchange=()=>{let na=$('pedConfig').value==='N/A';$('ped').disabled=na;if(na)$('ped').value=''};$('daed').onchange=syncDeploymentPadFields;$('auditResult').onchange=()=>{let issues=$('auditResult').value==='Issues found';$('notes').required=issues;$('issueHint').style.display=issues?'block':'none'};$('shock').onchange=()=>{let yes=$('shock').value==='Yes';$('shockPersonFields').style.display=yes?'grid':'none';$('shockCityEmployee').required=yes;let city=yes&&$('shockCityEmployee').value==='Yes';$('shockBy').required=city;$('shockPhone').required=city;syncDeploymentPadFields();if(!yes){$('shockBy').value='';$('shockCityEmployee').value='';$('shockPhone').value='';$('shockBy').required=false;$('shockPhone').required=false;$('shockContact').value='';$('adultPadsUsed').checked=false;$('pedPadsUsed').checked=false}};
 $('shockCityEmployee').onchange=()=>{let city=$('shock').value==='Yes'&&$('shockCityEmployee').value==='Yes';$('shockBy').required=city;$('shockPhone').required=city;$('shockPhoneWrap').style.display=$('shock').value==='Yes'?'grid':'none';};
 function aedScannerConfig(){
