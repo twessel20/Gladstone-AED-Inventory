@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#123a5a"><title>AED Repository</title><script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script><script src="./pdf-engine-v2.js"></script><style>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#123a5a"><title>AED Repository</title><script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script><script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script><script src="./pdf-engine-v2.js"></script><style>
 :root{--n:#123a5a;--b:#1f608e;--bg:#f4f7f9;--ink:#172838;--m:#687b8a;--l:#d9e3ea;--g:#1f754a;--a:#946100;--r:#a32c2c}
 *{box-sizing:border-box}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);padding-bottom:env(safe-area-inset-bottom)}
@@ -64,6 +64,18 @@ dialog{width:min(94vw,700px);border:0;border-radius:16px;padding:18px;box-shadow
 dialog::backdrop{background:#10202d77}
 .da{display:flex;justify-content:flex-end;gap:7px;margin-top:14px}
 .event-aed-picker{display:grid;gap:6px}
+.event-aed-row{display:flex;gap:7px;align-items:stretch}
+.event-aed-row input{flex:1;min-width:0}
+.damage-photo-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px}
+.damage-photo{position:relative;border:1px solid var(--l);border-radius:10px;background:#fff;padding:5px}
+.damage-photo img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:7px}
+.damage-photo button{position:absolute;top:7px;right:7px;padding:4px 7px;border-radius:999px;background:#fff;color:var(--r);border:1px solid #efc5c5}
+.repo-event-photos{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.repo-event-photos img{width:92px;height:70px;object-fit:cover;border:1px solid var(--l);border-radius:7px;background:#fff}
+.repo-pdf-photos{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.repo-pdf-photos img{width:82px;height:60px;object-fit:cover;border:1px solid #d9e3ea;border-radius:5px}
+@media(max-width:700px){.damage-photo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.event-aed-row{align-items:stretch}}
+
 .signature-card{margin-top:12px;padding:13px;border:1px solid var(--l);border-radius:12px;background:#f8fbfd}
 .signature-card h3{margin:0 0 8px;color:var(--n);font-size:1rem}
 .signature-pad{display:block;width:100%;height:170px;border:2px solid #b8c9d5;border-radius:10px;background:#fff;touch-action:none}
@@ -135,7 +147,7 @@ dialog::backdrop{background:#10202d77}
 <section class="lifecycle-step">
   <div class="lifecycle-step-head"><span class="lifecycle-step-num">1</span><div><div class="lifecycle-step-title">Select AED</div><div class="lifecycle-step-sub">Find the unit by location or serial number.</div></div></div>
   <div class="event-aed-picker">
-    <input id="eventAedSearch" type="search" placeholder="Search location or serial" autocomplete="off">
+    <div class="event-aed-row"><input id="eventAedSearch" type="search" placeholder="Search location or serial" autocomplete="off"><button type="button" id="eventScanAed">Scan AED</button></div>
     <select id="aedSelect" required></select>
   </div>
 </section>
@@ -173,18 +185,19 @@ dialog::backdrop{background:#10202d77}
     <div id="repairFields" style="display:none"><label>Sent To / Repair Facility<input id="repairFacility" placeholder="Facility, vendor or service provider"></label></div>
     <div id="eolFields" style="display:none"><div class="grid"><label>Final Disposition<select id="disposition"><option>Beyond Repair</option><option>Destroyed</option><option>Retired / End of Life</option><option>Final Disposal</option><option>Replaced</option><option>Other</option></select></label><label>Replacement AED Serial<input id="replacementSerial" placeholder="Optional"></label></div></div>
     <label>Details / Disposition<textarea id="eventNotes" required placeholder="Describe what occurred, condition of the AED, actions taken, and any relevant disposition details."></textarea></label>
+    <div><label>Photo Evidence <span class="muted">(optional; recommended for damage)</span><input id="eventPhotos" type="file" accept="image/*" capture="environment" multiple></label><div id="eventPhotoHint" class="muted" style="margin-top:5px">Photos are retained with the lifecycle record and available in Repository reporting.</div><div id="eventPhotoPreview" class="damage-photo-grid"></div></div>
   </div>
 </section>
 
 <section class="lifecycle-step lifecycle-signoff">
-  <div class="lifecycle-step-head"><span class="lifecycle-step-num">5</span><div><div class="lifecycle-step-title">Documenter Signature</div><div class="lifecycle-step-sub">Required for every lifecycle event.</div></div></div>
+  <div class="lifecycle-step-head"><span class="lifecycle-step-num">5</span><div><div id="eventSignatureTitle" class="lifecycle-step-title">Documenter Signature</div><div id="eventSignatureSub" class="lifecycle-step-sub">Required for every lifecycle event.</div></div></div>
   <canvas id="eventSigCanvas" class="signature-pad"></canvas>
   <input id="eventSigData" type="hidden">
   <div class="signature-actions"><button type="button" id="eventSigClear">Clear Signature</button></div>
 </section>
 
 <section id="witnessFields" class="lifecycle-step lifecycle-witness" style="display:none">
-  <div class="lifecycle-step-head"><span class="lifecycle-step-num">6</span><div><div class="lifecycle-step-title">Final Disposal Witness</div><div class="lifecycle-step-sub">Required only when the AED is being finally disposed.</div></div></div>
+  <div class="lifecycle-step-head"><span class="lifecycle-step-num">6</span><div><div id="witnessSignatureTitle" class="lifecycle-step-title">Final Disposal Witness</div><div class="lifecycle-step-sub">Required only when the AED is being finally disposed.</div></div></div>
   <div class="grid">
     <label>Witness Name<input id="witnessName" placeholder="Witness name"></label>
     <label>Witness Employee Number<input id="witnessEmp" type="number" inputmode="numeric" min="0" step="1" placeholder="Employee #"></label>
@@ -196,7 +209,43 @@ dialog::backdrop{background:#10202d77}
 
 </div>
 <div class="da"><button type="button" onclick="eventDlg.close()">Cancel</button><button class="primary">Save Lifecycle Event</button></div>
-</form></dialog><script>const KEY='gfd-aed-v2',SYNC_URL='https://vogywnzeizbuypoljzcv.supabase.co/functions/v1/aed-sync',SYNC_KEY_STORE='gfd-aed-sync-key',SYNC_TS_STORE='gfd-aed-sync-updated-at',SYNC_DIRTY='gfd-aed-sync-dirty',AUTH_TOKEN_STORE='gfd-aed-auth-token',AUTH_USER_STORE='gfd-aed-auth-user',AUTH_EXP_STORE='gfd-aed-auth-exp';let db={aeds:[],audit:[]},cloudUpdatedAt=localStorage.getItem(SYNC_TS_STORE)||null,repoFilter='all';const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])),today=()=>new Date().toISOString().slice(0,10);function fmt(v){if(!v)return'N/A';let d=new Date(String(v).slice(0,10)+'T12:00:00');return isNaN(d)?String(v):d.toLocaleDateString()}function key(){return localStorage.getItem(SYNC_KEY_STORE)||''}async function req(method='GET',body=null){if(!key())throw Error('Cloud Sync is not connected on this device. Open the main AED app and connect Cloud Sync first.');let o={method,headers:{'x-sync-key':key()}};if(body){o.headers['Content-Type']='application/json';o.body=JSON.stringify(body)}let r=await fetch(SYNC_URL,o),data={};try{data=await r.json()}catch(e){}return{ok:r.ok,status:r.status,data}}function load(){try{db=JSON.parse(localStorage.getItem(KEY)||'{"aeds":[],"audit":[]}')}catch(e){db={aeds:[],audit:[]}}db.aeds=db.aeds||[];db.audit=db.audit||[]}async function pull(){load();render();if(!key())return $('syncState').textContent='Showing records stored on this device. Cloud Sync is not connected here.';try{$('syncState').textContent='Checking shared inventory…';let r=await req();if(!r.ok)throw Error(r.data.error||'Cloud check failed');if(r.data.state&&r.data.state.data){db=r.data.state.data;db.aeds=db.aeds||[];db.audit=db.audit||[];cloudUpdatedAt=r.data.state.updated_at;localStorage.setItem(KEY,JSON.stringify(db));localStorage.setItem(SYNC_TS_STORE,cloudUpdatedAt);render()}$('syncState').textContent='Synced · '+new Date(cloudUpdatedAt).toLocaleString()}catch(e){$('syncState').textContent=e.message}}async function save(){localStorage.setItem(KEY,JSON.stringify(db));localStorage.setItem(SYNC_DIRTY,'1');render();if(!key()||!cloudUpdatedAt)return $('syncState').textContent='Saved locally. Open the main AED app to sync.';try{let r=await req('POST',{data:db,baseUpdatedAt:cloudUpdatedAt});if(r.status===409&&r.data.state){db=r.data.state.data;cloudUpdatedAt=r.data.state.updated_at;localStorage.setItem(KEY,JSON.stringify(db));render();throw Error('A newer shared copy was loaded. Re-enter the lifecycle event so no history is overwritten.')}if(!r.ok)throw Error(r.data.error||'Cloud save failed');cloudUpdatedAt=r.data.state.updated_at;localStorage.setItem(SYNC_TS_STORE,cloudUpdatedAt);localStorage.removeItem(SYNC_DIRTY);$('syncState').textContent='Synced · '+new Date(cloudUpdatedAt).toLocaleString()}catch(e){$('syncState').textContent=e.message}}function active(a){return /^(In Service|Active)$/i.test(String(a.status||'').trim())}function retired(a){return /^(Removed|Retired)/i.test(String(a.status||''))||/End of Life|Destroyed|Disposed/i.test((a.lifecycle||[]).map(x=>x.type).join(' '))}function oos(a){return !active(a)&&!retired(a)}function name(a){return(a.location||'Unknown location')+(a.descriptor?' — '+a.descriptor:'')}function events(a){let z=[];(a.checks||[]).forEach(c=>z.push({date:c.date,type:'Quarterly Inspection',detail:(c.auditResult||c.status||'Completed')+(c.inspector?' · '+c.inspector+(c.employeeNumber?' #'+c.employeeNumber:''):'')}));(a.deps||[]).forEach(d=>z.push({date:d.date,type:'Deployment',detail:(d.report?'Report '+d.report+' · ':'')+(d.shock?'Shock delivered':'No shock')+(d.rts?' · Returned to service':'')}));db.audit.filter(e=>e.id===a.id).forEach(e=>z.push({date:e.time,type:e.type||'Audit Event',detail:e.detail||'',who:e.who||''}));(a.lifecycle||[]).forEach(e=>z.push({date:e.date||e.time,type:e.type,detail:e.notes||'',who:e.by||'',employeeNumber:e.employeeNumber||'',repairFacility:e.repairFacility||'',disposition:e.disposition,replacementSerial:e.replacementSerial,signature:e.signature||'',witnessName:e.witnessName||'',witnessEmployeeNumber:e.witnessEmployeeNumber||'',witnessSignature:e.witnessSignature||''}));return z.sort((x,y)=>String(y.date).localeCompare(String(x.date)))}function bindLifecycleSignature(canvasId,dataId,clearId){
+</form></dialog><dialog id="eventScanDlg"><h2>Scan AED for Lifecycle Event</h2><p class="muted">Scan the AED QR code or serial barcode. A matching AED will be selected in the lifecycle event automatically.</p><div id="eventSerialReader" style="width:100%;max-width:520px;margin:auto"></div><div class="card" style="margin-top:12px"><label>Manual Serial Number<input id="eventManualSerial" placeholder="Type serial number"></label><div class="actions"><button type="button" id="eventFindSerial">Find AED</button></div><div id="eventScanMsg" class="muted" style="margin-top:8px"></div></div><div class="da"><button type="button" id="closeEventScan">Close</button></div></dialog><script>const KEY='gfd-aed-v2',SYNC_URL='https://vogywnzeizbuypoljzcv.supabase.co/functions/v1/aed-sync',SYNC_KEY_STORE='gfd-aed-sync-key',SYNC_TS_STORE='gfd-aed-sync-updated-at',SYNC_DIRTY='gfd-aed-sync-dirty',AUTH_TOKEN_STORE='gfd-aed-auth-token',AUTH_USER_STORE='gfd-aed-auth-user',AUTH_EXP_STORE='gfd-aed-auth-exp';let db={aeds:[],audit:[]},cloudUpdatedAt=localStorage.getItem(SYNC_TS_STORE)||null,repoFilter='all';const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])),today=()=>new Date().toISOString().slice(0,10);function fmt(v){if(!v)return'N/A';let d=new Date(String(v).slice(0,10)+'T12:00:00');return isNaN(d)?String(v):d.toLocaleDateString()}function key(){return localStorage.getItem(SYNC_KEY_STORE)||''}async function req(method='GET',body=null){if(!key())throw Error('Cloud Sync is not connected on this device. Open the main AED app and connect Cloud Sync first.');let o={method,headers:{'x-sync-key':key()}};if(body){o.headers['Content-Type']='application/json';o.body=JSON.stringify(body)}let r=await fetch(SYNC_URL,o),data={};try{data=await r.json()}catch(e){}return{ok:r.ok,status:r.status,data}}function load(){try{db=JSON.parse(localStorage.getItem(KEY)||'{"aeds":[],"audit":[]}')}catch(e){db={aeds:[],audit:[]}}db.aeds=db.aeds||[];db.audit=db.audit||[]}async function pull(){load();render();if(!key())return $('syncState').textContent='Showing records stored on this device. Cloud Sync is not connected here.';try{$('syncState').textContent='Checking shared inventory…';let r=await req();if(!r.ok)throw Error(r.data.error||'Cloud check failed');if(r.data.state&&r.data.state.data){db=r.data.state.data;db.aeds=db.aeds||[];db.audit=db.audit||[];cloudUpdatedAt=r.data.state.updated_at;localStorage.setItem(KEY,JSON.stringify(db));localStorage.setItem(SYNC_TS_STORE,cloudUpdatedAt);render()}$('syncState').textContent='Synced · '+new Date(cloudUpdatedAt).toLocaleString()}catch(e){$('syncState').textContent=e.message}}async function save(){localStorage.setItem(KEY,JSON.stringify(db));localStorage.setItem(SYNC_DIRTY,'1');render();if(!key()||!cloudUpdatedAt)return $('syncState').textContent='Saved locally. Open the main AED app to sync.';try{let r=await req('POST',{data:db,baseUpdatedAt:cloudUpdatedAt});if(r.status===409&&r.data.state){db=r.data.state.data;cloudUpdatedAt=r.data.state.updated_at;localStorage.setItem(KEY,JSON.stringify(db));render();throw Error('A newer shared copy was loaded. Re-enter the lifecycle event so no history is overwritten.')}if(!r.ok)throw Error(r.data.error||'Cloud save failed');cloudUpdatedAt=r.data.state.updated_at;localStorage.setItem(SYNC_TS_STORE,cloudUpdatedAt);localStorage.removeItem(SYNC_DIRTY);$('syncState').textContent='Synced · '+new Date(cloudUpdatedAt).toLocaleString()}catch(e){$('syncState').textContent=e.message}}function active(a){return /^(In Service|Active)$/i.test(String(a.status||'').trim())}function retired(a){return /^(Removed|Retired)/i.test(String(a.status||''))||/End of Life|Destroyed|Disposed/i.test((a.lifecycle||[]).map(x=>x.type).join(' '))}function oos(a){return !active(a)&&!retired(a)}function name(a){return(a.location||'Unknown location')+(a.descriptor?' — '+a.descriptor:'')}function events(a){let z=[];(a.checks||[]).forEach(c=>z.push({date:c.date,type:'Quarterly Inspection',detail:(c.auditResult||c.status||'Completed')+(c.inspector?' · '+c.inspector+(c.employeeNumber?' #'+c.employeeNumber:''):'')}));(a.deps||[]).forEach(d=>z.push({date:d.date,type:'Deployment',detail:(d.report?'Report '+d.report+' · ':'')+(d.shock?'Shock delivered':'No shock')+(d.rts?' · Returned to service':'')}));db.audit.filter(e=>e.id===a.id).forEach(e=>z.push({date:e.time,type:e.type||'Audit Event',detail:e.detail||'',who:e.who||''}));(a.lifecycle||[]).forEach(e=>z.push({date:e.date||e.time,type:e.type,detail:e.notes||'',who:e.by||'',employeeNumber:e.employeeNumber||'',repairFacility:e.repairFacility||'',disposition:e.disposition,replacementSerial:e.replacementSerial,signature:e.signature||'',witnessName:e.witnessName||'',witnessEmployeeNumber:e.witnessEmployeeNumber||'',witnessSignature:e.witnessSignature||'',photos:Array.isArray(e.photos)?e.photos:[]}));return z.sort((x,y)=>String(y.date).localeCompare(String(x.date)))}let eventPhotoData=[],eventScanner=null;
+function compressLifecyclePhoto(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onerror=reject;
+    reader.onload=()=>{const img=new Image();img.onload=()=>{const max=1200,scale=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(img.width*scale));c.height=Math.max(1,Math.round(img.height*scale));c.getContext('2d').drawImage(img,0,0,c.width,c.height);resolve(c.toDataURL('image/jpeg',.76))};img.onerror=reject;img.src=reader.result};
+    reader.readAsDataURL(file);
+  });
+}
+function renderLifecyclePhotos(){
+  $('eventPhotoPreview').innerHTML=eventPhotoData.map((src,i)=>'<div class="damage-photo"><img src="'+src+'" alt="Lifecycle damage evidence"><button type="button" onclick="removeLifecyclePhoto('+i+')" aria-label="Remove photo">×</button></div>').join('');
+}
+window.removeLifecyclePhoto=i=>{eventPhotoData.splice(i,1);renderLifecyclePhotos()};
+async function addLifecyclePhotos(files){
+  const list=[...files].slice(0,Math.max(0,6-eventPhotoData.length));
+  for(const file of list){if(!file.type.startsWith('image/'))continue;try{eventPhotoData.push(await compressLifecyclePhoto(file))}catch(e){}}
+  renderLifecyclePhotos();$('eventPhotos').value='';
+}
+function selectLifecycleAedByValue(value){
+  const raw=String(value||'').trim();if(!raw)return false;
+  let id=raw,serial=raw;
+  try{const u=new URL(raw,location.href);id=u.searchParams.get('aed')||id}catch(e){}
+  const found=db.aeds.find(a=>a.id===id)||db.aeds.find(a=>String(a.serial||'').trim().toLowerCase()===serial.toLowerCase());
+  if(!found)return false;
+  populateLifecycleAeds('');
+  $('aedSelect').value=found.id;$('eventAedSearch').value=found.serial||found.location||'';return true;
+}
+async function stopLifecycleScanner(){if(eventScanner){try{await eventScanner.stop()}catch(e){}try{await eventScanner.clear()}catch(e){}eventScanner=null}}
+async function openLifecycleScanner(){
+  $('eventScanMsg').textContent='';$('eventManualSerial').value='';eventScanDlg.showModal();
+  if(!window.Html5Qrcode){$('eventScanMsg').textContent='Camera scanner is unavailable. Enter the serial number manually.';return}
+  try{
+    eventScanner=new Html5Qrcode('eventSerialReader');
+    await eventScanner.start({facingMode:'environment'},{fps:10,qrbox:{width:260,height:160}},async decoded=>{if(selectLifecycleAedByValue(decoded)){await stopLifecycleScanner();eventScanDlg.close()}else $('eventScanMsg').textContent='No matching AED found for '+decoded});
+  }catch(e){$('eventScanMsg').textContent='Camera could not start. Enter the serial number manually.'}
+}
+function bindLifecycleSignature(canvasId,dataId,clearId){
   const canvas=$(canvasId),data=$(dataId),clear=$(clearId);if(!canvas||!data)return;
   const ctx=canvas.getContext('2d');let drawing=false,last=null;
   function resize(){const r=canvas.getBoundingClientRect(),dpr=Math.max(1,window.devicePixelRatio||1),saved=data.value;canvas.width=Math.round(r.width*dpr);canvas.height=Math.round(r.height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);ctx.lineWidth=2.2;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#172838';if(saved){const img=new Image();img.onload=()=>ctx.drawImage(img,0,0,r.width,r.height);img.src=saved}}
