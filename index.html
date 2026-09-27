@@ -314,7 +314,7 @@ if(['X11L529144','X11L528791','X11L528628','X11L529451','X19D142339'].includes(a
 if(['X11L528801','X11L528610'].includes(a.serial)&&a.group!=='Public Works / Animal Control'){a.group='Public Works / Animal Control';migrated=true}
 if(['X19D140932','X20A241496','X19D140968','X11L529367','X11L528800','X17L979521'].includes(a.serial)&&a.group!=='Community Center / Parks & Recreation'){a.group='Community Center / Parks & Recreation';migrated=true}
 if(!a.group||a.group==='Other Locations'){a.group=a.location||'Unassigned';migrated=true}
-if(!a.status){a.status='In Service';migrated=true}if(a.serial==='X17L979521'&&a.pedConfig!=='Installed'){a.pedConfig='Installed';migrated=true}if(!a.pedConfig){a.pedConfig=a.ped?'Installed':'N/A';migrated=true}if(!a.checks)a.checks=[];if(a.checkDraft===undefined){a.checkDraft=null;migrated=true}a.checks.forEach(ch=>{if(!ch.id){ch.id=crypto.randomUUID();migrated=true}})});if(migrated)localStorage.setItem(KEY,JSON.stringify(db));let invFilter='all';
+if(!a.status){a.status='In Service';migrated=true}if(a.serial==='X17L979521'&&a.pedConfig!=='Installed'){a.pedConfig='Installed';migrated=true}if(!a.pedConfig){a.pedConfig=a.ped?'Installed':'N/A';migrated=true}if(!a.checks)a.checks=[];if(a.checkDraft===undefined){a.checkDraft=null;migrated=true}a.checks.forEach(ch=>{if(!ch.id){ch.id=crypto.randomUUID();migrated=true}})});if(migrated)localStorage.setItem(KEY,JSON.stringify(db));let invFilter='all';const expandedGroupKeys=new Set();const openInventoryRows=new Set();
 function save(){localStorage.setItem(KEY,JSON.stringify(db));localStorage.setItem(SYNC_DIRTY,'1');render();queueCloudPush()}
 function authToken(){const token=localStorage.getItem(AUTH_TOKEN_STORE)||'',exp=localStorage.getItem(AUTH_EXP_STORE)||'';if(!token)return '';if(exp&&Date.parse(exp)<=Date.now()){clearAuth();return ''}return token}
 function authUser(){try{return JSON.parse(localStorage.getItem(AUTH_USER_STORE)||'null')}catch(e){return null}}
@@ -397,7 +397,7 @@ function lastCompletedCheck(a){
   let html='';
   groups.forEach(g=>{
     const key='group-'+g.replace(/[^a-z0-9]+/gi,'-').toLowerCase();
-    const collapsed=true;
+    const collapsed=!expandedGroupKeys.has(key);
     const items=buckets[g];
     const inactiveGroup=g==='Inactive AEDs';
     const attn=inactiveGroup?0:items.filter(a=>needsAttention(a)).length;
@@ -419,7 +419,7 @@ function lastCompletedCheck(a){
       '</button>'+
       '<div class="group-items">'+
       buckets[g].map(a=>
-        '<div class="item compact'+(isOutOfService(a)?' oos-row':'')+'" id="row-'+a.id+'">'+
+        '<div class="item compact'+(isOutOfService(a)?' oos-row':'')+(openInventoryRows.has(a.id)?' open':'')+'" id="row-'+a.id+'">'+
           '<div class="top" onclick="toggleRow(\''+a.id+'\')">'+
             '<div>'+locHTML(a)+'<div class="meta">'+esc(a.serial)+'</div><div class="meta">Last check: '+(lastCompletedCheck(a)?fmt(lastCompletedCheck(a).date):'No completed check')+'</div></div>'+
             '<div>'+(isOutOfService(a)?oosReasonPill(a):'<span class="pill '+(isActive(a)&&needsAttention(a)?'warn':statusClass(a))+'">'+(isActive(a)?(needsAttention(a)?'Attention':'OK'):'Inactive')+'</span>')+' <span class="chev">▾</span></div>'+
@@ -439,8 +439,14 @@ function lastCompletedCheck(a){
 
   $('list').innerHTML=html||'<div class="card muted">No AEDs match this filter.</div>';
 }
-window.toggleGroup=id=>{let el=$(id);if(!el)return;el.classList.toggle('collapsed')};
-window.toggleRow=id=>$('row-'+id).classList.toggle('open');window.showQR=id=>{let a=db.aeds.find(x=>x.id==id);let url=location.origin+location.pathname+'?aed='+encodeURIComponent(id);$('qrTitle').textContent='QR — '+a.location;$('qrLabel').textContent=a.location+' · '+a.serial;$('qrImg').src='https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&data='+encodeURIComponent(url);qrDlg.showModal()}
+window.toggleGroup=id=>{let el=$(id);if(!el)return;el.classList.toggle('collapsed');if(el.classList.contains('collapsed'))expandedGroupKeys.delete(id);else expandedGroupKeys.add(id)};
+window.toggleRow=id=>{let row=$('row-'+id);if(!row)return;row.classList.toggle('open');if(row.classList.contains('open'))openInventoryRows.add(id);else openInventoryRows.delete(id)};
+function revealInventoryRow(id){
+  let row=$('row-'+id);if(!row)return;
+  row.classList.add('open');openInventoryRows.add(id);
+  let group=row.closest('.group-block');
+  if(group){group.classList.remove('collapsed');expandedGroupKeys.add(group.id)}
+}window.showQR=id=>{let a=db.aeds.find(x=>x.id==id);let url=location.origin+location.pathname+'?aed='+encodeURIComponent(id);$('qrTitle').textContent='QR — '+a.location;$('qrLabel').textContent=a.location+' · '+a.serial;$('qrImg').src='https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&data='+encodeURIComponent(url);qrDlg.showModal()}
 function checks(){
   const buckets={};
   const tracked=db.aeds.filter(isInventoryTracked);
@@ -491,7 +497,7 @@ function checks(){
   groups.forEach(g=>{
     const items=buckets[g];
     const key='quarter-group-'+g.replace(/[^a-z0-9]+/gi,'-').toLowerCase();
-    const collapsed=true;
+    const collapsed=!expandedGroupKeys.has(key);
     const due=items.filter(a=>!cur(a)).length;
     const complete=items.length-due;
     const oos=items.filter(isOutOfService).length;
@@ -689,9 +695,9 @@ function syncAuditExportControls(){
   $('auditEndWrap').style.display=scope==='range'?'grid':'none';
 }
 function audit(){$('auditlist').innerHTML=db.audit.map(e=>{let a=db.aeds.find(x=>x.id==e.id);return '<div class="item"><b>'+e.type+(a?' — '+a.location:'')+'</b><div class="meta">'+new Date(e.time).toLocaleString()+' · '+e.who+'</div><p>'+e.detail+'</p></div>'}).join('')||'<div class="card muted">No audit entries.</div>'}
-function goView(view){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.v===view));document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id===view));render()}
+function goView(view){const current=document.querySelector('.view.on')?.id||'';if(current&&current!==view){expandedGroupKeys.clear();openInventoryRows.clear()}document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.v===view));document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id===view));render()}
 function setInventoryFilter(filter){invFilter=filter;$('search').value='';document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('on',x.dataset.f===filter));inv()}
-window.openInventoryTarget=(id,filter='all')=>{goView('inv');setInventoryFilter(filter);setTimeout(()=>{let row=$('row-'+id);if(row){row.classList.add('open');row.scrollIntoView({behavior:'smooth',block:'center'})}},80)};
+window.openInventoryTarget=(id,filter='all')=>{goView('inv');setInventoryFilter(filter);setTimeout(()=>{revealInventoryRow(id);let row=$('row-'+id);if(row)row.scrollIntoView({behavior:'smooth',block:'center'})},80)};
 window.dashboardStatAction=kind=>{let tracked=db.aeds.filter(isInventoryTracked);if(kind==='checked'){goView('checks');return}let list=kind==='oos'?tracked.filter(isOutOfService):kind==='expired'?tracked.filter(hasExpiredComponent):kind==='expiring'?tracked.filter(hasDue180Component):tracked;if(list.length===1&&kind!=='all'){openInventoryTarget(list[0].id,kind);return}goView('inv');setInventoryFilter(kind==='all'?'all':kind)};
 window.toggleQStatusSection=section=>{let complete=section==='complete',list=$(complete?'qCompleteList':'qDueList'),chev=$(complete?'qCompleteChev':'qDueChev'),key=complete?'gfd-qstatus-complete-collapsed':'gfd-qstatus-due-collapsed';if(!list)return;let collapsed=list.style.display!=='none';list.style.display=collapsed?'none':'block';chev.textContent=collapsed?'▸':'▾';localStorage.setItem(key,collapsed?'1':'0')};document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>goView(b.dataset.v));$('syncBtn').onclick=()=>{syncDlg.showModal();if(authToken())pullCloudState(false)};$('syncNow').onclick=()=>pullCloudState(true);$('syncInitialize').onclick=initializeCloudFromDevice;$('logoutBtn').onclick=logout;$('loginForm').onsubmit=async e=>{e.preventDefault();const b=$('loginButton'),u=$('loginUsername').value.trim(),p=$('loginPassword').value;b.disabled=true;b.textContent='Signing In…';$('loginError').style.display='none';try{await login(u,p)}catch(err){showLogin(err.message||'Sign in failed')}finally{b.disabled=false;b.textContent='Sign In'}};$('search').oninput=inv;document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('on'));b.classList.add('on');invFilter=b.dataset.f;inv()});$('auditExportScope').onchange=syncAuditExportControls;$('auditPreviewBtn').onclick=previewAuditExport;$('auditSaveBtn').onclick=saveAuditExport;$('auditPrintBtn').onclick=printAuditExport;$('auditShareBtn').onclick=shareAuditExport;const nowAudit=new Date();$('auditExportYear').value=String(nowAudit.getFullYear());$('auditExportMonth').value=String(nowAudit.getFullYear())+'-'+String(nowAudit.getMonth()+1).padStart(2,'0');$('auditExportQuarter').value=String(q(nowAudit));syncAuditExportControls();$('reportYear').onchange=reports;$('reportQuarter').onchange=reports;$('quarterReportBtn').onclick=()=>{let year=Number($('reportYear').value),quarter=Number($('reportQuarter').value),html=attachOverallSignature(buildQuarterReportHTML(year,quarter));if(!html)return;let actions='<div class="report-toolbar report-toolbar-dual"><button class="primary" onclick="previewQuarterReport()">Preview PDF</button><button onclick="saveQuarterReport()">Save PDF</button><button onclick="shareQuarterReport('+year+','+quarter+')">Share PDF</button></div>';$('reportModalContent').innerHTML=actions+html+actions;reportDlg.showModal()};$('annualReportBtn').onclick=()=>{let year=Number($('reportYear').value),html=attachOverallSignature(buildAnnualReportHTML(year));if(!html)return;let actions='<div class="report-toolbar report-toolbar-dual"><button class="primary" onclick="previewAnnualReport()">Preview PDF</button><button onclick="saveAnnualReport()">Save PDF</button><button onclick="shareAnnualReport('+year+')">Share PDF</button></div>';$('reportModalContent').innerHTML=actions+html+actions;reportDlg.showModal()};$('install').onclick=()=>installDlg.showModal();
 $('pedConfig').onchange=()=>{let na=$('pedConfig').value==='N/A';$('ped').disabled=na;if(na)$('ped').value=''};$('daed').onchange=syncDeploymentPadFields;$('auditResult').onchange=()=>{let issues=$('auditResult').value==='Issues found';$('notes').required=issues;$('issueHint').style.display=issues?'block':'none'};$('shock').onchange=()=>{let yes=$('shock').value==='Yes';$('shockPersonFields').style.display=yes?'grid':'none';$('shockCityEmployee').required=yes;let city=yes&&$('shockCityEmployee').value==='Yes';$('shockBy').required=city;$('shockPhone').required=city;syncDeploymentPadFields();if(!yes){$('shockBy').value='';$('shockCityEmployee').value='';$('shockPhone').value='';$('shockBy').required=false;$('shockPhone').required=false;$('shockContact').value='';$('adultPadsUsed').checked=false;$('pedPadsUsed').checked=false}};
@@ -787,10 +793,9 @@ function addAedFromSerial(raw){
 }
 function openAedBySerial(raw,allowAdd=false){let parsed=serialFromScan(raw),s=normSerial(parsed);let a=db.aeds.find(x=>normSerial(x.serial)===s);if(!a){if(allowAdd){$('scanMsg').textContent='New AED detected. Opening Add AED...';addAedFromSerial(parsed);return true}$('scanMsg').textContent='No AED found for serial: '+raw;return false}
 $('scanMsg').textContent='Matched '+a.location+(a.descriptor?' - '+a.descriptor:'')+' — '+a.serial;
-document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));document.querySelector('[data-v="inv"]').classList.add('on');
-document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));$('inv').classList.add('on');
+goView('inv');
 $('search').value=a.serial;invFilter='all';document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('on',x.dataset.f==='all'));inv();
-setTimeout(()=>{let row=$('row-'+a.id);if(row){row.classList.add('open');row.scrollIntoView({behavior:'smooth',block:'center'})}},100);
+setTimeout(()=>{revealInventoryRow(a.id);let row=$('row-'+a.id);if(row)row.scrollIntoView({behavior:'smooth',block:'center'})},100);
 return true}
 async function stopSerialScanner(){if(serialScanner){try{await serialScanner.stop()}catch(e){}try{serialScanner.clear()}catch(e){}serialScanner=null}}
 const startSerialScan=async(allowAdd=false)=>{scanDlg.dataset.allowAdd=allowAdd?'1':'0';scanDlg.showModal();$('manualSerial').value='';$('scanMsg').textContent='';await stopSerialScanner();try{serialScanner=new Html5Qrcode('serialReader',aedScannerConfig());await serialScanner.start({facingMode:'environment'},{fps:10,qrbox:scanBox,aspectRatio:1.777},async decoded=>{if(openAedBySerial(decoded,scanDlg.dataset.allowAdd==='1')){await stopSerialScanner();scanDlg.close()}},()=>{})}catch(e){$('scanMsg').textContent='Camera scanner unavailable. You can still type the serial number below.'}}
@@ -902,6 +907,6 @@ if('serviceWorker' in navigator){
   });
 }
 bindSignatureCanvas('auditorSigCanvas','auditorSigData','auditorSigClear');bindSignatureCanvas('overallSigCanvas','overallSigData','overallSigClear');if(window.navigator.standalone===true)$('install').style.display='none';render();(async()=>{if(!authToken()){showLogin();return}showLogin();try{const ok=await pullCloudState(true);if(ok)hideLogin()}catch(e){showLogin('Unable to validate your session. Check your connection and sign in again.')}})();setInterval(()=>{if(document.visibilityState==='visible'&&navigator.onLine&&!syncBusy&&!syncPushTimer&&authToken()){if(localStorage.getItem(SYNC_DIRTY)==='1'&&cloudUpdatedAt)pushCloudState();else pullCloudState(true)}},15000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&navigator.onLine&&!syncBusy&&!syncPushTimer&&authToken()){if(localStorage.getItem(SYNC_DIRTY)==='1'&&cloudUpdatedAt)pushCloudState();else pullCloudState(true)}})
-if($('loginUsername'))$('loginUsername').value=(authUser()?.username||'travisw@gladstone.mo.us');const linkedId=new URLSearchParams(location.search).get('aed');if(linkedId&&db.aeds.some(a=>a.id===linkedId)){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));document.querySelector('[data-v="inv"]').classList.add('on');document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));$('inv').classList.add('on');invFilter='all';document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('on',x.dataset.f==='all'));$('search').value='';inv();setTimeout(()=>{let row=$('row-'+linkedId);if(row){row.classList.add('open');row.scrollIntoView({behavior:'smooth',block:'center'})}},100)}
+if($('loginUsername'))$('loginUsername').value=(authUser()?.username||'travisw@gladstone.mo.us');const linkedId=new URLSearchParams(location.search).get('aed');if(linkedId&&db.aeds.some(a=>a.id===linkedId)){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));document.querySelector('[data-v="inv"]').classList.add('on');document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));$('inv').classList.add('on');invFilter='all';document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('on',x.dataset.f==='all'));$('search').value='';inv();setTimeout(()=>{revealInventoryRow(linkedId);let row=$('row-'+linkedId);if(row)row.scrollIntoView({behavior:'smooth',block:'center'})},100)}
 </script><script src="pdf-engine-v2.js?v=161"></script>
 <script src="report-builder.js?v=161"></script></body></html>
