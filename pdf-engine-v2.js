@@ -177,35 +177,62 @@ function showPreview(blob,filename='aed-report.pdf',title='AED Report',summary='
   let dlg=document.getElementById(PREVIEW_ID);
   if(!dlg){
     dlg=document.createElement('dialog');dlg.id=PREVIEW_ID;
-    dlg.style.cssText='width:min(98vw,1100px);max-width:1100px;height:94vh;max-height:94vh;padding:0;overflow:hidden;';
-    dlg.innerHTML='<div style="display:flex;flex-direction:column;height:100%;min-height:0"><div style="flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid #d9e3ea;background:#fff;flex-wrap:wrap"><div><b style="color:#123a5a">PDF Preview</b><div style="font-size:.82rem;color:#687b8a">Portrait Letter preview rendered from the same pages used to create the PDF.</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" id="pdfV2Save">Save PDF</button><button type="button" id="pdfV2Share">Share PDF</button><button type="button" id="pdfV2Close">Close</button></div></div><div id="pdfV2Pages" style="flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#dfe5e9;padding:16px;display:flex;flex-direction:column;align-items:center;gap:16px"></div></div>';
+    dlg.style.cssText='position:fixed;inset:0;width:100vw;max-width:none;height:100dvh;max-height:none;margin:0;padding:0;border:0;border-radius:0;overflow:hidden;background:#dfe5e9;';
+    dlg.innerHTML='<div style="display:flex;flex-direction:column;height:100dvh;min-height:0"><div style="flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:calc(8px + env(safe-area-inset-top)) 10px 8px;border-bottom:1px solid #d9e3ea;background:#fff;flex-wrap:wrap"><div style="min-width:0"><b style="color:#123a5a">PDF Preview</b><div id="pdfV2PageStatus" style="font-size:.82rem;color:#687b8a">Portrait Letter</div></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" id="pdfV2Prev">Previous</button><button type="button" id="pdfV2Next">Next</button><button type="button" id="pdfV2Save">Save PDF</button><button type="button" id="pdfV2Share">Share PDF</button><button type="button" id="pdfV2Close">Close</button></div></div><div id="pdfV2Pages" style="flex:1 1 auto;min-height:0;height:0;overflow-y:scroll;-webkit-overflow-scrolling:touch;touch-action:pan-y;overscroll-behavior:contain;background:#dfe5e9;padding:12px 8px calc(18px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:14px"></div></div>';
     document.body.appendChild(dlg);
     dlg.querySelector('#pdfV2Close').onclick=()=>dlg.close();
     dlg.querySelector('#pdfV2Save').onclick=async()=>{try{await saveBlob(previewState.blob,previewState.filename)}catch(e){alert(e.message||'Unable to save PDF.')}};
     dlg.querySelector('#pdfV2Share').onclick=async()=>{try{await shareBlob(previewState.blob,previewState.filename,previewState.title,previewState.summary)}catch(e){if(!e||e.name!=='AbortError')alert(e.message||'Unable to share PDF.')}};
-    dlg.addEventListener('close',()=>{const pages=dlg.querySelector('#pdfV2Pages');if(pages)pages.innerHTML='';previewState={blob:null,filename:'aed-report.pdf',title:'AED Report',summary:''}})
+    dlg.querySelector('#pdfV2Prev').onclick=()=>navigatePreviewPage(-1);
+    dlg.querySelector('#pdfV2Next').onclick=()=>navigatePreviewPage(1);
+    dlg.addEventListener('close',()=>{const pages=dlg.querySelector('#pdfV2Pages');if(pages)pages.innerHTML='';dlg.dataset.page='0';previewState={blob:null,filename:'aed-report.pdf',title:'AED Report',summary:''}})
   }
   const pages=dlg.querySelector('#pdfV2Pages');
   pages.innerHTML='';
   const imgs=previewPages.get(blob)||[];
+  dlg.dataset.page='0';
   if(imgs.length){
     imgs.forEach((src,i)=>{
       const wrap=document.createElement('div');
-      wrap.style.cssText='width:min(100%,850px);background:#fff;box-shadow:0 2px 12px #0002;flex:0 0 auto;';
+      wrap.dataset.previewPage=String(i);
+      wrap.style.cssText='width:min(100%,850px);background:#fff;box-shadow:0 2px 12px #0002;flex:0 0 auto;scroll-margin-top:8px;';
       const img=document.createElement('img');
-      img.src=src;img.alt='PDF page '+(i+1);img.style.cssText='display:block;width:100%;height:auto;background:#fff;';
+      img.src=src;img.alt='PDF page '+(i+1);img.draggable=false;img.style.cssText='display:block;width:100%;height:auto;background:#fff;user-select:none;-webkit-user-drag:none;';
       const cap=document.createElement('div');
-      cap.textContent='Page '+(i+1)+' of '+imgs.length;cap.style.cssText='font-size:.78rem;color:#687b8a;text-align:center;padding:6px 8px;border-top:1px solid #e3e8ec;background:#fff;';
+      cap.textContent='Page '+(i+1)+' of '+imgs.length;cap.style.cssText='font-size:.78rem;color:#687b8a;text-align:center;padding:7px 8px;border-top:1px solid #e3e8ec;background:#fff;';
       wrap.appendChild(img);wrap.appendChild(cap);pages.appendChild(wrap);
     });
+    updatePreviewPageStatus();
+    pages.onscroll=()=>{clearTimeout(pages._pageTimer);pages._pageTimer=setTimeout(()=>{const children=[...pages.querySelectorAll('[data-preview-page]')];if(!children.length)return;const pr=pages.getBoundingClientRect();let best=0,dist=Infinity;children.forEach((el,i)=>{const r=el.getBoundingClientRect(),d=Math.abs(r.top-pr.top-8);if(d<dist){dist=d;best=i}});dlg.dataset.page=String(best);updatePreviewPageStatus()},80)};
   }else{
     const url=URL.createObjectURL(blob);
     const iframe=document.createElement('iframe');
-    iframe.src=url;iframe.title='PDF Preview';iframe.style.cssText='width:100%;height:100%;min-height:75vh;border:0;background:#fff';
+    iframe.src=url;iframe.title='PDF Preview';iframe.style.cssText='width:100%;height:100%;min-height:80vh;border:0;background:#fff';
     iframe.onload=()=>setTimeout(()=>URL.revokeObjectURL(url),120000);
     pages.appendChild(iframe);
+    dlg.querySelector('#pdfV2Prev').style.display='none';
+    dlg.querySelector('#pdfV2Next').style.display='none';
+    dlg.querySelector('#pdfV2PageStatus').textContent='PDF Preview';
   }
+  if(imgs.length){dlg.querySelector('#pdfV2Prev').style.display='inline-block';dlg.querySelector('#pdfV2Next').style.display='inline-block'}
   dlg.showModal();
+
+  function updatePreviewPageStatus(){
+    const total=pages.querySelectorAll('[data-preview-page]').length,current=Math.min(total-1,Math.max(0,Number(dlg.dataset.page||0)));
+    const status=dlg.querySelector('#pdfV2PageStatus');
+    if(status)status.textContent=total?'Page '+(current+1)+' of '+total+' · Portrait Letter':'Portrait Letter';
+    const prev=dlg.querySelector('#pdfV2Prev'),next=dlg.querySelector('#pdfV2Next');
+    if(prev)prev.disabled=current<=0;if(next)next.disabled=current>=total-1;
+  }
+  function navigatePreviewPage(delta){
+    const total=pages.querySelectorAll('[data-preview-page]').length;
+    if(!total)return;
+    let current=Math.min(total-1,Math.max(0,Number(dlg.dataset.page||0)));
+    current=Math.min(total-1,Math.max(0,current+delta));dlg.dataset.page=String(current);
+    const target=pages.querySelector('[data-preview-page="'+current+'"]');
+    if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+    updatePreviewPageStatus();
+  }
 }
 async function previewElement(source,filename,title,summary){showPreview(await buildFromElement(source,filename),filename,title,summary)}
 async function previewHtml(html,filename,title,summary){showPreview(await buildFromHtml(html,filename),filename,title,summary)}
