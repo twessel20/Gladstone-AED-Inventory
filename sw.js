@@ -1,4 +1,4 @@
-const VERSION='gfd-aed-pwa-v160';
+const VERSION='gfd-aed-pwa-v161';
 const CORE_CACHE=VERSION+'-core';
 const RUNTIME_CACHE=VERSION+'-runtime';
 const CORE=['./','./index.html','./lifecycle.html','./manifest.webmanifest','./pdf-engine-v2.js','./report-builder.js','./report-pdf.css'];
@@ -27,11 +27,11 @@ async function decorateMainApp(response){
   let html=await response.text();
   const isMainApp=html.includes('<title>Gladstone AED Inventory</title>')&&html.includes('data-v="dash"')&&html.includes('data-v="audit"');
   if(isMainApp){
-    if(!html.includes('report-pdf.css'))html=html.replace('</head>','<link rel="stylesheet" href="./report-pdf.css?v=150"></head>');
-    if(!html.includes('pdf-engine-v2.js'))html=html.replace('</body>','<script src="./pdf-engine-v2.js?v=150"></script></body>');if(!html.includes('report-builder.js'))html=html.replace('</body>','<script src="./report-builder.js?v=150"></script></body>');
+    if(!html.includes('report-pdf.css'))html=html.replace('</head>','<link rel="stylesheet" href="./report-pdf.css?v=161"></head>');
+    if(!html.includes('pdf-engine-v2.js'))html=html.replace('</body>','<script src="./pdf-engine-v2.js?v=161"></script></body>');if(!html.includes('report-builder.js'))html=html.replace('</body>','<script src="./report-builder.js?v=161"></script></body>');
     if(!html.includes('id="repositoryNav"')){
       const auditButton='<button class="tab" data-v="audit">Audit Log</button>';
-      const repositoryLink='<a id="repositoryNav" href="./lifecycle.html" style="font:inherit;font-weight:750;border:1px solid var(--l);background:#fff;border-radius:9px;padding:10px 12px;color:var(--n);text-decoration:none;white-space:nowrap">AED Repository</a>';
+      const repositoryLink='<a id="repositoryNav" href="./lifecycle.html" style="display:inline-flex;align-items:center;justify-content:center;min-height:42px;font:inherit;font-weight:750;border:1px solid var(--l);background:#fff;border-radius:9px;padding:10px 14px;color:var(--n);text-decoration:none;white-space:nowrap;line-height:1">AED Repository</a>';
       html=html.replace(auditButton,auditButton+repositoryLink);
     }
   }
@@ -69,7 +69,7 @@ self.addEventListener('fetch',event=>{
     event.respondWith(networkFirst(event.request));
     return;
   }
-  if(url.origin===self.location.origin&&url.pathname.endsWith('/pdf-export.js')){
+  if(url.origin===self.location.origin&&(url.pathname.endsWith('/pdf-export.js')||url.pathname.endsWith('/pdf-engine-v2.js')||url.pathname.endsWith('/report-builder.js')||url.pathname.endsWith('/report-pdf.css'))){
     event.respondWith(networkFirst(event.request));
     return;
   }
