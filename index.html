@@ -187,7 +187,7 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
 </style>
 </head>
 <body><div id="authGate" class="auth-gate"><form id="loginForm" class="auth-card"><img src="gfd-patch.jpg" alt="Gladstone Fire EMS"><h1>AED Inventory Login</h1><p>Gladstone Fire / EMS</p><label>Username<input id="loginUsername" type="text" autocomplete="username" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" required></label><button id="loginButton" type="submit" class="primary">Sign In</button><div id="loginError" class="auth-error"></div></form></div>
-<header><div class="app-header-inner"><img class="app-header-logo" src="gfd-patch.jpg" alt="Gladstone Fire EMS patch"><div class="app-header-copy"><div class="k">GLADSTONE FIRE / EMS</div><h1>AED Inventory & Quarterly Audit</h1><p>Inventory, expirations, inspections, deployments and traceable records.</p></div></div></header>
+<header><div class="app-header-inner"><img class="app-header-logo" src="gfd-patch.jpg" alt="Gladstone Fire EMS patch"><div class="app-header-copy"><div class="k">GLADSTONE FIRE / EMS</div><h1>AED Inventory & Quarterly Audit</h1><p>Inventory, Expirations, Inspections, Deployments and Traceable Records.</p></div></div></header>
 <nav><button class="tab on" data-v="dash">Dashboard</button><button class="tab" data-v="inv">Inventory</button><button class="tab" data-v="checks">Quarterly</button><button class="tab" data-v="deps">Deployments</button><button class="tab" data-v="reports">Reports</button><button class="tab" data-v="audit">Audit Log</button><button id="syncBtn">Cloud Sync</button><span id="authUserLabel" class="auth-user"></span><button id="logoutBtn">Logout</button><button id="install">Add to iPhone</button></nav>
 <main>
 <section id="dash" class="view on"><div class="card" style="margin-bottom:12px"><div class="bar" style="margin:0"><div><h2 style="margin:0">Quick Actions</h2><p class="muted" style="margin:3px 0 0">Scan an AED, start a quarterly check, or quickly record a deployment event.</p></div><div class="actions" style="margin-top:0"><button id="dashQuickScan">Quick Scan</button><button id="dashQuickQuarterly">Quarterly Check</button><button class="primary" id="dashQuickDeployment">Record Deployment</button></div></div></div><div id="stats" class="stats"></div><div id="shockOosCard" class="card" style="display:none"><div class="bar"><div><h2 style="margin:0">Out of Service — Shock Delivered</h2><p class="muted" style="margin:3px 0 0">These AEDs remain in inventory but are unavailable until the return-to-service workflow is completed.</p></div></div><div id="shockOosList"></div></div><div class="two"><div class="card"><h2>Expiration Watch</h2><div id="watch"></div></div><div class="card"><h2 id="qtitle">Quarterly Status</h2><div id="qstatus"></div></div></div></section>
@@ -373,7 +373,7 @@ function lastCompletedCheck(a){
   let html='';
   groups.forEach(g=>{
     const key='group-'+g.replace(/[^a-z0-9]+/gi,'-').toLowerCase();
-    const collapsed=localStorage.getItem('gfd-aed-group-'+key)==='1';
+    const collapsed=localStorage.getItem('gfd-aed-group-'+key)!=='0';
     const items=buckets[g];
     const inactiveGroup=g==='Inactive AEDs';
     const attn=inactiveGroup?0:items.filter(a=>needsAttention(a)).length;
