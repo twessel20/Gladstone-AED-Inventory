@@ -1,4 +1,4 @@
-const VERSION='gfd-aed-pwa-v162';
+const VERSION='gfd-aed-pwa-v163';
 const CORE_CACHE=VERSION+'-core';
 const RUNTIME_CACHE=VERSION+'-runtime';
 const CORE=['./','./index.html','./lifecycle.html','./manifest.webmanifest','./pdf-engine-v2.js','./report-builder.js','./report-pdf.css'];
