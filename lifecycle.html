@@ -74,6 +74,11 @@ dialog::backdrop{background:#10202d77}
 .repo-event-photos img{width:92px;height:70px;object-fit:cover;border:1px solid var(--l);border-radius:7px;background:#fff}
 .repo-pdf-photos{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
 .repo-pdf-photos img{width:82px;height:60px;object-fit:cover;border:1px solid #d9e3ea;border-radius:5px}
+.repo-pdf-signatures{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.repo-pdf-signature{border:1px solid #d9e3ea;border-radius:6px;padding:5px;background:#fff;min-width:150px}
+.repo-pdf-signature b{display:block;font-size:.65rem;color:#123a5a;margin-bottom:3px}
+.repo-pdf-signature img{display:block;width:140px;height:44px;object-fit:contain;background:#fff}
+
 @media(max-width:700px){.damage-photo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.event-aed-row{align-items:stretch}}
 
 .signature-card{margin-top:12px;padding:13px;border:1px solid var(--l);border-radius:12px;background:#f8fbfd}
@@ -307,7 +312,7 @@ function repoExportHTML(){
 
   const datasetHtml=x=>{
     const a=x.a,ev=x.ev||[];
-    const rowsHtml=ev.length?ev.map(e=>'<tr><td>'+fmt(e.date)+'</td><td>'+esc(e.type||'Event')+'</td><td>'+esc(e.detail||'')+(e.repairFacility?'<br><b>Sent To:</b> '+esc(e.repairFacility):'')+(e.disposition?'<br><b>Disposition:</b> '+esc(e.disposition):'')+(e.replacementSerial?'<br><b>Replacement AED:</b> '+esc(e.replacementSerial):'')+(e.employeeNumber?'<br><b>Employee #:</b> '+esc(e.employeeNumber):'')+(e.signature?'<br><b>Signature:</b> Captured':'')+(e.witnessName?'<br><b>Witness:</b> '+esc(e.witnessName)+(e.witnessEmployeeNumber?' #'+esc(e.witnessEmployeeNumber):'')+(e.witnessSignature?' · Signature captured':''):'')+((e.photos||[]).length?'<div class="repo-pdf-photos">'+e.photos.map((src,i)=>'<img src="'+src+'" alt="Lifecycle photo '+(i+1)+'">').join('')+'</div>':'')+'</td><td>'+esc(e.who||'')+'</td></tr>').join(''):'<tr><td colspan="4" class="muted">No lifecycle activity in the selected period.</td></tr>';
+    const rowsHtml=ev.length?ev.map(e=>'<tr><td>'+fmt(e.date)+'</td><td>'+esc(e.type||'Event')+'</td><td>'+esc(e.detail||'')+(e.repairFacility?'<br><b>Sent To:</b> '+esc(e.repairFacility):'')+(e.disposition?'<br><b>Disposition:</b> '+esc(e.disposition):'')+(e.replacementSerial?'<br><b>Replacement AED:</b> '+esc(e.replacementSerial):'')+(e.employeeNumber?'<br><b>Employee #:</b> '+esc(e.employeeNumber):'')+(e.witnessName?'<br><b>Witness:</b> '+esc(e.witnessName)+(e.witnessEmployeeNumber?' #'+esc(e.witnessEmployeeNumber):''):'')+((e.signature||e.witnessSignature)?'<div class="repo-pdf-signatures">'+(e.signature?'<div class="repo-pdf-signature"><b>'+(e.type==='Final Disposal'?'Auditor Signature':'Documenter Signature')+'</b><img src="'+e.signature+'" alt="Lifecycle signature"></div>':'')+(e.witnessSignature?'<div class="repo-pdf-signature"><b>Witness Signature</b><img src="'+e.witnessSignature+'" alt="Witness signature"></div>':'')+'</div>':'')+((e.photos||[]).length?'<div class="repo-pdf-photos">'+e.photos.map((src,i)=>'<img src="'+src+'" alt="Lifecycle photo '+(i+1)+'">').join('')+'</div>':'')+'</td><td>'+esc(e.who||'')+'</td></tr>').join(''):'<tr><td colspan="4" class="muted">No lifecycle activity in the selected period.</td></tr>';
     return '<div class="repo-dataset">'+
       '<div class="repo-dataset-head"><div><h2>'+esc(name(a))+'</h2><div class="repo-dataset-sub">Serial: '+esc(a.serial||'N/A')+' · Group: '+esc(a.group||'Unassigned')+' · Status: '+esc(a.status||'N/A')+'</div></div></div>'+
       '<div class="repo-component-line"><b>Adult Pads:</b> '+fmt(a.adult)+' &nbsp; · &nbsp; <b>Pediatric Pads:</b> '+fmt(a.ped)+' &nbsp; · &nbsp; <b>Battery:</b> '+fmt(a.battery)+'</div>'+
@@ -321,7 +326,7 @@ function repoExportHTML(){
     let units=2.5;
     ev.forEach(e=>{
       const len=((e.type||'')+(e.detail||'')+(e.disposition||'')+(e.replacementSerial||'')+(e.who||'')).length;
-      units+=1+Math.min(2.5,Math.ceil(len/180)*.55);
+      units+=1+Math.min(2.5,Math.ceil(len/180)*.55)+((e.photos||[]).length*.85)+(e.signature?1.1:0)+(e.witnessSignature?1.1:0);
     });
     return Math.max(3,units);
   };
