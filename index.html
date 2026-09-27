@@ -799,7 +799,9 @@ function versionCsvEscape(v){const t=String(v??'');return /[",\r\n]/.test(t)?'"'
 function exportVersionCsv(){
   const data=versionExportRows(),headers=['Version','Release Date','Category','Summary','Change Details'];
   const csv='\ufeff'+[headers.join(',')].concat(data.map(r=>headers.map(h=>versionCsvEscape(r[h])).join(','))).join('\r\n');
-  downloadAuditBlob(new Blob([csv],{type:'text/csv;charset=utf-8'}),'text/csv;charset=utf-8',versionExportFilename('csv').replace(/^.*\./,''));
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),u=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=u;a.download=versionExportFilename('csv');a.rel='noopener';document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(u),120000);
 }
 function exportVersionJson(){
   const payload={application:'Gladstone Fire / EMS AED Inventory & Quarterly Audit',currentVersion:APP_VERSION,scope:versionRangeLabel(),generated:new Date().toISOString(),versions:versionScopeRecords()};
