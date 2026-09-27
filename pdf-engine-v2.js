@@ -191,6 +191,18 @@ async function previewElement(source,filename,title,summary){showPreview(await b
 async function previewHtml(html,filename,title,summary){showPreview(await buildFromHtml(html,filename),filename,title,summary)}
 async function openElement(source,filename,title,summary){showPreview(await buildFromElement(source,filename),filename,title||filename,summary||'')}
 async function openHtml(html,filename,title,summary){showPreview(await buildFromHtml(html,filename),filename,title||filename,summary||'')}
+async function printBlob(blob){
+  if(!blob)throw new Error('PDF file is unavailable.');
+  const url=URL.createObjectURL(blob);
+  const frame=document.createElement('iframe');
+  frame.style.cssText='position:fixed;right:0;bottom:0;width:1px;height:1px;border:0;opacity:0;pointer-events:none';
+  frame.src=url;
+  document.body.appendChild(frame);
+  frame.onload=()=>{setTimeout(()=>{try{frame.contentWindow.focus();frame.contentWindow.print()}catch(e){window.open(url,'_blank')}setTimeout(()=>{frame.remove();URL.revokeObjectURL(url)},120000)},250)};
+}
+async function printElement(source,filename){return printBlob(await buildFromElement(source,filename))}
+async function printHtml(html,filename){return printBlob(await buildFromHtml(html,filename))}
+
 async function saveBlob(blob,filename){
   if(!blob)throw new Error('PDF file is unavailable.');
   const buffer=await blob.arrayBuffer();
@@ -231,5 +243,5 @@ async function shareBlob(blob,filename,title,summary){
 async function shareElement(source,filename,title,summary){return shareBlob(await buildFromElement(source,filename),filename,title,summary)}
 async function shareHtml(html,filename,title,summary){return shareBlob(await buildFromHtml(html,filename),filename,title,summary)}
 
-window.GFDAEDPdfV2={buildFromElement,buildFromHtml,previewElement,previewHtml,openElement,openHtml,saveElement,saveHtml,shareElement,shareHtml};
+window.GFDAEDPdfV2={buildFromElement,buildFromHtml,previewElement,previewHtml,openElement,openHtml,printElement,printHtml,saveElement,saveHtml,shareElement,shareHtml};
 })();
