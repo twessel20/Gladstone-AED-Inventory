@@ -4,6 +4,7 @@
 const LETTER={w:8.5,h:11};
 const PREVIEW_ID='pdfPreviewDlg';
 const renderCache=new WeakMap();
+const previewPages=new WeakMap();
 
 function getJsPDF(){return (window.jspdf&&window.jspdf.jsPDF)||window.jsPDF||null}
 function getCanvas(){return window.html2canvas||null}
@@ -95,6 +96,7 @@ async function buildFromElement(source,filename='aed-report.pdf'){
     const explicit=[...clone.children].filter(x=>x.classList?.contains('packet-page'));
     const doc=new JsPDF({unit:'in',format:'letter',orientation:'portrait',compress:true});
 
+    const previewImages=[];
     if(explicit.length){
       const margin=.18,maxW=LETTER.w-margin*2,maxH=LETTER.h-margin*2,targetRatio=maxH/maxW;
       explicit.forEach(page=>{
@@ -112,6 +114,7 @@ async function buildFromElement(source,filename='aed-report.pdf'){
         const canvas=await capture(page,{scale:2.5,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:page.clientWidth,height:page.clientHeight,imageTimeout:15000});
         if(!canvas.width||!canvas.height)throw new Error('A report page could not be captured.');
         const img=canvas.toDataURL('image/png');
+        previewImages.push(img);
         const w=maxW,h=maxH;
         const x=margin,y=margin;
         if(i)doc.addPage();
@@ -132,6 +135,7 @@ async function buildFromElement(source,filename='aed-report.pdf'){
       for(let i=0;i<slices.length;i++){
         const [y1,y2]=slices[i],part=sliceCanvas(full,y1,y2);
         const img=part.toDataURL('image/png');
+        previewImages.push(img);
         const margin=.20,maxW=LETTER.w-margin*2,maxH=LETTER.h-margin*2;
         let w=maxW,h=w*(part.height/part.width);
         if(h>maxH){h=maxH;w=h*(part.width/part.height)}
@@ -149,6 +153,7 @@ async function buildFromElement(source,filename='aed-report.pdf'){
     const sig=String.fromCharCode(...bytes.slice(0,5));
     if(sig!=='%PDF-')throw new Error('Generated file is not a valid PDF.');
     const blob=new Blob([buffer],{type:'application/pdf'});
+    previewPages.set(blob,previewImages);
     renderCache.set(source,{filename:fileName(filename),blob});
     return blob;
   }finally{mount.remove()}
@@ -168,23 +173,40 @@ async function buildFromHtml(html,filename='aed-report.pdf'){
 
 let previewState={blob:null,filename:'aed-report.pdf',title:'AED Report',summary:''};
 function showPreview(blob,filename='aed-report.pdf',title='AED Report',summary=''){
-  const url=URL.createObjectURL(blob);
   previewState={blob,filename:fileName(filename),title:title||filename||'AED Report',summary:summary||''};
   let dlg=document.getElementById(PREVIEW_ID);
   if(!dlg){
     dlg=document.createElement('dialog');dlg.id=PREVIEW_ID;
     dlg.style.cssText='width:min(98vw,1100px);max-width:1100px;height:94vh;max-height:94vh;padding:0;overflow:hidden;';
-    dlg.innerHTML='<div style="display:flex;flex-direction:column;height:100%;min-height:0"><div style="flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid #d9e3ea;background:#fff;flex-wrap:wrap"><div><b style="color:#123a5a">PDF Preview</b><div style="font-size:.82rem;color:#687b8a">Portrait Letter preview rendered directly from the generated PDF.</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" id="pdfV2Save">Save PDF</button><button type="button" id="pdfV2Share">Share PDF</button><button type="button" id="pdfV2Close">Close</button></div></div><div style="flex:1 1 auto;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;background:#f4f7f9"><iframe id="pdfV2Frame" title="PDF Preview" scrolling="yes" style="display:block;width:100%;height:100%;min-height:100%;border:0;background:#f4f7f9;overflow:auto"></iframe></div></div>';
+    dlg.innerHTML='<div style="display:flex;flex-direction:column;height:100%;min-height:0"><div style="flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid #d9e3ea;background:#fff;flex-wrap:wrap"><div><b style="color:#123a5a">PDF Preview</b><div style="font-size:.82rem;color:#687b8a">Portrait Letter preview rendered from the same pages used to create the PDF.</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" id="pdfV2Save">Save PDF</button><button type="button" id="pdfV2Share">Share PDF</button><button type="button" id="pdfV2Close">Close</button></div></div><div id="pdfV2Pages" style="flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#dfe5e9;padding:16px;display:flex;flex-direction:column;align-items:center;gap:16px"></div></div>';
     document.body.appendChild(dlg);
     dlg.querySelector('#pdfV2Close').onclick=()=>dlg.close();
     dlg.querySelector('#pdfV2Save').onclick=async()=>{try{await saveBlob(previewState.blob,previewState.filename)}catch(e){alert(e.message||'Unable to save PDF.')}};
     dlg.querySelector('#pdfV2Share').onclick=async()=>{try{await shareBlob(previewState.blob,previewState.filename,previewState.title,previewState.summary)}catch(e){if(!e||e.name!=='AbortError')alert(e.message||'Unable to share PDF.')}};
-    dlg.addEventListener('close',()=>{const f=dlg.querySelector('#pdfV2Frame');if(f?.dataset.url){URL.revokeObjectURL(f.dataset.url);delete f.dataset.url;f.src='about:blank'}previewState={blob:null,filename:'aed-report.pdf',title:'AED Report',summary:''}})
+    dlg.addEventListener('close',()=>{const pages=dlg.querySelector('#pdfV2Pages');if(pages)pages.innerHTML='';previewState={blob:null,filename:'aed-report.pdf',title:'AED Report',summary:''}})
   }
-  const frame=dlg.querySelector('#pdfV2Frame');if(frame.dataset.url)URL.revokeObjectURL(frame.dataset.url);
-  frame.src=url;frame.dataset.url=url;dlg.showModal();
+  const pages=dlg.querySelector('#pdfV2Pages');
+  pages.innerHTML='';
+  const imgs=previewPages.get(blob)||[];
+  if(imgs.length){
+    imgs.forEach((src,i)=>{
+      const wrap=document.createElement('div');
+      wrap.style.cssText='width:min(100%,850px);background:#fff;box-shadow:0 2px 12px #0002;flex:0 0 auto;';
+      const img=document.createElement('img');
+      img.src=src;img.alt='PDF page '+(i+1);img.style.cssText='display:block;width:100%;height:auto;background:#fff;';
+      const cap=document.createElement('div');
+      cap.textContent='Page '+(i+1)+' of '+imgs.length;cap.style.cssText='font-size:.78rem;color:#687b8a;text-align:center;padding:6px 8px;border-top:1px solid #e3e8ec;background:#fff;';
+      wrap.appendChild(img);wrap.appendChild(cap);pages.appendChild(wrap);
+    });
+  }else{
+    const url=URL.createObjectURL(blob);
+    const iframe=document.createElement('iframe');
+    iframe.src=url;iframe.title='PDF Preview';iframe.style.cssText='width:100%;height:100%;min-height:75vh;border:0;background:#fff';
+    iframe.onload=()=>setTimeout(()=>URL.revokeObjectURL(url),120000);
+    pages.appendChild(iframe);
+  }
+  dlg.showModal();
 }
-
 async function previewElement(source,filename,title,summary){showPreview(await buildFromElement(source,filename),filename,title,summary)}
 async function previewHtml(html,filename,title,summary){showPreview(await buildFromHtml(html,filename),filename,title,summary)}
 async function openElement(source,filename,title,summary){showPreview(await buildFromElement(source,filename),filename,title||filename,summary||'')}
