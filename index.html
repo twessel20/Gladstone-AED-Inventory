@@ -732,8 +732,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v165';
+const APP_VERSION='v166';
 const APP_CHANGELOG=[
+  {version:'v166',date:'2026-09-27',category:'AED Repository / PDF',summary:'Standardized AED Repository PDF page headers and dataset layout.',details:['Repeated the full AED Repository header on every PDF page.','Repeated Repository Scope, AED Records Included, Total AEDs Tracked and Generated fields on every page.','Started each AED/history dataset cleanly below the repeated header.','Split longer lifecycle histories across clean continuation pages to prevent clipped data.']},
   {version:'v165',date:'2026-09-27',category:'Governance / Documentation',summary:'Added formal app version history and change reporting.',details:['Added Updates tab with current-version identification.','Added PDF, Excel, CSV and JSON exports for version/change history.','Established a documented version register for future application changes.']},
   {version:'v164',date:'2026-09-27',category:'Audit Log',summary:'Expanded Audit Log exports and improved multi-page report layout.',details:['Added Excel (.xlsx), CSV and JSON Audit Log exports.','Repeated the report header on every Audit Log PDF page.','Cleaned reporting-period and generated-date placement for each page.']},
   {version:'v163',date:'2026-09-27',category:'Authentication / UI',summary:'Moved signed-in account controls into the application header.',details:['Removed username and Logout from the primary navigation row.','Added subtle clickable username menu in the upper-right header.','Logout is now accessed through the account menu.']},
