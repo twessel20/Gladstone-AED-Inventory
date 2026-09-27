@@ -1,4 +1,4 @@
-const VERSION='gfd-aed-pwa-v169';
+const VERSION='gfd-aed-pwa-v170';
 const CORE_CACHE=VERSION+'-core';
 const RUNTIME_CACHE=VERSION+'-runtime';
 const CORE=['./','./index.html','./lifecycle.html','./version-history.json','./manifest.webmanifest','./pdf-engine-v2.js','./report-builder.js','./report-pdf.css'];
@@ -29,11 +29,7 @@ async function decorateMainApp(response){
   if(isMainApp){
     if(!html.includes('report-pdf.css'))html=html.replace('</head>','<link rel="stylesheet" href="./report-pdf.css?v=161"></head>');
     if(!html.includes('pdf-engine-v2.js'))html=html.replace('</body>','<script src="./pdf-engine-v2.js?v=161"></script></body>');if(!html.includes('report-builder.js'))html=html.replace('</body>','<script src="./report-builder.js?v=161"></script></body>');
-    if(!html.includes('id="repositoryNav"')){
-      const auditButton='<button class="tab" data-v="audit">Audit Log</button>';
-      const repositoryLink='<a id="repositoryNav" href="./lifecycle.html" style="display:inline-flex;align-items:center;justify-content:center;min-height:42px;font:inherit;font-weight:750;border:1px solid var(--l);background:#fff;border-radius:9px;padding:10px 14px;color:var(--n);text-decoration:none;white-space:nowrap;line-height:1">AED Repository</a>';
-      html=html.replace(auditButton,auditButton+repositoryLink);
-    }
+
   }
   const headers=new Headers(response.headers);
   headers.delete('content-length');
