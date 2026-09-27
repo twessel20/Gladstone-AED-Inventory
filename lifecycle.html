@@ -81,14 +81,15 @@ dialog::backdrop{background:#10202d77}
 .repo-pdf-meta>div{min-width:0}
 .repo-pdf-meta b{display:block;color:var(--n);font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
 .repo-pdf-meta span{display:block;color:#40596c;font-size:.8rem;line-height:1.25;overflow-wrap:anywhere}
-.repo-dataset{border:1px solid var(--l);border-radius:11px;padding:12px;margin-top:0}
+.repo-page-datasets{display:flex;flex-direction:column;gap:10px;min-height:0}
+.repo-dataset{border:1px solid var(--l);border-radius:11px;padding:12px;margin-top:0;break-inside:avoid;page-break-inside:avoid;flex:0 0 auto}
 .repo-dataset-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding-bottom:9px;border-bottom:1px solid #e7edf1}
 .repo-dataset-head h2{margin:0;color:var(--n);font-size:1.08rem}
 .repo-dataset-sub{margin-top:3px;color:var(--m);font-size:.76rem;line-height:1.3}
-.repo-component-line{margin:9px 0 10px;font-size:.78rem;line-height:1.4;color:#314b5e}
-.repo-history-title{margin:8px 0 6px;color:var(--n);font-size:.88rem}
-.repo-history-table{width:100%;border-collapse:collapse;font-size:.72rem;table-layout:fixed}
-.repo-history-table th,.repo-history-table td{text-align:left;vertical-align:top;border-bottom:1px solid #edf1f3;padding:5px 4px;line-height:1.25;overflow-wrap:anywhere}
+.repo-component-line{margin:7px 0 8px;font-size:.74rem;line-height:1.32;color:#314b5e}
+.repo-history-title{margin:6px 0 5px;color:var(--n);font-size:.84rem}
+.repo-history-table{width:100%;border-collapse:collapse;font-size:.69rem;table-layout:fixed}
+.repo-history-table th,.repo-history-table td{text-align:left;vertical-align:top;border-bottom:1px solid #edf1f3;padding:4px 4px;line-height:1.2;overflow-wrap:anywhere}
 .repo-history-table th{background:#f1f5f8;color:var(--n);font-weight:800}
 .repo-history-table th:nth-child(1),.repo-history-table td:nth-child(1){width:14%}
 .repo-history-table th:nth-child(2),.repo-history-table td:nth-child(2){width:20%}
@@ -101,15 +102,6 @@ function repoExportRows(){let r=repoExportRange();return db.aeds.map(a=>{let ev=
 function repoExportHTML(){
   const r=repoExportRange(),rows=repoExportRows(),all=db.aeds||[],generated=new Date();
   const generatedText=generated.toLocaleString([], {year:'numeric',month:'long',day:'numeric',hour:'numeric',minute:'2-digit'});
-  const pageData=[];
-  rows.forEach(x=>{
-    const ev=x.ev||[];
-    if(!ev.length){pageData.push({a:x.a,events:[],part:1,parts:1});return}
-    const chunks=[];for(let i=0;i<ev.length;i+=6)chunks.push(ev.slice(i,i+6));
-    chunks.forEach((chunk,i)=>pageData.push({a:x.a,events:chunk,part:i+1,parts:chunks.length}));
-  });
-  if(!pageData.length)pageData.push({a:null,events:[],part:1,parts:1});
-  const pageCount=pageData.length;
   const header=()=>'<div class="repo-pdf-header"><img src="gfd-patch.jpg"><div class="repo-pdf-title"><h1>AED Repository</h1><p>Gladstone Fire / EMS · Complete Cradle-to-Retirement Record</p></div></div>'+
     '<div class="repo-pdf-meta">'+
       '<div><b>Repository Scope</b><span>'+esc(r.label)+'</span></div>'+
@@ -117,23 +109,43 @@ function repoExportHTML(){
       '<div><b>Total AEDs Tracked</b><span>'+all.length+'</span></div>'+
       '<div><b>Generated</b><span>'+esc(generatedText)+'</span></div>'+
     '</div>';
-  const pages=pageData.map((p,index)=>{
-    if(!p.a){
-      return '<section class="packet-page repo-pdf-page">'+header()+'<div class="repo-dataset"><h2 style="margin:0;color:#123a5a">No AED records</h2><p class="muted">No repository records match the selected reporting scope.</p></div><div class="repo-pdf-foot"><span>Read-only AED repository record</span><span>Page '+(index+1)+' of '+pageCount+'</span></div></section>';
-    }
-    const a=p.a,continuation=p.parts>1?' · History '+p.part+' of '+p.parts:'';
-    const rowsHtml=p.events.length?p.events.map(e=>'<tr><td>'+fmt(e.date)+'</td><td>'+esc(e.type||'Event')+'</td><td>'+esc(e.detail||'')+(e.disposition?'<br><b>Disposition:</b> '+esc(e.disposition):'')+(e.replacementSerial?'<br><b>Replacement AED:</b> '+esc(e.replacementSerial):'')+'</td><td>'+esc(e.who||'')+'</td></tr>').join(''):'<tr><td colspan="4" class="muted">No lifecycle activity in the selected period.</td></tr>';
-    return '<section class="packet-page repo-pdf-page">'+header()+
-      '<div class="repo-dataset">'+
-        '<div class="repo-dataset-head"><div><h2>'+esc(name(a))+'</h2><div class="repo-dataset-sub">Serial: '+esc(a.serial||'N/A')+' · Group: '+esc(a.group||'Unassigned')+' · Status: '+esc(a.status||'N/A')+continuation+'</div></div></div>'+
-        '<div class="repo-component-line"><b>Adult Pads:</b> '+fmt(a.adult)+' &nbsp; · &nbsp; <b>Pediatric Pads:</b> '+fmt(a.ped)+' &nbsp; · &nbsp; <b>Battery:</b> '+fmt(a.battery)+'</div>'+
-        '<h3 class="repo-history-title">Lifecycle / Audit History</h3>'+
-        '<table class="repo-history-table"><thead><tr><th>Date</th><th>Event</th><th>Details</th><th>Documented By</th></tr></thead><tbody>'+rowsHtml+'</tbody></table>'+
-      '</div>'+
-      '<div class="repo-pdf-foot"><span>Read-only AED repository record · '+esc(r.label)+'</span><span>Page '+(index+1)+' of '+pageCount+'</span></div>'+
-    '</section>';
-  }).join('');
-  return '<div class="report-sheet repo-pdf">'+pages+'</div>';
+
+  const datasetHtml=x=>{
+    const a=x.a,ev=x.ev||[];
+    const rowsHtml=ev.length?ev.map(e=>'<tr><td>'+fmt(e.date)+'</td><td>'+esc(e.type||'Event')+'</td><td>'+esc(e.detail||'')+(e.disposition?'<br><b>Disposition:</b> '+esc(e.disposition):'')+(e.replacementSerial?'<br><b>Replacement AED:</b> '+esc(e.replacementSerial):'')+'</td><td>'+esc(e.who||'')+'</td></tr>').join(''):'<tr><td colspan="4" class="muted">No lifecycle activity in the selected period.</td></tr>';
+    return '<div class="repo-dataset">'+
+      '<div class="repo-dataset-head"><div><h2>'+esc(name(a))+'</h2><div class="repo-dataset-sub">Serial: '+esc(a.serial||'N/A')+' · Group: '+esc(a.group||'Unassigned')+' · Status: '+esc(a.status||'N/A')+'</div></div></div>'+
+      '<div class="repo-component-line"><b>Adult Pads:</b> '+fmt(a.adult)+' &nbsp; · &nbsp; <b>Pediatric Pads:</b> '+fmt(a.ped)+' &nbsp; · &nbsp; <b>Battery:</b> '+fmt(a.battery)+'</div>'+
+      '<h3 class="repo-history-title">Lifecycle / Audit History</h3>'+
+      '<table class="repo-history-table"><thead><tr><th>Date</th><th>Event</th><th>Details</th><th>Documented By</th></tr></thead><tbody>'+rowsHtml+'</tbody></table>'+
+    '</div>';
+  };
+
+  const estimateUnits=x=>{
+    const ev=x.ev||[];
+    let units=2.5;
+    ev.forEach(e=>{
+      const len=((e.type||'')+(e.detail||'')+(e.disposition||'')+(e.replacementSerial||'')+(e.who||'')).length;
+      units+=1+Math.min(2.5,Math.ceil(len/180)*.55);
+    });
+    return Math.max(3,units);
+  };
+
+  const pages=[];let page=[],used=0;
+  const capacity=13.5;
+  rows.forEach(x=>{
+    const units=estimateUnits(x);
+    if(page.length&&used+units>capacity){pages.push(page);page=[];used=0}
+    page.push(x);used+=units;
+  });
+  if(page.length)pages.push(page);
+  if(!pages.length)pages.push([]);
+
+  const pageCount=pages.length;
+  return '<div class="report-sheet repo-pdf">'+pages.map((datasets,index)=>{
+    const body=datasets.length?datasets.map(datasetHtml).join(''):'<div class="repo-dataset"><h2 style="margin:0;color:#123a5a">No AED records</h2><p class="muted">No repository records match the selected reporting scope.</p></div>';
+    return '<section class="packet-page repo-pdf-page">'+header()+'<div class="repo-page-datasets">'+body+'</div><div class="repo-pdf-foot"><span>Read-only AED repository record · '+esc(r.label)+'</span><span>Page '+(index+1)+' of '+pageCount+'</span></div></section>';
+  }).join('')+'</div>';
 }
 function repoExportFilename(){let r=repoExportRange();return 'gfd-aed-repository-'+r.label.replace(/[^a-z0-9]+/ig,'-').toLowerCase()+'.pdf'}
 function syncRepoExportControls(){let scope=$('repoExportScope')?.value||'all';$('repoYearWrap').style.display=(scope==='quarter'||scope==='year')?'grid':'none';$('repoMonthWrap').style.display=scope==='month'?'grid':'none';$('repoQuarterWrap').style.display=scope==='quarter'?'grid':'none';$('repoStartWrap').style.display=scope==='range'?'grid':'none';$('repoEndWrap').style.display=scope==='range'?'grid':'none'}
