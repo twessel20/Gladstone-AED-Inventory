@@ -178,10 +178,6 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
 .version-entry .version-details{margin:9px 0 0;padding-left:18px;color:#40596c}
 .version-entry .version-details li{margin:4px 0;line-height:1.35}
 .version-section-title{margin:18px 0 8px;color:var(--n);font-size:1.05rem}
-.version-history-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--l);border-radius:12px;overflow:hidden}
-.version-history-table th,.version-history-table td{padding:8px 7px;border-bottom:1px solid #edf1f3;text-align:left;vertical-align:top;font-size:.8rem;line-height:1.3}
-.version-history-table th{background:#f1f5f8;color:var(--n);font-weight:800}
-.version-history-table td:first-child{white-space:nowrap}
 .version-history-note{margin:0;color:#40596c;line-height:1.45}
 
 .version-export-page{padding:24px!important}
@@ -739,8 +735,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v168';
+const APP_VERSION='v169';
 const APP_CHANGELOG=[
+  {version:'v169',date:'2026-09-27',category:'Governance / Version History',summary:'Unified pre-version development history styling with formal release history.',details:['Replaced the separate development-history table with the same card layout used by formal releases.','Development entries now show build ID, date/time, category, summary and commit details in the same visual hierarchy.','Retained the Development label so historical builds remain clearly distinguished from formal releases.']},
   {version:'v168',date:'2026-09-27',category:'AED Repository / UI',summary:'Unified AED Repository with the main dashboard visual system.',details:['Matched the main app header, navigation tabs, content width, cards, buttons, filters, typography and mobile spacing.','Added the complete main navigation row to the Repository with AED Repository shown as the active section.','Repository navigation now links back to the matching Dashboard, Inventory, Quarterly, Deployments, Reports, Audit Log and Updates view.','Kept lifecycle-specific content and workflows intact while removing the separate-utility-page appearance.']},
   {version:'v167',date:'2026-09-27',category:'Governance / Version History',summary:'Expanded version history to cover the entire AED app lifespan.',details:['Formal numbered releases remain tracked from v151 forward.','Added the complete pre-v151 Git development history back to the initial commit.','Added All History, Formal Versions, Pre-Version Development History, Current Version and Date Range scopes.','Version-history exports now include both formal releases and historical development commits.']},
   {version:'v166',date:'2026-09-27',category:'AED Repository / PDF',summary:'Standardized AED Repository PDF page headers and dataset layout.',details:['Repeated the full AED Repository header on every PDF page.','Repeated Repository Scope, AED Records Included, Total AEDs Tracked and Generated fields on every page.','Started each AED/history dataset cleanly below the repeated header.','Split longer lifecycle histories across clean continuation pages to prevent clipped data.']},
@@ -813,7 +810,7 @@ function renderVersionHistory(){
   const first=PRE_VERSION_HISTORY.length?PRE_VERSION_HISTORY[PRE_VERSION_HISTORY.length-1]:null;
   $('versionHistorySummary').innerHTML='<h3 style="margin-top:0">Complete History</h3><p class="version-history-note"><b>'+APP_CHANGELOG.length+' formal releases</b> are documented from v151 through '+APP_VERSION+'. '+(PRE_VERSION_HISTORY.length?'<b>'+PRE_VERSION_HISTORY.length+' pre-version development commits</b> are preserved from the repository history'+(first?' back to '+new Date(first.date+'T12:00:00').toLocaleDateString():'')+'.':'Loading pre-version repository history…')+'</p>';
   const formal='<h3 class="version-section-title">Formal Releases</h3>'+APP_CHANGELOG.map(v=>'<div class="card version-entry'+(v.version===APP_VERSION?' current':'')+'"><div class="version-top"><div><h3>'+esc(v.version)+'</h3><div class="meta">'+esc(new Date(v.date+'T12:00:00').toLocaleDateString())+' · '+esc(v.category)+'</div></div>'+(v.version===APP_VERSION?'<span class="pill ok">Current</span>':'')+'</div><p class="version-summary">'+esc(v.summary)+'</p><ul class="version-details">'+v.details.map(d=>'<li>'+esc(d)+'</li>').join('')+'</ul></div>').join('');
-  const dev=PRE_VERSION_HISTORY.length?'<h3 class="version-section-title">Pre-Version Development History</h3><div class="card" style="padding:0;overflow:auto"><table class="version-history-table"><thead><tr><th>Date</th><th>Build</th><th>Repository Change</th></tr></thead><tbody>'+PRE_VERSION_HISTORY.map(v=>'<tr><td>'+esc(new Date(v.dateTime||v.date+'T12:00:00').toLocaleString())+'</td><td><b>'+esc(v.version)+'</b></td><td>'+esc(v.summary)+'</td></tr>').join('')+'</tbody></table></div>':'<div class="card muted">Loading complete repository history…</div>';
+  const dev=PRE_VERSION_HISTORY.length?'<h3 class="version-section-title">Pre-Version Development History</h3>'+PRE_VERSION_HISTORY.map(v=>'<div class="card version-entry"><div class="version-top"><div><h3>'+esc(v.version)+'</h3><div class="meta">'+esc(new Date(v.dateTime||v.date+'T12:00:00').toLocaleString())+' · '+esc(v.category)+'</div></div><span class="pill">Development</span></div><p class="version-summary">'+esc(v.summary)+'</p><ul class="version-details">'+(v.details||[]).map(d=>'<li>'+esc(d)+'</li>').join('')+'</ul></div>').join(''):'<div class="card muted">Loading complete repository history…</div>';
   $('versionList').innerHTML=formal+dev;
 }
 function syncVersionExportControls(){
