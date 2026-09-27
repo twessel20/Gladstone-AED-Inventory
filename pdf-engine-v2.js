@@ -176,10 +176,10 @@ function showPreview(blob,filename='aed-report.pdf',title='AED Report',summary='
   if(!dlg){
     dlg=document.createElement('dialog');dlg.id=PREVIEW_ID;
     dlg.style.cssText='width:min(98vw,1100px);max-width:1100px;height:94vh;padding:0;';
-    dlg.innerHTML='<div style="display:flex;flex-direction:column;height:100%"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid #d9e3ea;background:#fff;flex-wrap:wrap"><div><b style="color:#123a5a">PDF Preview</b><div style="font-size:.82rem;color:#687b8a">Rendered directly from the generated report.</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" id="pdfV2Print">Print PDF</button><button type="button" id="pdfV2Share">Share PDF</button><button type="button" id="pdfV2Close">Close</button></div></div><iframe id="pdfV2Frame" title="PDF Preview" style="width:100%;flex:1;border:0;background:#f4f7f9"></iframe></div>';
+    dlg.innerHTML='<div style="display:flex;flex-direction:column;height:100%"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid #d9e3ea;background:#fff;flex-wrap:wrap"><div><b style="color:#123a5a">PDF Preview</b><div style="font-size:.82rem;color:#687b8a">Rendered directly from the generated report.</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" id="pdfV2Save">Save PDF</button><button type="button" id="pdfV2Share">Share PDF</button><button type="button" id="pdfV2Close">Close</button></div></div><iframe id="pdfV2Frame" title="PDF Preview" style="width:100%;flex:1;border:0;background:#f4f7f9"></iframe></div>';
     document.body.appendChild(dlg);
     dlg.querySelector('#pdfV2Close').onclick=()=>dlg.close();
-    dlg.querySelector('#pdfV2Print').onclick=()=>{const f=dlg.querySelector('#pdfV2Frame');try{f.contentWindow.focus();f.contentWindow.print()}catch(e){if(f.dataset.url)window.open(f.dataset.url,'_blank')}};
+    dlg.querySelector('#pdfV2Save').onclick=async()=>{try{await saveBlob(previewState.blob,previewState.filename)}catch(e){alert(e.message||'Unable to save PDF.')}};
     dlg.querySelector('#pdfV2Share').onclick=async()=>{try{await shareBlob(previewState.blob,previewState.filename,previewState.title,previewState.summary)}catch(e){if(!e||e.name!=='AbortError')alert(e.message||'Unable to share PDF.')}};
     dlg.addEventListener('close',()=>{const f=dlg.querySelector('#pdfV2Frame');if(f?.dataset.url){URL.revokeObjectURL(f.dataset.url);delete f.dataset.url;f.src='about:blank'}previewState={blob:null,filename:'aed-report.pdf',title:'AED Report',summary:''}})
   }
@@ -191,6 +191,22 @@ async function previewElement(source,filename,title,summary){showPreview(await b
 async function previewHtml(html,filename,title,summary){showPreview(await buildFromHtml(html,filename),filename,title,summary)}
 async function openElement(source,filename,title,summary){showPreview(await buildFromElement(source,filename),filename,title||filename,summary||'')}
 async function openHtml(html,filename,title,summary){showPreview(await buildFromHtml(html,filename),filename,title||filename,summary||'')}
+async function saveBlob(blob,filename){
+  if(!blob)throw new Error('PDF file is unavailable.');
+  const buffer=await blob.arrayBuffer();
+  const bytes=new Uint8Array(buffer);
+  const sig=String.fromCharCode(...bytes.slice(0,5));
+  if(sig!=='%PDF-')throw new Error('The generated file is not a valid PDF.');
+  let name=fileName(filename||'aed-report.pdf');
+  if(!/\.pdf$/i.test(name))name+='.pdf';
+  const cleanBlob=new Blob([buffer],{type:'application/pdf'});
+  const u=URL.createObjectURL(cleanBlob);
+  const a=document.createElement('a');a.href=u;a.download=name;a.rel='noopener';document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(u),120000);
+}
+async function saveElement(source,filename){return saveBlob(await buildFromElement(source,filename),filename)}
+async function saveHtml(html,filename){return saveBlob(await buildFromHtml(html,filename),filename)}
+
 async function shareBlob(blob,filename,title,summary){
   if(!blob)throw new Error('PDF file is unavailable.');
   const buffer=await blob.arrayBuffer();
@@ -215,5 +231,5 @@ async function shareBlob(blob,filename,title,summary){
 async function shareElement(source,filename,title,summary){return shareBlob(await buildFromElement(source,filename),filename,title,summary)}
 async function shareHtml(html,filename,title,summary){return shareBlob(await buildFromHtml(html,filename),filename,title,summary)}
 
-window.GFDAEDPdfV2={buildFromElement,buildFromHtml,previewElement,previewHtml,openElement,openHtml,shareElement,shareHtml};
+window.GFDAEDPdfV2={buildFromElement,buildFromHtml,previewElement,previewHtml,openElement,openHtml,saveElement,saveHtml,shareElement,shareHtml};
 })();
