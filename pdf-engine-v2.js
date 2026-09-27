@@ -26,19 +26,17 @@ function prepareClone(source){
 }
 
 function sourceWidth(source){
-  const rect=source.getBoundingClientRect();
-  const w=Math.max(source.scrollWidth||0,rect.width||0);
-  return Math.max(820,Math.min(1000,Math.round(w||920)));
+  return 900;
 }
 
 function mountClone(source){
   const width=sourceWidth(source);
   const mount=document.createElement('div');
-  mount.style.cssText='position:fixed;left:-30000px;top:0;width:'+width+'px;background:#fff;z-index:-9999;overflow:visible;';
+  mount.style.cssText='position:fixed;left:-30000px;top:0;width:'+width+'px;background:#fff;z-index:-9999;overflow:visible;display:flex;justify-content:center;';
   const clone=prepareClone(source);
   clone.style.width=width+'px';
-  clone.style.maxWidth='none';
-  clone.style.margin='0';
+  clone.style.maxWidth=width+'px';
+  clone.style.margin='0 auto';
   clone.style.transform='none';
   clone.style.zoom='1';
   mount.appendChild(clone);
@@ -126,7 +124,7 @@ async function buildFromElement(source,filename='aed-report.pdf'){
       const scale=2.5;
       const full=await capture(clone,{scale,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:clone.scrollWidth,height:clone.scrollHeight});
       if(!full.width||!full.height)throw new Error('The report could not be captured.');
-      const cssPageHeight=(width*LETTER.h/LETTER.w)-24;
+      const cssPageHeight=Math.floor(width*(LETTER.h/LETTER.w)*0.94);
       const candidatesCss=breakCandidates(clone);
       const slicesCss=pageSlices(clone.scrollHeight,cssPageHeight,candidatesCss);
       const ratio=full.height/clone.scrollHeight;
@@ -176,7 +174,7 @@ function showPreview(blob,filename='aed-report.pdf',title='AED Report',summary='
   if(!dlg){
     dlg=document.createElement('dialog');dlg.id=PREVIEW_ID;
     dlg.style.cssText='width:min(98vw,1100px);max-width:1100px;height:94vh;padding:0;';
-    dlg.innerHTML='<div style="display:flex;flex-direction:column;height:100%"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid #d9e3ea;background:#fff;flex-wrap:wrap"><div><b style="color:#123a5a">PDF Preview</b><div style="font-size:.82rem;color:#687b8a">Rendered directly from the generated report.</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" id="pdfV2Save">Save PDF</button><button type="button" id="pdfV2Share">Share PDF</button><button type="button" id="pdfV2Close">Close</button></div></div><iframe id="pdfV2Frame" title="PDF Preview" style="width:100%;flex:1;border:0;background:#f4f7f9"></iframe></div>';
+    dlg.innerHTML='<div style="display:flex;flex-direction:column;height:100%"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid #d9e3ea;background:#fff;flex-wrap:wrap"><div><b style="color:#123a5a">PDF Preview</b><div style="font-size:.82rem;color:#687b8a">Portrait Letter preview rendered directly from the generated PDF.</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" id="pdfV2Save">Save PDF</button><button type="button" id="pdfV2Share">Share PDF</button><button type="button" id="pdfV2Close">Close</button></div></div><iframe id="pdfV2Frame" title="PDF Preview" style="width:100%;flex:1;border:0;background:#f4f7f9"></iframe></div>';
     document.body.appendChild(dlg);
     dlg.querySelector('#pdfV2Close').onclick=()=>dlg.close();
     dlg.querySelector('#pdfV2Save').onclick=async()=>{try{await saveBlob(previewState.blob,previewState.filename)}catch(e){alert(e.message||'Unable to save PDF.')}};
