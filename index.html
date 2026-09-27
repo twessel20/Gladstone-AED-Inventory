@@ -177,6 +177,13 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
 .version-entry .version-summary{margin:7px 0 0;line-height:1.45}
 .version-entry .version-details{margin:9px 0 0;padding-left:18px;color:#40596c}
 .version-entry .version-details li{margin:4px 0;line-height:1.35}
+.version-section-title{margin:18px 0 8px;color:var(--n);font-size:1.05rem}
+.version-history-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--l);border-radius:12px;overflow:hidden}
+.version-history-table th,.version-history-table td{padding:8px 7px;border-bottom:1px solid #edf1f3;text-align:left;vertical-align:top;font-size:.8rem;line-height:1.3}
+.version-history-table th{background:#f1f5f8;color:var(--n);font-weight:800}
+.version-history-table td:first-child{white-space:nowrap}
+.version-history-note{margin:0;color:#40596c;line-height:1.45}
+
 .version-export-page{padding:24px!important}
 .version-export-page .report-header{margin-bottom:10px;padding-bottom:12px}
 .version-export-page .report-header img{width:82px}
@@ -274,7 +281,7 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
 <section id="deps" class="view"><div class="bar"><div><h2>Deployments</h2><p class="muted">Record use and return-to-service actions.</p></div><div class="actions" style="margin-top:0"><button id="scanDeploySerial">Scan Serial</button><button class="primary" id="newdep">+ Deployment</button></div></div><div id="deplist"></div></section>
 <section id="reports" class="view"><div class="bar"><div><h2>Inspection Reports</h2><p class="muted">Export a complete quarterly report or a full-year summary.</p></div></div><div class="card"><div class="grid"><label>Report Year<select id="reportYear"></select></label><label>Quarter<select id="reportQuarter"><option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option></select></label></div><div class="actions"><button class="primary" id="quarterReportBtn">Quarterly Report</button><button id="annualReportBtn">Annual Summary - All Quarters</button></div></div><div class="card"><h3 style="margin-top:0">Overall Report Signature</h3><p class="muted">Required for every official generated report. No witness signature is required.</p><div class="grid"><label>Auditor / Report Preparer<input id="overallSignerName" placeholder="Name"></label><label>Employee Number<input id="overallSignerEmp" placeholder="Employee #"></label></div><canvas id="overallSigCanvas" class="signature-pad" width="560" height="150" aria-label="Overall report signature pad"></canvas><input type="hidden" id="overallSigData"><div class="actions"><button type="button" id="overallSigClear">Clear Signature</button></div></div><div id="reportlist" class="report-list"></div></section>
 <section id="audit" class="view"><div class="bar"><div><h2>Audit Log</h2><p class="muted">Chronological trace of changes and checks.</p></div></div><div class="card"><h3 style="margin-top:0">Audit Log Export</h3><div class="grid"><label>Scope<select id="auditExportScope"><option value="all">All Records</option><option value="range">Date Range</option><option value="month">Monthly</option><option value="quarter">Quarterly</option><option value="year">Annual</option></select></label><label id="auditYearWrap">Year<input id="auditExportYear" type="number" min="2000" max="2100"></label><label id="auditMonthWrap" style="display:none">Month<input id="auditExportMonth" type="month"></label><label id="auditQuarterWrap" style="display:none">Quarter<select id="auditExportQuarter"><option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option></select></label><label id="auditStartWrap" style="display:none">Start Date<input id="auditExportStart" type="date"></label><label id="auditEndWrap" style="display:none">End Date<input id="auditExportEnd" type="date"></label></div><div class="actions"><button class="primary" id="auditPreviewBtn">Preview PDF</button><button id="auditSaveBtn">Save PDF</button><button id="auditPrintBtn">Print</button><button id="auditShareBtn">Share PDF</button></div><div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--l)"><div class="muted" style="font-weight:750;margin-bottom:7px">Data Export</div><div class="actions" style="margin-top:0"><button id="auditExcelBtn">Excel (.xlsx)</button><button id="auditCsvBtn">CSV</button><button id="auditJsonBtn">JSON</button></div></div></div><div id="auditlist"></div></section>
-<section id="updates" class="view"><div class="bar"><div><h2>App Updates & Version History</h2><p class="muted">Documented application changes for operational, administrative and IT records.</p></div><span id="currentVersionBadge" class="pill ok"></span></div><div class="card"><div class="grid"><label>Version Export Scope<select id="versionExportScope"><option value="all">All Versions</option><option value="current">Current Version</option><option value="range">Date Range</option></select></label><label id="versionStartWrap" style="display:none">Start Date<input id="versionStart" type="date"></label><label id="versionEndWrap" style="display:none">End Date<input id="versionEnd" type="date"></label></div><div class="actions"><button class="primary" id="versionPreviewBtn">Preview PDF</button><button id="versionSaveBtn">Save PDF</button><button id="versionPrintBtn">Print</button><button id="versionShareBtn">Share PDF</button></div><div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--l)"><div class="muted" style="font-weight:750;margin-bottom:7px">Data Export</div><div class="actions" style="margin-top:0"><button id="versionExcelBtn">Excel (.xlsx)</button><button id="versionCsvBtn">CSV</button><button id="versionJsonBtn">JSON</button></div></div></div><div id="versionList"></div>
+<section id="updates" class="view"><div class="bar"><div><h2>App Updates & Version History</h2><p class="muted">Complete application history from the initial build through the current formal release.</p></div><span id="currentVersionBadge" class="pill ok"></span></div><div class="card"><div class="grid"><label>History Export Scope<select id="versionExportScope"><option value="all">All History</option><option value="formal">Formal Versions</option><option value="development">Pre-Version Development History</option><option value="current">Current Version</option><option value="range">Date Range</option></select></label><label id="versionStartWrap" style="display:none">Start Date<input id="versionStart" type="date"></label><label id="versionEndWrap" style="display:none">End Date<input id="versionEnd" type="date"></label></div><div class="actions"><button class="primary" id="versionPreviewBtn">Preview PDF</button><button id="versionSaveBtn">Save PDF</button><button id="versionPrintBtn">Print</button><button id="versionShareBtn">Share PDF</button></div><div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--l)"><div class="muted" style="font-weight:750;margin-bottom:7px">Data Export</div><div class="actions" style="margin-top:0"><button id="versionExcelBtn">Excel (.xlsx)</button><button id="versionCsvBtn">CSV</button><button id="versionJsonBtn">JSON</button></div></div></div><div id="versionHistorySummary" class="card"></div><div id="versionList"></div></section>
 <section id="reportPrintArea"></section>
 </main>
 <dialog id="aedDlg"><form id="aedForm"><h2 id="aedTitle">AED</h2><input type="hidden" id="aid"><div class="grid"><label>Serial Number<div class="actions" style="margin-top:0"><input id="serial" required style="flex:1;min-width:0"><button type="button" id="scanAddSerial">Scan Serial</button></div></label><label>Location<input id="loc" required></label><label>Location Descriptor<input id="locDesc" placeholder="e.g. Upper Level, Lobby, Time Clock Area"></label><label>Group<input id="group" placeholder="e.g. Police Department / City Hall"></label><label>Adult Pad Expiration<input id="adult" type="date"></label><label>Pediatric Pads<select id="pedConfig"><option value="Installed">Installed</option><option value="N/A">N/A - Not Equipped</option></select></label><label>Pediatric Pad Expiration<input id="ped" type="date"></label><label>Battery Expected Expiration<input id="bat" type="month"></label><label>Current Status<select id="status"><option>In Service</option><option>Out of Service - Repair</option><option>Out of Service - Damage</option><option>Removed / Retired - Beyond Repair</option><option>Removed / Retired - Destroyed</option></select></label><label>Comments<input id="com"></label></div><div class="da"><button type="button" onclick="aedDlg.close()">Cancel</button><button class="primary">Save</button></div></form></dialog>
@@ -732,8 +739,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v166';
+const APP_VERSION='v167';
 const APP_CHANGELOG=[
+  {version:'v167',date:'2026-09-27',category:'Governance / Version History',summary:'Expanded version history to cover the entire AED app lifespan.',details:['Formal numbered releases remain tracked from v151 forward.','Added the complete pre-v151 Git development history back to the initial commit.','Added All History, Formal Versions, Pre-Version Development History, Current Version and Date Range scopes.','Version-history exports now include both formal releases and historical development commits.']},
   {version:'v166',date:'2026-09-27',category:'AED Repository / PDF',summary:'Standardized AED Repository PDF page headers and dataset layout.',details:['Repeated the full AED Repository header on every PDF page.','Repeated Repository Scope, AED Records Included, Total AEDs Tracked and Generated fields on every page.','Started each AED/history dataset cleanly below the repeated header.','Split longer lifecycle histories across clean continuation pages to prevent clipped data.']},
   {version:'v165',date:'2026-09-27',category:'Governance / Documentation',summary:'Added formal app version history and change reporting.',details:['Added Updates tab with current-version identification.','Added PDF, Excel, CSV and JSON exports for version/change history.','Established a documented version register for future application changes.']},
   {version:'v164',date:'2026-09-27',category:'Audit Log',summary:'Expanded Audit Log exports and improved multi-page report layout.',details:['Added Excel (.xlsx), CSV and JSON Audit Log exports.','Repeated the report header on every Audit Log PDF page.','Cleaned reporting-period and generated-date placement for each page.']},
@@ -751,25 +759,61 @@ const APP_CHANGELOG=[
   {version:'v152',date:'2026-09-27',category:'Inventory / Quarterly',summary:'Changed group views to reset collapsed when switching tabs.',details:['Removed persistent localStorage group expansion state.','Groups initially render collapsed when returning to Inventory or Quarterly.']},
   {version:'v151',date:'2026-09-27',category:'Inventory',summary:'Changed AED Inventory group view to collapsed initial presentation.',details:['Inventory groups default to collapsed.','Capitalized application header subtitle terms for consistency.']}
 ];
+let PRE_VERSION_HISTORY=[];
+const FORMAL_VERSION_START='2026-09-27T14:15:26Z';
+
+async function loadCompleteVersionHistory(){
+  try{
+    const r=await fetch('./version-history.json',{cache:'no-store'});
+    if(!r.ok)throw new Error('History file unavailable');
+    const data=await r.json();
+    PRE_VERSION_HISTORY=(data.commits||[]).filter(c=>String(c.date||'')<FORMAL_VERSION_START).map(c=>({
+      recordType:'Development Build',
+      version:'Build '+(c.shortSha||String(c.sha||'').slice(0,7)),
+      date:String(c.date||'').slice(0,10),
+      dateTime:c.date||'',
+      category:'Development Commit',
+      summary:c.message||'Repository change',
+      details:['Commit '+(c.sha||''),c.url||''].filter(Boolean),
+      sha:c.sha||'',
+      url:c.url||''
+    }));
+  }catch(e){
+    PRE_VERSION_HISTORY=[];
+  }
+  renderVersionHistory();
+}
+
+function formalVersionRecords(){
+  return APP_CHANGELOG.map(v=>({...v,recordType:'Formal Release',dateTime:v.date+'T12:00:00'}));
+}
+function allVersionHistoryRecords(){
+  return [...formalVersionRecords(),...PRE_VERSION_HISTORY].sort((a,b)=>String(b.dateTime||b.date).localeCompare(String(a.dateTime||a.date)));
+}
 function versionScopeRecords(){
   const scope=$('versionExportScope')?.value||'all';
-  let rows=APP_CHANGELOG.slice();
-  if(scope==='current')rows=rows.filter(x=>x.version===APP_VERSION);
+  let rows=scope==='formal'?formalVersionRecords():scope==='development'?PRE_VERSION_HISTORY.slice():scope==='current'?formalVersionRecords().filter(x=>x.version===APP_VERSION):allVersionHistoryRecords();
   if(scope==='range'){
     const start=$('versionStart').value||'',end=$('versionEnd').value||'';
-    rows=rows.filter(x=>(!start||x.date>=start)&&(!end||x.date<=end));
+    rows=allVersionHistoryRecords().filter(x=>(!start||x.date>=start)&&(!end||x.date<=end));
   }
   return rows;
 }
 function versionRangeLabel(){
   const scope=$('versionExportScope')?.value||'all';
+  if(scope==='formal')return 'Formal versions v151–'+APP_VERSION;
+  if(scope==='development')return 'Pre-version development history';
   if(scope==='current')return APP_VERSION+' only';
   if(scope==='range')return ($('versionStart').value||'Beginning')+' through '+($('versionEnd').value||'Present');
-  return 'All documented versions';
+  return 'Complete app history';
 }
 function renderVersionHistory(){
   $('currentVersionBadge').textContent='Current '+APP_VERSION;
-  $('versionList').innerHTML=APP_CHANGELOG.map(v=>'<div class="card version-entry'+(v.version===APP_VERSION?' current':'')+'"><div class="version-top"><div><h3>'+esc(v.version)+'</h3><div class="meta">'+esc(new Date(v.date+'T12:00:00').toLocaleDateString())+' · '+esc(v.category)+'</div></div>'+(v.version===APP_VERSION?'<span class="pill ok">Current</span>':'')+'</div><p class="version-summary">'+esc(v.summary)+'</p><ul class="version-details">'+v.details.map(d=>'<li>'+esc(d)+'</li>').join('')+'</ul></div>').join('');
+  const first=PRE_VERSION_HISTORY.length?PRE_VERSION_HISTORY[PRE_VERSION_HISTORY.length-1]:null;
+  $('versionHistorySummary').innerHTML='<h3 style="margin-top:0">Complete History</h3><p class="version-history-note"><b>'+APP_CHANGELOG.length+' formal releases</b> are documented from v151 through '+APP_VERSION+'. '+(PRE_VERSION_HISTORY.length?'<b>'+PRE_VERSION_HISTORY.length+' pre-version development commits</b> are preserved from the repository history'+(first?' back to '+new Date(first.date+'T12:00:00').toLocaleDateString():'')+'.':'Loading pre-version repository history…')+'</p>';
+  const formal='<h3 class="version-section-title">Formal Releases</h3>'+APP_CHANGELOG.map(v=>'<div class="card version-entry'+(v.version===APP_VERSION?' current':'')+'"><div class="version-top"><div><h3>'+esc(v.version)+'</h3><div class="meta">'+esc(new Date(v.date+'T12:00:00').toLocaleDateString())+' · '+esc(v.category)+'</div></div>'+(v.version===APP_VERSION?'<span class="pill ok">Current</span>':'')+'</div><p class="version-summary">'+esc(v.summary)+'</p><ul class="version-details">'+v.details.map(d=>'<li>'+esc(d)+'</li>').join('')+'</ul></div>').join('');
+  const dev=PRE_VERSION_HISTORY.length?'<h3 class="version-section-title">Pre-Version Development History</h3><div class="card" style="padding:0;overflow:auto"><table class="version-history-table"><thead><tr><th>Date</th><th>Build</th><th>Repository Change</th></tr></thead><tbody>'+PRE_VERSION_HISTORY.map(v=>'<tr><td>'+esc(new Date(v.dateTime||v.date+'T12:00:00').toLocaleString())+'</td><td><b>'+esc(v.version)+'</b></td><td>'+esc(v.summary)+'</td></tr>').join('')+'</tbody></table></div>':'<div class="card muted">Loading complete repository history…</div>';
+  $('versionList').innerHTML=formal+dev;
 }
 function syncVersionExportControls(){
   const range=$('versionExportScope').value==='range';
@@ -778,19 +822,21 @@ function syncVersionExportControls(){
 }
 function versionExportRows(){
   return versionScopeRecords().map(v=>({
-    'Version':v.version,
-    'Release Date':v.date,
+    'Record Type':v.recordType||'Formal Release',
+    'Version / Build':v.version,
+    'Release / Commit Date':v.date,
     'Category':v.category,
     'Summary':v.summary,
-    'Change Details':v.details.join(' | ')
+    'Change Details':(v.details||[]).join(' | '),
+    'Commit SHA':v.sha||''
   }));
 }
 function versionExportFilename(ext='pdf'){return 'gfd-aed-version-history-'+versionRangeLabel().replace(/[^a-z0-9]+/ig,'-').replace(/^-|-$/g,'').toLowerCase()+'.'+ext}
 function versionExportHTML(){
   const rows=versionScopeRecords(),generated=new Date(),chunks=[];
-  for(let i=0;i<rows.length;i+=6)chunks.push(rows.slice(i,i+6));
+  for(let i=0;i<rows.length;i+=8)chunks.push(rows.slice(i,i+8));
   if(!chunks.length)chunks.push([]);
-  return '<div class="report-sheet packet-report">'+chunks.map((chunk,i)=>'<section class="packet-page version-export-page"><div class="report-header"><img src="gfd-patch.jpg"><div class="report-title"><h1>AED App Version History</h1><p>Gladstone Fire / EMS</p></div></div><div class="audit-export-meta"><div><b>Scope</b><br>'+esc(versionRangeLabel())+'</div><div class="right"><b>Generated</b><br>'+esc(generated.toLocaleString())+'</div></div><table class="summary-table"><thead><tr><th>Version</th><th>Date</th><th>Category</th><th>Changes</th></tr></thead><tbody>'+(chunk.length?chunk.map(v=>'<tr><td><b>'+esc(v.version)+'</b>'+(v.version===APP_VERSION?'<br><span class="pill ok">Current</span>':'')+'</td><td>'+esc(new Date(v.date+'T12:00:00').toLocaleDateString())+'</td><td>'+esc(v.category)+'</td><td><b>'+esc(v.summary)+'</b><br>'+v.details.map(d=>'• '+esc(d)).join('<br>')+'</td></tr>').join(''):'<tr><td colspan="4">No versions in selected range.</td></tr>')+'</tbody></table><div class="report-foot">Application version register · Page '+(i+1)+' of '+chunks.length+'</div></section>').join('')+'</div>';
+  return '<div class="report-sheet packet-report">'+chunks.map((chunk,i)=>'<section class="packet-page version-export-page"><div class="report-header"><img src="gfd-patch.jpg"><div class="report-title"><h1>AED App Version History</h1><p>Gladstone Fire / EMS</p></div></div><div class="audit-export-meta"><div><b>Scope</b><br>'+esc(versionRangeLabel())+'</div><div class="right"><b>Generated</b><br>'+esc(generated.toLocaleString())+'</div></div><table class="summary-table"><thead><tr><th>Version / Build</th><th>Date</th><th>Category</th><th>Changes</th></tr></thead><tbody>'+(chunk.length?chunk.map(v=>'<tr><td><b>'+esc(v.version)+'</b>'+(v.version===APP_VERSION?'<br><span class="pill ok">Current</span>':'')+(v.recordType==='Development Build'?'<br><span class="pill">Development</span>':'')+'</td><td>'+esc(new Date((v.dateTime||v.date+'T12:00:00')).toLocaleDateString())+'</td><td>'+esc(v.category)+'</td><td><b>'+esc(v.summary)+'</b>'+(v.details?.length?'<br>'+v.details.map(d=>'• '+esc(d)).join('<br>'):'')+'</td></tr>').join(''):'<tr><td colspan="4">No history records in selected range.</td></tr>')+'</tbody></table><div class="report-foot">Application history register · '+rows.length+' record'+(rows.length===1?'':'s')+' · Page '+(i+1)+' of '+chunks.length+'</div></section>').join('')+'</div>';
 }
 async function previewVersionExport(){return pdfV2().previewHtml(versionExportHTML(),versionExportFilename('pdf'),'AED App Version History',versionRangeLabel())}
 async function saveVersionExport(){return pdfV2().saveHtml(versionExportHTML(),versionExportFilename('pdf'))}
@@ -798,25 +844,25 @@ async function printVersionExport(){return pdfV2().printHtml(versionExportHTML()
 async function shareVersionExport(){return pdfV2().shareHtml(versionExportHTML(),versionExportFilename('pdf'),'Gladstone Fire EMS AED App Version History','Version history: '+versionRangeLabel())}
 function versionCsvEscape(v){const t=String(v??'');return /[",\r\n]/.test(t)?'"'+t.replace(/"/g,'""')+'"':t}
 function exportVersionCsv(){
-  const data=versionExportRows(),headers=['Version','Release Date','Category','Summary','Change Details'];
+  const data=versionExportRows(),headers=['Record Type','Version / Build','Release / Commit Date','Category','Summary','Change Details','Commit SHA'];
   const csv='\ufeff'+[headers.join(',')].concat(data.map(r=>headers.map(h=>versionCsvEscape(r[h])).join(','))).join('\r\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),u=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=u;a.download=versionExportFilename('csv');a.rel='noopener';document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(u),120000);
 }
 function exportVersionJson(){
-  const payload={application:'Gladstone Fire / EMS AED Inventory & Quarterly Audit',currentVersion:APP_VERSION,scope:versionRangeLabel(),generated:new Date().toISOString(),versions:versionScopeRecords()};
+  const payload={application:'Gladstone Fire / EMS AED Inventory & Quarterly Audit',currentVersion:APP_VERSION,scope:versionRangeLabel(),generated:new Date().toISOString(),recordCount:versionScopeRecords().length,history:versionScopeRecords()};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'});
   const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=versionExportFilename('json');a.click();setTimeout(()=>URL.revokeObjectURL(u),120000);
 }
 function exportVersionExcel(){
   if(!window.XLSX){alert('Excel export library is still loading. Try again in a moment.');return}
   const data=versionExportRows(),wb=XLSX.utils.book_new(),ws=XLSX.utils.json_to_sheet(data);
-  ws['!cols']=[{wch:12},{wch:14},{wch:26},{wch:48},{wch:100}];
-  ws['!autofilter']={ref:'A1:E'+Math.max(1,data.length+1)};
-  XLSX.utils.book_append_sheet(wb,ws,'Version History');
-  const info=XLSX.utils.aoa_to_sheet([['Application','Gladstone Fire / EMS AED Inventory & Quarterly Audit'],['Current Version',APP_VERSION],['Export Scope',versionRangeLabel()],['Generated',new Date().toLocaleString()]]);
-  info['!cols']=[{wch:22},{wch:60}];XLSX.utils.book_append_sheet(wb,info,'Export Info');
+  ws['!cols']=[{wch:20},{wch:18},{wch:18},{wch:26},{wch:55},{wch:100},{wch:42}];
+  ws['!autofilter']={ref:'A1:G'+Math.max(1,data.length+1)};
+  XLSX.utils.book_append_sheet(wb,ws,'Complete History');
+  const info=XLSX.utils.aoa_to_sheet([['Application','Gladstone Fire / EMS AED Inventory & Quarterly Audit'],['Current Version',APP_VERSION],['Export Scope',versionRangeLabel()],['Records Included',data.length],['Formal Releases',APP_CHANGELOG.length],['Pre-Version Commits',PRE_VERSION_HISTORY.length],['Generated',new Date().toLocaleString()]]);
+  info['!cols']=[{wch:24},{wch:65}];XLSX.utils.book_append_sheet(wb,info,'Export Info');
   XLSX.writeFile(wb,versionExportFilename('xlsx'),{compression:true});
 }
 function auditExportData(){
@@ -937,7 +983,7 @@ function goView(view){const current=document.querySelector('.view.on')?.id||'';i
 function setInventoryFilter(filter){invFilter=filter;$('search').value='';document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('on',x.dataset.f===filter));inv()}
 window.openInventoryTarget=(id,filter='all')=>{goView('inv');setInventoryFilter(filter);setTimeout(()=>{revealInventoryRow(id);let row=$('row-'+id);if(row)row.scrollIntoView({behavior:'smooth',block:'center'})},80)};
 window.dashboardStatAction=kind=>{let tracked=db.aeds.filter(isInventoryTracked);if(kind==='checked'){goView('checks');return}let list=kind==='oos'?tracked.filter(isOutOfService):kind==='expired'?tracked.filter(hasExpiredComponent):kind==='expiring'?tracked.filter(hasDue180Component):tracked;if(list.length===1&&kind!=='all'){openInventoryTarget(list[0].id,kind);return}goView('inv');setInventoryFilter(kind==='all'?'all':kind)};
-window.toggleQStatusSection=section=>{let complete=section==='complete',list=$(complete?'qCompleteList':'qDueList'),chev=$(complete?'qCompleteChev':'qDueChev'),key=complete?'gfd-qstatus-complete-collapsed':'gfd-qstatus-due-collapsed';if(!list)return;let collapsed=list.style.display!=='none';list.style.display=collapsed?'none':'block';chev.textContent=collapsed?'▸':'▾';localStorage.setItem(key,collapsed?'1':'0')};document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>goView(b.dataset.v));$('accountMenuBtn').onclick=e=>{e.stopPropagation();let menu=$('accountMenu'),open=!menu.classList.contains('open');menu.classList.toggle('open',open);$('accountMenuBtn').setAttribute('aria-expanded',open?'true':'false')};document.addEventListener('click',e=>{if(!e.target.closest('.header-account')){$('accountMenu')?.classList.remove('open');$('accountMenuBtn')?.setAttribute('aria-expanded','false')}});$('syncBtn').onclick=()=>{syncDlg.showModal();if(authToken())pullCloudState(false)};$('syncNow').onclick=()=>pullCloudState(true);$('syncInitialize').onclick=initializeCloudFromDevice;$('logoutBtn').onclick=()=>{$('accountMenu')?.classList.remove('open');$('accountMenuBtn')?.setAttribute('aria-expanded','false');logout()};$('loginForm').onsubmit=async e=>{e.preventDefault();const b=$('loginButton'),u=$('loginUsername').value.trim(),p=$('loginPassword').value;b.disabled=true;b.textContent='Signing In…';$('loginError').style.display='none';try{await login(u,p)}catch(err){showLogin(err.message||'Sign in failed')}finally{b.disabled=false;b.textContent='Sign In'}};$('search').oninput=inv;document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('on'));b.classList.add('on');invFilter=b.dataset.f;inv()});$('auditExportScope').onchange=syncAuditExportControls;$('auditPreviewBtn').onclick=previewAuditExport;$('auditSaveBtn').onclick=saveAuditExport;$('auditPrintBtn').onclick=printAuditExport;$('auditShareBtn').onclick=shareAuditExport;$('auditExcelBtn').onclick=exportAuditExcel;$('auditCsvBtn').onclick=exportAuditCsv;$('auditJsonBtn').onclick=exportAuditJson;$('versionExportScope').onchange=syncVersionExportControls;$('versionPreviewBtn').onclick=previewVersionExport;$('versionSaveBtn').onclick=saveVersionExport;$('versionPrintBtn').onclick=printVersionExport;$('versionShareBtn').onclick=shareVersionExport;$('versionExcelBtn').onclick=exportVersionExcel;$('versionCsvBtn').onclick=exportVersionCsv;$('versionJsonBtn').onclick=exportVersionJson;syncVersionExportControls();renderVersionHistory();const nowAudit=new Date();$('auditExportYear').value=String(nowAudit.getFullYear());$('auditExportMonth').value=String(nowAudit.getFullYear())+'-'+String(nowAudit.getMonth()+1).padStart(2,'0');$('auditExportQuarter').value=String(q(nowAudit));syncAuditExportControls();$('reportYear').onchange=reports;$('reportQuarter').onchange=reports;$('quarterReportBtn').onclick=()=>{let year=Number($('reportYear').value),quarter=Number($('reportQuarter').value),html=attachOverallSignature(buildQuarterReportHTML(year,quarter));if(!html)return;let actions='<div class="report-toolbar report-toolbar-dual"><button class="primary" onclick="previewQuarterReport()">Preview PDF</button><button onclick="saveQuarterReport()">Save PDF</button><button onclick="shareQuarterReport('+year+','+quarter+')">Share PDF</button></div>';$('reportModalContent').innerHTML=actions+html+actions;reportDlg.showModal()};$('annualReportBtn').onclick=()=>{let year=Number($('reportYear').value),html=attachOverallSignature(buildAnnualReportHTML(year));if(!html)return;let actions='<div class="report-toolbar report-toolbar-dual"><button class="primary" onclick="previewAnnualReport()">Preview PDF</button><button onclick="saveAnnualReport()">Save PDF</button><button onclick="shareAnnualReport('+year+')">Share PDF</button></div>';$('reportModalContent').innerHTML=actions+html+actions;reportDlg.showModal()};$('install').onclick=()=>installDlg.showModal();
+window.toggleQStatusSection=section=>{let complete=section==='complete',list=$(complete?'qCompleteList':'qDueList'),chev=$(complete?'qCompleteChev':'qDueChev'),key=complete?'gfd-qstatus-complete-collapsed':'gfd-qstatus-due-collapsed';if(!list)return;let collapsed=list.style.display!=='none';list.style.display=collapsed?'none':'block';chev.textContent=collapsed?'▸':'▾';localStorage.setItem(key,collapsed?'1':'0')};document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>goView(b.dataset.v));$('accountMenuBtn').onclick=e=>{e.stopPropagation();let menu=$('accountMenu'),open=!menu.classList.contains('open');menu.classList.toggle('open',open);$('accountMenuBtn').setAttribute('aria-expanded',open?'true':'false')};document.addEventListener('click',e=>{if(!e.target.closest('.header-account')){$('accountMenu')?.classList.remove('open');$('accountMenuBtn')?.setAttribute('aria-expanded','false')}});$('syncBtn').onclick=()=>{syncDlg.showModal();if(authToken())pullCloudState(false)};$('syncNow').onclick=()=>pullCloudState(true);$('syncInitialize').onclick=initializeCloudFromDevice;$('logoutBtn').onclick=()=>{$('accountMenu')?.classList.remove('open');$('accountMenuBtn')?.setAttribute('aria-expanded','false');logout()};$('loginForm').onsubmit=async e=>{e.preventDefault();const b=$('loginButton'),u=$('loginUsername').value.trim(),p=$('loginPassword').value;b.disabled=true;b.textContent='Signing In…';$('loginError').style.display='none';try{await login(u,p)}catch(err){showLogin(err.message||'Sign in failed')}finally{b.disabled=false;b.textContent='Sign In'}};$('search').oninput=inv;document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('on'));b.classList.add('on');invFilter=b.dataset.f;inv()});$('auditExportScope').onchange=syncAuditExportControls;$('auditPreviewBtn').onclick=previewAuditExport;$('auditSaveBtn').onclick=saveAuditExport;$('auditPrintBtn').onclick=printAuditExport;$('auditShareBtn').onclick=shareAuditExport;$('auditExcelBtn').onclick=exportAuditExcel;$('auditCsvBtn').onclick=exportAuditCsv;$('auditJsonBtn').onclick=exportAuditJson;$('versionExportScope').onchange=syncVersionExportControls;$('versionPreviewBtn').onclick=previewVersionExport;$('versionSaveBtn').onclick=saveVersionExport;$('versionPrintBtn').onclick=printVersionExport;$('versionShareBtn').onclick=shareVersionExport;$('versionExcelBtn').onclick=exportVersionExcel;$('versionCsvBtn').onclick=exportVersionCsv;$('versionJsonBtn').onclick=exportVersionJson;syncVersionExportControls();renderVersionHistory();loadCompleteVersionHistory();const nowAudit=new Date();$('auditExportYear').value=String(nowAudit.getFullYear());$('auditExportMonth').value=String(nowAudit.getFullYear())+'-'+String(nowAudit.getMonth()+1).padStart(2,'0');$('auditExportQuarter').value=String(q(nowAudit));syncAuditExportControls();$('reportYear').onchange=reports;$('reportQuarter').onchange=reports;$('quarterReportBtn').onclick=()=>{let year=Number($('reportYear').value),quarter=Number($('reportQuarter').value),html=attachOverallSignature(buildQuarterReportHTML(year,quarter));if(!html)return;let actions='<div class="report-toolbar report-toolbar-dual"><button class="primary" onclick="previewQuarterReport()">Preview PDF</button><button onclick="saveQuarterReport()">Save PDF</button><button onclick="shareQuarterReport('+year+','+quarter+')">Share PDF</button></div>';$('reportModalContent').innerHTML=actions+html+actions;reportDlg.showModal()};$('annualReportBtn').onclick=()=>{let year=Number($('reportYear').value),html=attachOverallSignature(buildAnnualReportHTML(year));if(!html)return;let actions='<div class="report-toolbar report-toolbar-dual"><button class="primary" onclick="previewAnnualReport()">Preview PDF</button><button onclick="saveAnnualReport()">Save PDF</button><button onclick="shareAnnualReport('+year+')">Share PDF</button></div>';$('reportModalContent').innerHTML=actions+html+actions;reportDlg.showModal()};$('install').onclick=()=>installDlg.showModal();
 $('pedConfig').onchange=()=>{let na=$('pedConfig').value==='N/A';$('ped').disabled=na;if(na)$('ped').value=''};$('daed').onchange=syncDeploymentPadFields;$('auditResult').onchange=()=>{let issues=$('auditResult').value==='Issues found';$('notes').required=issues;$('issueHint').style.display=issues?'block':'none'};$('shock').onchange=()=>{let yes=$('shock').value==='Yes';$('shockPersonFields').style.display=yes?'grid':'none';$('shockCityEmployee').required=yes;let city=yes&&$('shockCityEmployee').value==='Yes';$('shockBy').required=city;$('shockPhone').required=city;syncDeploymentPadFields();if(!yes){$('shockBy').value='';$('shockCityEmployee').value='';$('shockPhone').value='';$('shockBy').required=false;$('shockPhone').required=false;$('shockContact').value='';$('adultPadsUsed').checked=false;$('pedPadsUsed').checked=false}};
 $('shockCityEmployee').onchange=()=>{let city=$('shock').value==='Yes'&&$('shockCityEmployee').value==='Yes';$('shockBy').required=city;$('shockPhone').required=city;$('shockPhoneWrap').style.display=$('shock').value==='Yes'?'grid':'none';};
 function aedScannerConfig(){
