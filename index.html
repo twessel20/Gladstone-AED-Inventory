@@ -373,7 +373,7 @@ function lastCompletedCheck(a){
   let html='';
   groups.forEach(g=>{
     const key='group-'+g.replace(/[^a-z0-9]+/gi,'-').toLowerCase();
-    const collapsed=localStorage.getItem('gfd-aed-group-'+key)!=='0';
+    const collapsed=true;
     const items=buckets[g];
     const inactiveGroup=g==='Inactive AEDs';
     const attn=inactiveGroup?0:items.filter(a=>needsAttention(a)).length;
@@ -415,7 +415,7 @@ function lastCompletedCheck(a){
 
   $('list').innerHTML=html||'<div class="card muted">No AEDs match this filter.</div>';
 }
-window.toggleGroup=id=>{let el=$(id);if(!el)return;el.classList.toggle('collapsed');localStorage.setItem('gfd-aed-group-'+id,el.classList.contains('collapsed')?'1':'0')};
+window.toggleGroup=id=>{let el=$(id);if(!el)return;el.classList.toggle('collapsed')};
 window.toggleRow=id=>$('row-'+id).classList.toggle('open');window.showQR=id=>{let a=db.aeds.find(x=>x.id==id);let url=location.origin+location.pathname+'?aed='+encodeURIComponent(id);$('qrTitle').textContent='QR — '+a.location;$('qrLabel').textContent=a.location+' · '+a.serial;$('qrImg').src='https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&data='+encodeURIComponent(url);qrDlg.showModal()}
 function checks(){
   const buckets={};
@@ -467,7 +467,7 @@ function checks(){
   groups.forEach(g=>{
     const items=buckets[g];
     const key='quarter-group-'+g.replace(/[^a-z0-9]+/gi,'-').toLowerCase();
-    const collapsed=localStorage.getItem('gfd-aed-group-'+key)==='1';
+    const collapsed=true;
     const due=items.filter(a=>!cur(a)).length;
     const complete=items.length-due;
     const oos=items.filter(isOutOfService).length;
