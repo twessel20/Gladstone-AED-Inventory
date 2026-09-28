@@ -325,7 +325,36 @@ function setupSignatureFullscreen(){
   canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);
   clear.onclick=()=>{ctx.clearRect(0,0,canvas.width,canvas.height);fullscreenSignatureDirty=true};
   cancel.onclick=()=>dlg.close();
-  use.onclick=()=>{if(!fullscreenSignatureTarget)return;const data=canvas.toDataURL('image/png');const hidden=$(fullscreenSignatureTarget.dataId);if(hidden)hidden.value=data;restoreSignatureCanvas(fullscreenSignatureTarget.canvasId,fullscreenSignatureTarget.dataId,data);dlg.close()};
+  const normalizedSignatureData=source=>{
+    const sctx=source.getContext('2d',{willReadFrequently:true}),w=source.width,h=source.height;
+    if(!w||!h)return '';
+    const pixels=sctx.getImageData(0,0,w,h).data;
+    let minX=w,minY=h,maxX=-1,maxY=-1;
+    for(let y=0;y<h;y++){
+      for(let x=0;x<w;x++){
+        const i=(y*w+x)*4;
+        if(pixels[i+3]>12){
+          if(x<minX)minX=x;if(x>maxX)maxX=x;
+          if(y<minY)minY=y;if(y>maxY)maxY=y;
+        }
+      }
+    }
+    if(maxX<minX||maxY<minY)return '';
+    const pad=Math.max(18,Math.round(Math.min(w,h)*.035));
+    minX=Math.max(0,minX-pad);minY=Math.max(0,minY-pad);
+    maxX=Math.min(w-1,maxX+pad);maxY=Math.min(h-1,maxY+pad);
+    const cropW=maxX-minX+1,cropH=maxY-minY+1;
+    const out=document.createElement('canvas');
+    out.width=1000;out.height=260;
+    const octx=out.getContext('2d');
+    const marginX=36,marginY=24;
+    const scale=Math.min((out.width-marginX*2)/cropW,(out.height-marginY*2)/cropH);
+    const drawW=cropW*scale,drawH=cropH*scale;
+    const dx=marginX,dy=(out.height-drawH)/2;
+    octx.drawImage(source,minX,minY,cropW,cropH,dx,dy,drawW,drawH);
+    return out.toDataURL('image/png');
+  };
+  use.onclick=()=>{if(!fullscreenSignatureTarget)return;const data=normalizedSignatureData(canvas);if(!data)return alert('Please add a signature before using it.');const hidden=$(fullscreenSignatureTarget.dataId);if(hidden)hidden.value=data;restoreSignatureCanvas(fullscreenSignatureTarget.canvasId,fullscreenSignatureTarget.dataId,data);dlg.close()};
   dlg.addEventListener('close',()=>{fullscreenSignatureTarget=null;fullscreenSignatureDirty=false});
   window.addEventListener('resize',()=>{if(dlg.open)setTimeout(sizeCanvas,60)});
   window.addEventListener('orientationchange',()=>{if(dlg.open)setTimeout(sizeCanvas,180)});
