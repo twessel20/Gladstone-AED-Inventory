@@ -93,73 +93,19 @@ async function buildFromElement(source,filename='aed-report.pdf'){
     await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
     await waitImages(clone);
 
-    const explicit=[...clone.children].filter(x=>x.classList?.contains('packet-page'));
     const doc=new JsPDF({unit:'in',format:'letter',orientation:'portrait',compress:true});
-
     const previewImages=[];
-    if(explicit.length){
-      const margin=.18,maxW=LETTER.w-margin*2,maxH=LETTER.h-margin*2,targetRatio=maxH/maxW;
-      explicit.forEach(page=>{
-        const pageWidth=Math.max(1,page.getBoundingClientRect().width||page.scrollWidth||width);
-        page.style.boxSizing='border-box';
-        page.style.width=pageWidth+'px';
-        page.style.minHeight='0';
-        page.style.height=Math.floor(pageWidth*targetRatio)+'px';
-        page.style.maxHeight=Math.floor(pageWidth*targetRatio)+'px';
-        page.style.overflow='hidden';
-      });
-      await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
-      for(let i=0;i<explicit.length;i++){
-        const page=explicit[i];
-        const canvas=await capture(page,{scale:2.5,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:page.clientWidth,height:page.clientHeight,imageTimeout:15000});
-        if(!canvas.width||!canvas.height)throw new Error('A report page could not be captured.');
-        const img=canvas.toDataURL('image/png');
-        previewImages.push(img);
-        const w=maxW,h=maxH;
-        const x=margin,y=margin;
-        if(i)doc.addPage();
-        doc.addImage(img,'PNG',x,y,w,h,undefined,'FAST');
-        canvas.width=1;canvas.height=1;
-        doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(104,123,138);
-        doc.text('Page '+(i+1)+' of '+explicit.length,7.28,10.83);
-      }
-    }else{
-      const scale=2.5;
-      const full=await capture(clone,{scale,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:clone.scrollWidth,height:clone.scrollHeight});
-      if(!full.width||!full.height)throw new Error('The report could not be captured.');
-      const onePage=clone.classList?.contains('single-aed-report');
-      if(onePage){
-        const img=full.toDataURL('image/png');
-        previewImages.push(img);
-        const margin=.18,maxW=LETTER.w-margin*2,maxH=LETTER.h-margin*2;
-        let w=maxW,h=w*(full.height/full.width);
-        if(h>maxH){h=maxH;w=h*(full.width/full.height)}
-        const x=(LETTER.w-w)/2,y=(LETTER.h-h)/2;
-        doc.addImage(img,'PNG',x,y,w,h,undefined,'FAST');
-        doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(104,123,138);
-        doc.text('Page 1 of 1',7.28,10.83);
-      }else{
-        const cssPageHeight=Math.floor(width*(LETTER.h/LETTER.w)*0.94);
-        const candidatesCss=breakCandidates(clone);
-        const slicesCss=pageSlices(clone.scrollHeight,cssPageHeight,candidatesCss);
-        const ratio=full.height/clone.scrollHeight;
-        const slices=slicesCss.map(([a,b])=>[Math.round(a*ratio),Math.round(b*ratio)]);
-        for(let i=0;i<slices.length;i++){
-          const [y1,y2]=slices[i],part=sliceCanvas(full,y1,y2);
-          const img=part.toDataURL('image/png');
-          previewImages.push(img);
-          const margin=.20,maxW=LETTER.w-margin*2,maxH=LETTER.h-margin*2;
-          let w=maxW,h=w*(part.height/part.width);
-          if(h>maxH){h=maxH;w=h*(part.width/part.height)}
-          const x=(LETTER.w-w)/2,y=margin;
-          if(i)doc.addPage();
-          doc.addImage(img,'PNG',x,y,w,h,undefined,'FAST');
-          part.width=1;part.height=1;
-          doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(104,123,138);
-          doc.text('Page '+(i+1)+' of '+slices.length,7.28,10.83);
-        }
-      }
-    }
+    const full=await capture(clone,{scale:2.5,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:clone.scrollWidth,height:clone.scrollHeight,imageTimeout:15000});
+    if(!full.width||!full.height)throw new Error('The report could not be captured.');
+    const img=full.toDataURL('image/png');
+    previewImages.push(img);
+    const margin=.18,maxW=LETTER.w-margin*2,maxH=LETTER.h-margin*2;
+    let w=maxW,h=w*(full.height/full.width);
+    if(h>maxH){h=maxH;w=h*(full.width/full.height)}
+    const x=(LETTER.w-w)/2,y=(LETTER.h-h)/2;
+    doc.addImage(img,'PNG',x,y,w,h,undefined,'FAST');
+    doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(104,123,138);
+    doc.text('Page 1 of 1',7.28,10.83);
     const buffer=doc.output('arraybuffer');
     if(!buffer||buffer.byteLength<1200)throw new Error('PDF generation failed.');
     const bytes=new Uint8Array(buffer);
