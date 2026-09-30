@@ -35,7 +35,7 @@
  #generatedReportSheet th,#generatedReportSheet td{padding:4px!important}
  #generatedReportSheet .kv{gap:8px!important}
 }
-@media print{@page{size:letter portrait;margin:.35in}body{background:#fff!important}#generatedReportSheet{width:7.8in!important;max-width:7.8in!important;margin:0!important;padding:0!important}#generatedReportSheet .report-grid{grid-template-columns:1fr 1fr!important}#generatedReportSheet .report-toolbar{display:none!important}}
+@media print{@page{size:letter portrait;margin:.25in}body{background:#fff!important}#generatedReportSheet{width:7.8in!important;max-width:7.8in!important;margin:0!important;padding:0!important}#generatedReportSheet .report-grid{grid-template-columns:1fr 1fr!important}#generatedReportSheet .report-toolbar{display:none!important}}
 
 /* v94: strict portrait packet pagination and group delineation */
 #generatedReportSheet .packet-page{
@@ -81,7 +81,7 @@
   line-height:1.2!important;
 }
 @media print{
-  @page{size:letter portrait;margin:.35in}
+  @page{size:letter portrait;margin:.25in}
   #generatedReportSheet .packet-page{break-after:page!important;page-break-after:always!important}
   #generatedReportSheet .packet-aed-page{break-inside:avoid!important;page-break-inside:avoid!important}
 }
