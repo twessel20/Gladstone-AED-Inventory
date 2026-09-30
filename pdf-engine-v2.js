@@ -261,7 +261,7 @@ function showPreview(blob,filename='aed-report.pdf',title='AED Report',summary='
   if(!dlg){
     dlg=document.createElement('dialog');dlg.id=PREVIEW_ID;
     dlg.style.cssText='position:fixed;inset:0;width:100vw;max-width:none;height:100dvh;max-height:none;margin:0;padding:0;border:0;border-radius:0;overflow:hidden;background:#dfe5e9;';
-    dlg.innerHTML='<div style="display:flex;flex-direction:column;height:100dvh;min-height:0"><div style="flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:calc(8px + env(safe-area-inset-top)) 10px 8px;border-bottom:1px solid #d9e3ea;background:#fff"><div style="min-width:0"><b style="color:#123a5a">Generated PDF Preview</b><div id="pdfV2PageStatus" style="font-size:.82rem;color:#687b8a">Portrait Letter</div></div><button type="button" id="pdfV2CloseTop" style="flex:0 0 auto">Close</button><button type="button" id="pdfV2Prev" style="display:none">Previous</button><button type="button" id="pdfV2Next" style="display:none">Next</button></div><div id="pdfV2Pages" style="flex:1 1 auto;min-height:0;height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;overscroll-behavior-y:contain;overflow-x:hidden;background:#dfe5e9;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:12px"></div><div style="flex:0 0 auto;display:flex;justify-content:center;gap:7px;flex-wrap:wrap;padding:8px 10px calc(8px + env(safe-area-inset-bottom));border-top:1px solid #d9e3ea;background:#fff"><button type="button" id="pdfV2PrintBottom">Print</button><button type="button" id="pdfV2ShareBottom">Share</button><button type="button" id="pdfV2CloseBottom" style="min-width:120px">Close</button></div></div>';
+    dlg.innerHTML='<div style="display:flex;flex-direction:column;height:100dvh;min-height:0"><div style="flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:calc(8px + env(safe-area-inset-top)) 10px 8px;border-bottom:1px solid #d9e3ea;background:#fff"><div style="min-width:0"><b style="color:#123a5a">Generated PDF Preview</b><div id="pdfV2PageStatus" style="font-size:.82rem;color:#687b8a">Portrait Letter</div></div><button type="button" id="pdfV2CloseTop" style="flex:0 0 auto">Close</button><button type="button" id="pdfV2Prev" style="display:none">Previous</button><button type="button" id="pdfV2Next" style="display:none">Next</button></div><div id="pdfV2Pages" style="flex:1 1 auto;min-height:0;height:0;overflow:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;overscroll-behavior:contain;background:#dfe5e9;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:12px"></div><div style="flex:0 0 auto;display:flex;justify-content:center;gap:7px;flex-wrap:wrap;padding:8px 10px calc(8px + env(safe-area-inset-bottom));border-top:1px solid #d9e3ea;background:#fff"><button type="button" id="pdfV2PrintBottom">Print</button><button type="button" id="pdfV2ShareBottom">Share</button><button type="button" id="pdfV2CloseBottom" style="min-width:120px">Close</button></div></div>';
     document.body.appendChild(dlg);
     const closePreview=()=>dlg.close();
     dlg.querySelector('#pdfV2CloseTop').onclick=closePreview;dlg.querySelector('#pdfV2CloseBottom').onclick=closePreview;
@@ -281,14 +281,42 @@ function showPreview(blob,filename='aed-report.pdf',title='AED Report',summary='
     imgs.forEach((src,i)=>{
       const wrap=document.createElement('div');
       wrap.dataset.previewPage=String(i);
-      wrap.style.cssText='width:min(100%,850px);background:#fff;box-shadow:0 2px 12px #0002;flex:0 0 auto;scroll-margin-top:8px;';
+      wrap.dataset.scale='1';
+      wrap.style.cssText='width:min(100%,850px);background:#fff;box-shadow:0 2px 12px #0002;flex:0 0 auto;scroll-margin-top:8px;transform-origin:top center;';
       const img=document.createElement('img');
-      img.src=src;img.alt='PDF page '+(i+1);img.draggable=false;img.style.cssText='display:block;width:100%;height:auto;background:#fff;user-select:none;-webkit-user-drag:none;';
+      img.src=src;img.alt='PDF page '+(i+1);img.draggable=false;img.style.cssText='display:block;width:100%;height:auto;background:#fff;user-select:none;-webkit-user-drag:none;touch-action:none;';
       const cap=document.createElement('div');
       cap.textContent='Page '+(i+1)+' of '+imgs.length;cap.style.cssText='font-size:.78rem;color:#687b8a;text-align:center;padding:7px 8px;border-top:1px solid #e3e8ec;background:#fff;';
       wrap.appendChild(img);wrap.appendChild(cap);pages.appendChild(wrap);
     });
     updatePreviewPageStatus();
+    const touchDistance=(a,b)=>Math.hypot(b.clientX-a.clientX,b.clientY-a.clientY);
+    let pinchTarget=null,pinchStart=0,pinchScale=1;
+    pages.addEventListener('touchstart',e=>{
+      if(e.touches.length!==2)return;
+      const target=e.target.closest('[data-preview-page]');
+      if(!target)return;
+      pinchTarget=target;
+      pinchStart=touchDistance(e.touches[0],e.touches[1]);
+      pinchScale=Number(target.dataset.scale||1);
+    },{passive:true});
+    pages.addEventListener('touchmove',e=>{
+      if(e.touches.length!==2||!pinchTarget||!pinchStart)return;
+      e.preventDefault();
+      const scale=Math.min(3,Math.max(1,pinchScale*(touchDistance(e.touches[0],e.touches[1])/pinchStart)));
+      pinchTarget.dataset.scale=String(scale);
+      pinchTarget.style.transform='scale('+scale+')';
+      pinchTarget.style.marginBottom=((scale-1)*pinchTarget.offsetHeight)+'px';
+    },{passive:false});
+    pages.addEventListener('touchend',e=>{if(e.touches.length<2){pinchTarget=null;pinchStart=0}},{passive:true});
+    pages.addEventListener('dblclick',e=>{
+      const target=e.target.closest('[data-preview-page]');
+      if(!target)return;
+      const scale=Number(target.dataset.scale||1)>1?1:2;
+      target.dataset.scale=String(scale);
+      target.style.transform='scale('+scale+')';
+      target.style.marginBottom=((scale-1)*target.offsetHeight)+'px';
+    });
     pages.onscroll=()=>{clearTimeout(pages._pageTimer);pages._pageTimer=setTimeout(()=>{const children=[...pages.querySelectorAll('[data-preview-page]')];if(!children.length)return;const pr=pages.getBoundingClientRect();let best=0,dist=Infinity;children.forEach((el,i)=>{const r=el.getBoundingClientRect(),d=Math.abs(r.top-pr.top-8);if(d<dist){dist=d;best=i}});dlg.dataset.page=String(best);updatePreviewPageStatus()},80)};
   }else{
     const url=URL.createObjectURL(blob);
@@ -306,7 +334,7 @@ function showPreview(blob,filename='aed-report.pdf',title='AED Report',summary='
   function updatePreviewPageStatus(){
     const total=pages.querySelectorAll('[data-preview-page]').length,current=Math.min(total-1,Math.max(0,Number(dlg.dataset.page||0)));
     const status=dlg.querySelector('#pdfV2PageStatus');
-    if(status)status.textContent=total?'Page '+(current+1)+' of '+total+' · Portrait Letter':'Portrait Letter';
+    if(status)status.textContent=total?'Page '+(current+1)+' of '+total+' · Portrait Letter · Pinch to zoom':'Portrait Letter · Pinch to zoom';
     const prev=dlg.querySelector('#pdfV2Prev'),next=dlg.querySelector('#pdfV2Next');
     if(prev)prev.disabled=current<=0;if(next)next.disabled=current>=total-1;
   }
