@@ -104,6 +104,7 @@ async function buildFromElement(source,filename='aed-report.pdf'){
     // Build logical group packet pages before PDF capture.
     // Each AED entry is atomic: never split an AED record across pages.
     // New groups always begin on a fresh page; headers/footers repeat on every group page.
+    const isAnnualPacket=clone.classList?.contains('annual-report-format');
     const groupSources=[...clone.children].filter(x=>x.classList?.contains('packet-group-source'));
     if(groupSources.length){
       for(const source of groupSources){
@@ -118,7 +119,7 @@ async function buildFromElement(source,filename='aed-report.pdf'){
 
         function makeGroupPage(isFirst){
           const page=document.createElement('section');
-          page.className='packet-page packet-aed-page packet-group-rendered-page'+(isFirst?' packet-group-start':'');
+          page.className='packet-page packet-aed-page packet-group-rendered-page'+(isAnnualPacket?' packet-annual-aed-page':'')+(isFirst?' packet-group-start':'');
           page.setAttribute('data-group',groupName);
           page.style.boxSizing='border-box';
           page.style.width=sourceWidth+'px';
@@ -145,14 +146,16 @@ async function buildFromElement(source,filename='aed-report.pdf'){
         }
 
         let current=makeGroupPage(true);
-        for(const entry of entries){
+        for(let entryIndex=0;entryIndex<entries.length;entryIndex++){
+          const entry=entries[entryIndex];
+          if(isAnnualPacket&&entryIndex>0)current=makeGroupPage(false);
           const node=entry.cloneNode(true);
           current.body.appendChild(node);
           await new Promise(r=>requestAnimationFrame(r));
 
-          // If adding this complete AED makes the page too tall, move the whole AED
-          // to a new page. Never split an AED record to use leftover space.
-          if(current.body.children.length>1 && current.page.scrollHeight>targetHeight){
+          // Quarterly/group packets may share a page when complete AED records fit.
+          // Annual packets intentionally use one complete AED dossier per Letter page.
+          if(!isAnnualPacket&&current.body.children.length>1&&current.page.scrollHeight>targetHeight){
             current.body.removeChild(node);
             current=makeGroupPage(false);
             current.body.appendChild(node);
