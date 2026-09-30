@@ -212,14 +212,14 @@
 }
 
 /* v100: cover page is the Letter page, not a card inside the page. */
-#generatedReportSheet.pdf-letter-capture .packet-cover-page{
+#generatedReportSheet .packet-cover-page{
   border:0!important;
   border-radius:0!important;
   box-shadow:none!important;
   outline:0!important;
   background:#fff!important;
 }
-#generatedReportSheet.pdf-letter-capture .packet-cover-page::before,
-#generatedReportSheet.pdf-letter-capture .packet-cover-page::after{
+#generatedReportSheet .packet-cover-page::before,
+#generatedReportSheet .packet-cover-page::after{
   display:none!important;
 }
