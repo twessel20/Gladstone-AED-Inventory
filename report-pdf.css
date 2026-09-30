@@ -210,3 +210,16 @@
   font-size:11px!important;
   line-height:1.48!important;
 }
+
+/* v100: cover page is the Letter page, not a card inside the page. */
+#generatedReportSheet.pdf-letter-capture .packet-cover-page{
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  outline:0!important;
+  background:#fff!important;
+}
+#generatedReportSheet.pdf-letter-capture .packet-cover-page::before,
+#generatedReportSheet.pdf-letter-capture .packet-cover-page::after{
+  display:none!important;
+}
