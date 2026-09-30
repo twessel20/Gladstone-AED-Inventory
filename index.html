@@ -375,7 +375,7 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
 <dialog id="reportDlg" style="width:min(96vw,920px);max-height:92vh"><div id="reportModalContent"></div><div class="da"><button onclick="reportDlg.close()">Close</button></div></dialog>
 <dialog id="installDlg"><h2>Add AED Audit to iPhone</h2><div class="card install"><b>Safari → Share → Add to Home Screen → Add</b></div><p class="muted">It will launch from your Home Screen like an app. After the first load, the service worker keeps the app shell available offline.</p><div class="da"><button class="primary" onclick="installDlg.close()">Got it</button></div></dialog><dialog id="syncDlg"><h2>Cloud Sync</h2><div id="syncState" class="card"><b>Status:</b> Authentication required</div><p class="muted">Cloud inventory access is protected by your signed-in account.</p><div class="actions"><button type="button" class="primary" id="syncNow">Sync Now</button><button type="button" id="syncInitialize" style="display:none">Use This Device as Master</button></div><div class="da"><button type="button" onclick="syncDlg.close()">Close</button></div></dialog>
 <dialog id="signatureFullscreenDlg"><div class="signature-fullscreen-shell"><div class="signature-fullscreen-head"><h2 id="signatureFullscreenTitle">Signature</h2><div class="signature-fullscreen-head-actions"><button type="button" class="primary signature-fullscreen-use" id="signatureFullscreenUseTop">Use Signature</button><button type="button" id="signatureFullscreenCancel">Cancel</button></div></div><canvas id="signatureFullscreenCanvas" class="signature-fullscreen-canvas" width="1200" height="500" aria-label="Full screen signature pad"></canvas><div class="signature-fullscreen-actions"><button type="button" id="signatureFullscreenClear">Clear</button><button type="button" class="primary signature-fullscreen-use" id="signatureFullscreenUse">Use Signature</button></div></div></dialog>
-<div id="updateBanner" class="update-banner"><div class="text"><b>App updated</b><div class="muted">The latest version has been installed automatically.</div></div></div>
+<div id="updateBanner" class="update-banner" role="status" aria-live="polite"><div class="text"><b id="updateBannerTitle">App update</b><div id="updateBannerMessage" class="muted">Checking for the latest version.</div></div></div>
 <script>
 const KEY='gfd-aed-v2', $=x=>document.getElementById(x), today=()=>new Date().toISOString().slice(0,10);
 let fullscreenSignatureTarget=null,fullscreenSignatureDirty=false;
@@ -911,8 +911,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v202';
+const APP_VERSION='v203';
 const APP_CHANGELOG=[
+  {version:'v203',date:'2026-09-29',category:'App Updates / UX',summary:'Added live in-app banners for app version updates.',details:['While the app is open, a small non-blocking banner now appears when a new app version is detected.','The banner progresses through update found/downloading and installing states without interrupting the user.','After the service worker activates and the app refreshes, a confirmation banner shows the installed app version.','Existing automatic update checks remain in place, including periodic checks and checks when the app returns to the foreground.']},
   {version:'v202',date:'2026-09-29',category:'Inventory / Mobile UX',summary:'Cleaned up AED Inventory filters on mobile.',details:['Reworked the Inventory filter controls into a clean two-column grid on phones.','The All filter spans the full width for a clearer starting state.','Filter buttons now use consistent height, spacing and centered labels instead of uneven wrapping.','Very narrow screens fall back to a single-column filter list for readability.','All existing filter options and behavior are unchanged.']},
   {version:'v201',date:'2026-09-29',category:'Inventory / Grouping',summary:'Returned retired/disposal AEDs to the separate inactive section.',details:['Car 100 is again removed from the active Police Patrol Cars group because it is retired/beyond repair and placed for disposal.','Active patrol-car AEDs remain grouped together and continue to use the existing need/urgency sorting logic.','The Inactive AEDs section remains separate and is listed after active inventory groups.']},
   {version:'v200',date:'2026-09-29',category:'Inventory / Grouping',summary:'Restored urgency ordering while keeping patrol cars together.',details:['Restored the existing need/urgency sorting logic inside inventory groups.','Police Patrol Cars remain together as one logical group, including retired/disposal Car 100.','Urgent, out-of-service, expiration and quarterly-due logic can still move higher-need AEDs toward the top without splitting patrol cars into a separate inactive group.']},
@@ -1399,13 +1400,17 @@ $('saveCheckDraft').onclick=()=>{let id=$('cid').value,a=db.aeds.find(x=>x.id==i
 checkForm.onsubmit=e=>{e.preventDefault();if($('auditResult').value==='Issues found'&&!$('notes').value.trim()){$('notes').required=true;$('issueHint').style.display='block';$('notes').focus();return}let id=$('cid').value,a=db.aeds.find(x=>x.id==id),d=dt($('cdate').value),c={id:crypto.randomUUID(),date:$('cdate').value,quarter:q(d),year:d.getFullYear(),inspector:$('insp').value.trim(),employeeNumber:$('inspEmp').value.trim(),ready:$('ready').value,physical:$('phys').value,adult:$('ast').value,ped:$('pst').value,battery:$('bst').value,adultExp:$('checkAdultExp').value,pedExp:!hasPediatricPads(a)?'':$('checkPedExp').value,batteryExp:$('checkBatteryExp').value,accessories:$('acc').value,auditResult:$('auditResult').value,status:$('auditStatus').value,statusDate:$('statusDate').value,statusNotes:$('statusNotes').value.trim(),notes:$('notes').value.trim(),signature:$('auditorSigData').value};if(!c.signature){alert('Auditor signature is required to complete the inspection.');return}a.checks.push(c);a.checkDraft=null;a.adult=c.adultExp;if(hasPediatricPads(a))a.ped=c.pedExp;a.battery=c.batteryExp;let priorStatus=a.status||'In Service';a.status=c.status;if(priorStatus!==c.status){log('AED Status Change',id,'Status changed from '+priorStatus+' to '+c.status+(c.statusNotes?' — '+c.statusNotes:''),c.inspector)}log('Quarterly Inspection',id,'Q'+c.quarter+' '+c.year+' inspection completed. Result: '+c.auditResult+'. Ready: '+c.ready+'. Adult pads: '+c.adult+'; exp '+fmt(c.adultExp)+'. '+(!hasPediatricPads(a)?'Pediatric pads: N/A. ':'Pediatric pads: '+c.ped+'; exp '+fmt(c.pedExp)+'. ')+'Battery: '+c.battery+'; exp '+fmt(c.batteryExp)+'. Status: '+c.status+'. Employee #: '+c.employeeNumber+'.',c.inspector);checkDlg.close();save();openReport(id,c.id)};
 $('newdep').onclick=()=>{depForm.reset();$('ddate').value=today();$('shockPersonFields').style.display='none';$('shockBy').required=false;$('shockCityEmployee').required=false;$('shockPhone').required=false;syncDeploymentPadFields();depDlg.showModal()};depForm.onsubmit=e=>{e.preventDefault();let id=$('daed').value,a=db.aeds.find(x=>x.id==id),shock=$('shock').value==='Yes',adultPadsUsed=shock&&$('adultPadsUsed').checked,pedPadsUsed=shock&&hasPediatricPads(a)&&$('pedPadsUsed').checked;if(shock&&!adultPadsUsed&&!pedPadsUsed){alert('Select which AED pad set was used during the shock.');$('adultPadsUsed').focus();return}let d={date:$('ddate').value,report:$('report').value.trim(),agency:$('agency').value.trim(),agencyReport:$('agencyReport').value.trim(),by:$('dby').value.trim(),shock:shock,shockBy:$('shockBy').value.trim(),shockCityEmployee:$('shockCityEmployee').value,shockPhone:$('shockPhone').value.trim(),shockContact:$('shockContact').value.trim(),padsUsed:adultPadsUsed||pedPadsUsed,adultPadsUsed:adultPadsUsed,pediatricPadsUsed:pedPadsUsed,notes:$('dnotes').value.trim()};a.deps.push(d);if(d.shock){let priorStatus=a.status||'In Service';a.status='Out of Service - Repair';a.comments='Shock delivered. AED remains out of service until pads and battery are replaced with expiration dates documented, the internal AED event report is read/exported, and an operational test is completed.'+(d.notes?' '+d.notes:'');if(priorStatus!==a.status)log('AED Status Change',id,'Status changed from '+priorStatus+' to '+a.status+' — Shock deployment hold. Manual return-to-service workflow required.',d.by)}log('AED Deployment',id,'Deployment recorded'+(d.report?' for report '+d.report:'')+(d.agency?' · Agency: '+d.agency:'')+(d.agencyReport?' · Agency report: '+d.agencyReport:'')+(d.shock?' · Shock delivered: Yes'+(d.shockBy?' · Shock delivered by: '+d.shockBy:'')+(d.shockCityEmployee?' · City employee: '+d.shockCityEmployee:'')+(d.shockPhone?' · Phone: '+d.shockPhone:'')+(d.shockContact?' · Other contact: '+d.shockContact:''):' · Shock delivered: No')+'.',d.by);depDlg.close();save()};
 if('serviceWorker' in navigator){
-  let reloading=false,swReg=null;
-  const showUpdatedNotice=()=>{
-    const banner=$('updateBanner');
+  let reloading=false,swReg=null,updateBannerTimer=null;
+  const showUpdateBanner=(title,message,duration=3500)=>{
+    const banner=$('updateBanner'),titleEl=$('updateBannerTitle'),msgEl=$('updateBannerMessage');
     if(!banner)return;
+    if(titleEl)titleEl.textContent=title;
+    if(msgEl)msgEl.textContent=message;
+    clearTimeout(updateBannerTimer);
     banner.classList.add('show');
-    setTimeout(()=>banner.classList.remove('show'),3500);
+    if(duration>0)updateBannerTimer=setTimeout(()=>banner.classList.remove('show'),duration);
   };
+  const showUpdatedNotice=()=>showUpdateBanner('App updated',APP_VERSION+' is installed and ready.',4200);
   navigator.serviceWorker.addEventListener('controllerchange',()=>{
     if(reloading)return;
     reloading=true;
@@ -1419,12 +1424,17 @@ if('serviceWorker' in navigator){
     }
     try{
       swReg=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});
-      if(swReg.waiting) swReg.waiting.postMessage({type:'SKIP_WAITING'});
+      if(swReg.waiting){
+        showUpdateBanner('App update found','Installing the latest AED app version…',0);
+        swReg.waiting.postMessage({type:'SKIP_WAITING'});
+      }
       swReg.addEventListener('updatefound',()=>{
         const worker=swReg.installing;
         if(!worker)return;
+        showUpdateBanner('App update found','A new AED app version is downloading…',0);
         worker.addEventListener('statechange',()=>{
           if(worker.state==='installed'&&navigator.serviceWorker.controller){
+            showUpdateBanner('Installing update','The app will refresh automatically when the update is ready.',0);
             worker.postMessage({type:'SKIP_WAITING'});
           }
         });
