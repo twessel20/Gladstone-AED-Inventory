@@ -1,7 +1,7 @@
-const VERSION='gfd-aed-pwa-v189';
+const VERSION='gfd-aed-pwa-v190';
 const CORE_CACHE=VERSION+'-core';
 const RUNTIME_CACHE=VERSION+'-runtime';
-const CORE=['./','./index.html','./lifecycle.html','./version-history.json','./manifest.webmanifest','./pdf-engine-v2.js','./report-builder.js','./report-pdf.css'];
+const CORE=['./','./index.html','./lifecycle.html','./version-history.json','./manifest.webmanifest','./pdf-engine-v2.js','./report-builder.js','./report-pdf.css','./signature-quarterly-v207.js'];
 
 self.addEventListener('install',event=>{
   self.skipWaiting();
@@ -28,8 +28,9 @@ async function decorateMainApp(response){
   const isMainApp=html.includes('<title>Gladstone AED Inventory</title>')&&html.includes('data-v="dash"')&&html.includes('data-v="audit"');
   if(isMainApp){
     if(!html.includes('report-pdf.css'))html=html.replace('</head>','<link rel="stylesheet" href="./report-pdf.css?v=161"></head>');
-    if(!html.includes('pdf-engine-v2.js'))html=html.replace('</body>','<script src="./pdf-engine-v2.js?v=161"></script></body>');if(!html.includes('report-builder.js'))html=html.replace('</body>','<script src="./report-builder.js?v=161"></script></body>');
-
+    if(!html.includes('pdf-engine-v2.js'))html=html.replace('</body>','<script src="./pdf-engine-v2.js?v=161"></script></body>');
+    if(!html.includes('report-builder.js'))html=html.replace('</body>','<script src="./report-builder.js?v=161"></script></body>');
+    if(!html.includes('signature-quarterly-v207.js'))html=html.replace('</body>','<script src="./signature-quarterly-v207.js?v=207"></script></body>');
   }
   const headers=new Headers(response.headers);
   headers.delete('content-length');
@@ -65,7 +66,7 @@ self.addEventListener('fetch',event=>{
     event.respondWith(networkFirst(event.request));
     return;
   }
-  if(url.origin===self.location.origin&&(url.pathname.endsWith('/pdf-export.js')||url.pathname.endsWith('/pdf-engine-v2.js')||url.pathname.endsWith('/report-builder.js')||url.pathname.endsWith('/report-pdf.css'))){
+  if(url.origin===self.location.origin&&(url.pathname.endsWith('/pdf-export.js')||url.pathname.endsWith('/pdf-engine-v2.js')||url.pathname.endsWith('/report-builder.js')||url.pathname.endsWith('/report-pdf.css')||url.pathname.endsWith('/signature-quarterly-v207.js'))){
     event.respondWith(networkFirst(event.request));
     return;
   }
