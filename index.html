@@ -58,6 +58,12 @@ nav{display:flex;overflow:auto;gap:6px;position:sticky;top:0;z-index:9;backgroun
 #deps .deployment-head-copy p{margin:4px 0 0}
 #deps .deployment-head-actions{display:grid;grid-template-columns:repeat(3,minmax(132px,1fr));gap:8px;margin:0}
 #deps .deployment-head-actions button{min-height:44px;width:100%;display:flex;align-items:center;justify-content:center;text-align:center;white-space:nowrap}
+#inv .inventory-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;margin-bottom:12px}
+#inv .inventory-head-copy{min-width:0}
+#inv .inventory-head-copy h2{margin:0}
+#inv .inventory-head-copy p{margin:4px 0 0}
+#inv .inventory-head-actions{display:grid;grid-template-columns:repeat(4,minmax(110px,1fr));gap:8px}
+#inv .inventory-head-actions button{min-height:44px;width:100%;display:flex;align-items:center;justify-content:center;text-align:center;white-space:nowrap}
 @media(max-width:780px){
   #deps .deployment-head{grid-template-columns:1fr;gap:10px;align-items:stretch}
   #deps .deployment-head-actions{grid-template-columns:repeat(3,1fr)}
@@ -232,6 +238,49 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
   .compact .top>div:last-child{display:flex;align-items:flex-start;gap:4px;white-space:nowrap}
   .compact .pill{max-width:150px;white-space:normal;text-align:center;line-height:1.15}
 
+  #inv .inventory-head{
+    display:block;
+    margin-bottom:10px;
+  }
+  #inv .inventory-head-copy{
+    margin-bottom:8px;
+  }
+  #inv .inventory-head-copy h2{
+    font-size:1.18rem;
+    line-height:1.15;
+  }
+  #inv .inventory-head-copy p{
+    font-size:.8rem;
+    line-height:1.2;
+    margin-top:2px;
+  }
+  #inv .inventory-head-actions{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:6px;
+    width:100%;
+    margin:0;
+    padding:7px;
+    border:1px solid var(--l);
+    border-radius:12px;
+    background:#f8fbfd;
+  }
+  #inv .inventory-head-actions button{
+    width:100%;
+    min-width:0;
+    min-height:46px;
+    padding:7px 5px;
+    margin:0;
+    border-radius:9px;
+    font-size:.74rem;
+    line-height:1.08;
+    white-space:normal;
+    text-align:center;
+  }
+  #inv .inventory-head-actions #add{
+    box-shadow:0 2px 7px #123a5a20;
+  }
+
   #inv .filters{
     display:grid;
     grid-template-columns:repeat(2,minmax(0,1fr));
@@ -253,6 +302,8 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
   }
 }
 @media(max-width:390px){
+  #inv .inventory-head-actions{gap:4px;padding:6px}
+  #inv .inventory-head-actions button{font-size:.7rem;padding:6px 3px;min-height:46px}
   #inv .filters{grid-template-columns:1fr}
   #inv .filters .filter[data-f="all"]{grid-column:auto}
 }
@@ -497,7 +548,7 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
 <nav><button class="tab on" data-v="dash">Dashboard</button><button class="tab" data-v="inv">Inventory</button><button class="tab" data-v="checks">Quarterly</button><button class="tab" data-v="deps">Deployments</button><button class="tab" data-v="reports">Reports</button><button class="tab" data-v="audit">Audit Log</button><a id="repositoryNav" class="tab" href="./lifecycle.html">AED Repository</a><button class="tab" data-v="updates">Updates</button><button id="syncBtn">Cloud Sync</button><button id="install">Add to iPhone</button></nav>
 <main>
 <section id="dash" class="view on"><div class="card" style="margin-bottom:12px"><div class="bar" style="margin:0"><div><h2 style="margin:0">Quick Actions</h2><p class="muted" style="margin:3px 0 0">Scan an AED, start a quarterly check, or quickly record a deployment event.</p></div><div class="actions" style="margin-top:0"><button id="dashQuickScan">Quick Scan</button><button id="dashQuickQuarterly">Quarterly Check</button><button class="lifecycle-action" id="dashLifecycleEvent">Lifecycle Event</button><button class="primary deployment-action" id="dashQuickDeployment">Record Deployment</button></div></div></div><div id="stats" class="stats"></div><div id="shockOosCard" class="card" style="display:none"><div class="bar"><div><h2 style="margin:0">Out of Service — Shock Delivered</h2><p class="muted" style="margin:3px 0 0">These AEDs remain in inventory but are unavailable until the return-to-service workflow is completed.</p></div></div><div id="shockOosList"></div></div><div class="two"><div class="card"><h2>Expiration Watch</h2><div id="watch"></div></div><div class="card"><h2 id="qtitle">Quarterly Status</h2><div id="qstatus"></div></div></div></section>
-<section id="inv" class="view"><div class="bar"><div><h2>AED Inventory</h2><p class="muted">Tap a location to expand details.</p></div><div class="actions" style="margin-top:0"><button id="scanSerial">Scan Serial</button><button id="manageGroupsBtn">Manage Groups</button><button class="lifecycle-action" id="inventoryLifecycleEvent">Lifecycle Event</button><button class="primary" id="add">+ Add AED</button></div></div><input id="search" class="search" placeholder="Search location or serial"><div class="filters"><button class="filter on" data-f="all">All</button><button class="filter" data-f="oos">Out of Service</button><button class="filter" data-f="damage">Damaged / Destroyed</button><button class="filter" data-f="expired">Expired</button><button class="filter" data-f="expiring">Due ≤180 Days</button><button class="filter" data-f="attention">Needs Review</button><button class="filter" data-f="due">Due This Quarter</button></div><div id="list"></div></section>
+<section id="inv" class="view"><div class="inventory-head"><div class="inventory-head-copy"><h2>AED Inventory</h2><p class="muted">Tap a location to expand details.</p></div><div class="inventory-head-actions"><button id="scanSerial">Scan Serial</button><button id="manageGroupsBtn">Manage Groups</button><button class="lifecycle-action" id="inventoryLifecycleEvent">Lifecycle Event</button><button class="primary" id="add">+ Add AED</button></div></div><input id="search" class="search" placeholder="Search location or serial"><div class="filters"><button class="filter on" data-f="all">All</button><button class="filter" data-f="oos">Out of Service</button><button class="filter" data-f="damage">Damaged / Destroyed</button><button class="filter" data-f="expired">Expired</button><button class="filter" data-f="expiring">Due ≤180 Days</button><button class="filter" data-f="attention">Needs Review</button><button class="filter" data-f="due">Due This Quarter</button></div><div id="list"></div></section>
 <section id="checks" class="view"><div class="bar"><div><h2>Quarterly Checks</h2><p class="muted">Priority alerts are listed first so the most urgent AEDs can be handled before routine checks.</p></div><div class="actions" style="margin-top:0"><button class="lifecycle-action" id="quarterlyLifecycleEvent">Lifecycle Event</button></div></div><div id="checkPriority"></div><div id="checklist"></div></section>
 <section id="deps" class="view"><div class="deployment-head"><div class="deployment-head-copy"><h2>Deployments</h2><p class="muted">Record use and return-to-service actions.</p></div><div class="deployment-head-actions"><button id="scanDeploySerial">Scan Serial</button><button class="lifecycle-action" id="deploymentLifecycleEvent">Lifecycle Event</button><button class="primary deployment-action" id="newdep">+ Deployment</button></div></div><div class="card deployment-guide" style="margin-bottom:12px"><h3 style="margin-top:0">When to Record an AED Deployment</h3><p style="margin:0 0 8px;line-height:1.45;color:#314b5e"><b>Record a deployment when an AED enters active patient-care use for a suspected cardiac arrest or similar emergency.</b></p><ul style="margin:0;padding-left:20px;color:#314b5e;line-height:1.5"><li>AED powered on for patient care</li><li>Electrode pads applied or used</li><li>Rhythm analysis performed or attempted</li><li>Shock advised or delivered</li><li>AED otherwise used as part of active patient care in the field</li></ul><p style="margin:8px 0 0;color:#314b5e"><b>Record the deployment even if no shock was delivered.</b></p></div><div id="deplist"></div></section>
 <section id="reports" class="view"><div class="bar"><div><h2>Inspection Reports</h2><p class="muted">Export a complete quarterly report or a full-year summary.</p></div></div><div class="card"><div class="grid"><label>Report Year<select id="reportYear"></select></label><label>Quarter<select id="reportQuarter"><option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option></select></label></div><div class="actions"><button class="primary" id="quarterReportBtn">Quarterly Report</button><button id="annualReportBtn">Annual Summary - All Quarters</button></div></div><div class="card"><h3 style="margin-top:0">Overall Report Signature</h3><p class="muted">Required for every official generated report. No witness signature is required.</p><div class="grid"><label>Auditor / Report Preparer<input id="overallSignerName" placeholder="Name"></label><label>Employee Number<input type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" id="overallSignerEmp"  placeholder="Employee #"></label></div><canvas id="overallSigCanvas" class="signature-pad" width="560" height="150" aria-label="Overall report signature pad"></canvas><input type="hidden" id="overallSigData"><div class="actions"><button type="button" class="primary signature-fullscreen-btn" id="overallSigUse">Use Signature</button><button type="button" id="overallSigClear">Clear Signature</button></div></div><div id="reportlist" class="report-list"></div></section>
@@ -1054,8 +1105,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v204';
+const APP_VERSION='v205';
 const APP_CHANGELOG=[
+  {version:'v205',date:'2026-09-29',category:'Inventory / Mobile UX',summary:'Reworked the mobile Inventory action area into a single intentional toolbar.',details:['Scan Serial, Manage Groups, Lifecycle Event and + Add AED now stay together in one balanced four-control row on mobile instead of wrapping into a stacked layout.','All four actions use consistent height, spacing and alignment inside a subtle toolbar container.','The Inventory title and helper text remain cleanly separated above the action rail.','Very narrow phones keep the same one-row action layout with tighter typography rather than stacking controls vertically.']},
   {version:'v204',date:'2026-09-29',category:'Dashboard / Mobile UX',summary:'Made the mobile Home dashboard fit within one phone viewport.',details:['The mobile Home dashboard now fills exactly the space remaining below the app header and navigation, eliminating page-level scrolling on the dashboard.','Quick Actions use a compact balanced 2-by-2 grid with consistent touch targets.','The five dashboard metrics use a compact responsive grid while preserving all existing data.','Expiration Watch and Quarterly Status remain visible side-by-side in the lower dashboard area.','Long Expiration or Quarterly lists scroll inside their own panel instead of making the entire Home dashboard scroll.','Other app sections retain normal page scrolling.']},
   {version:'v203',date:'2026-09-29',category:'App Updates / UX',summary:'Added live in-app banners for app version updates.',details:['While the app is open, a small non-blocking banner now appears when a new app version is detected.','The banner progresses through update found/downloading and installing states without interrupting the user.','After the service worker activates and the app refreshes, a confirmation banner shows the installed app version.','Existing automatic update checks remain in place, including periodic checks and checks when the app returns to the foreground.']},
   {version:'v202',date:'2026-09-29',category:'Inventory / Mobile UX',summary:'Cleaned up AED Inventory filters on mobile.',details:['Reworked the Inventory filter controls into a clean two-column grid on phones.','The All filter spans the full width for a clearer starting state.','Filter buttons now use consistent height, spacing and centered labels instead of uneven wrapping.','Very narrow screens fall back to a single-column filter list for readability.','All existing filter options and behavior are unchanged.']},
