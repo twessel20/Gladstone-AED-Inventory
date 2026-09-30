@@ -1344,8 +1344,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v246';
+const APP_VERSION='v247';
 const APP_CHANGELOG=[
+  {version:'v247',date:'2026-09-29',category:'Navigation / Section Switching',summary:'Removed the unwanted page jump when switching primary app sections.',details:['Inventory, Quarterly, Deployments, Reports, Audit and Updates now switch in place without forcing the browser to scroll down.','Removed the section-change scroll reset introduced during the global consistency pass.','Section transition styling remains, but navigation no longer changes the page position.']},
   {version:'v246',date:'2026-09-29',category:'UI / Global Consistency',summary:'Standardized section sizing, portrait fit, spacing and movement across the application.',details:['Used Inventory as the visual baseline for section headers, spacing, card rhythm and action controls.','Quarterly, Deployments, Reports, Audit Log and Updates now share the same section-header scale and control sizing.','All primary sections are constrained to the portrait viewport and no longer allow side-to-side page movement.','Cards, grids, action rows, tables and controls now reflow or wrap instead of widening the page.','Primary tab changes return to a consistent top-of-section position for predictable navigation.','Added consistent focus, press and short section-entry motion feedback across the app while respecting reduced-motion settings.']},
   {version:'v245',date:'2026-09-29',category:'PDF / Unified Print Standards',summary:'Standardized print settings and cover-page borders across all report workflows.',details:['All PDF engines now use portrait Letter with a 0.25-inch print-safe margin.','Legacy and fallback export paths now use the same high-resolution 2.75× capture profile and PNG rendering as the primary packet engine.','Removed the remaining 0.35-inch legacy print-margin rule.','All packet cover pages now use the same clean borderless page treatment while retaining borders on internal information cards.','Quarterly, annual, individual/group packets, audit/version exports and legacy export paths now follow one print-quality standard.']},
   {version:'v244',date:'2026-09-29',category:'PDF / Print Quality',summary:'Optimized generated report packets for sharp, clean Letter-size printing.',details:['Raised report capture resolution to approximately 300 DPI at final Letter-page size for cleaner text, table rules and signatures.','Standardized a 0.25-inch print-safe margin around generated PDF content.','Moved page numbering farther inside the printable area to reduce clipping risk on office printers.','Preview, Save PDF, Share and Print continue to use the same authoritative generated PDF.']},
@@ -1677,13 +1678,6 @@ function goView(view){
   document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.v===view));
   document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id===view));
   render();
-  if(changed){
-    requestAnimationFrame(()=>{
-      const nav=document.querySelector('nav');
-      const top=nav?nav.offsetTop:0;
-      window.scrollTo({top,behavior:'auto'});
-    });
-  }
 }
 function setInventoryFilter(filter){invFilter=filter;$('search').value='';document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('on',x.dataset.f===filter));inv()}
 window.openInventoryTarget=(id,filter='all')=>{goView('inv');setInventoryFilter(filter);setTimeout(()=>{revealInventoryRow(id);let row=$('row-'+id);if(row)row.scrollIntoView({behavior:'smooth',block:'center'})},80)};
