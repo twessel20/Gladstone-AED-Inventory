@@ -362,16 +362,20 @@ async function shareBlob(blob,filename,title,summary){
   if(!/\.pdf$/i.test(name))name+='.pdf';
   const cleanBlob=new Blob([buffer],{type:'application/pdf'});
   const file=new File([cleanBlob],name,{type:'application/pdf',lastModified:Date.now()});
-  if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-    await navigator.share({title:title||name,text:summary||'',files:[file]});
+  const shareData={files:[file]};
+  if(navigator.share&&navigator.canShare&&navigator.canShare(shareData)){
+    await navigator.share(shareData);
     return;
   }
   if(navigator.share&&!navigator.canShare){
-    try{await navigator.share({title:title||name,text:summary||'',files:[file]});return}catch(e){if(e&&e.name==='AbortError')throw e}
+    try{
+      await navigator.share(shareData);
+      return;
+    }catch(e){
+      if(e&&e.name==='AbortError')throw e;
+    }
   }
-  const u=URL.createObjectURL(cleanBlob);
-  const a=document.createElement('a');a.href=u;a.download=name;a.rel='noopener';document.body.appendChild(a);a.click();a.remove();
-  setTimeout(()=>URL.revokeObjectURL(u),120000)
+  await saveBlob(cleanBlob,name);
 }
 async function shareElement(source,filename,title,summary){return shareBlob(await buildFromElement(source,filename),filename,title,summary)}
 async function shareHtml(html,filename,title,summary){return shareBlob(await buildFromHtml(html,filename),filename,title,summary)}
