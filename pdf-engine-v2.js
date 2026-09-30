@@ -18,7 +18,9 @@ async function waitImages(root){
 
 function prepareClone(source){
   const clone=source.cloneNode(true);
-  clone.removeAttribute('id');
+  if(source.id==='generatedReportSheet')clone.id='generatedReportSheet';
+  else clone.removeAttribute('id');
+  clone.classList.add('pdf-letter-capture');
   clone.querySelectorAll('.report-toolbar,button').forEach(x=>x.remove());
   clone.querySelectorAll('[style*="page-break"],[style*="break-after"],[style*="break-before"]').forEach(x=>{
     x.style.pageBreakAfter='auto';x.style.pageBreakBefore='auto';x.style.breakAfter='auto';x.style.breakBefore='auto';
