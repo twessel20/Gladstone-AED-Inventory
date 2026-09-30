@@ -75,6 +75,27 @@ nav{display:flex;overflow:auto;gap:6px;position:sticky;top:0;z-index:9;backgroun
 }
 
 #dash .actions button:focus-visible{outline:3px solid #8bb6d1;outline-offset:2px}
+#dash>.card:first-child .bar{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,1fr);gap:14px;align-items:center}
+#dash>.card:first-child .actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:0!important}
+#dash>.card:first-child .actions button{width:100%;min-height:46px;display:flex;align-items:center;justify-content:center;text-align:center}
+#dash .stats{grid-template-columns:repeat(5,minmax(0,1fr));align-items:stretch}
+#dash .stat{min-height:92px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;margin-bottom:0}
+#dash .two{grid-template-columns:1fr 1fr;align-items:stretch}
+#dash .two>.card{height:100%;margin-bottom:0}
+@media(max-width:700px){
+  #dash>.card:first-child .bar{grid-template-columns:1fr;gap:10px}
+  #dash>.card:first-child .actions{grid-template-columns:1fr 1fr;gap:8px}
+  #dash>.card:first-child .actions button{min-height:48px;padding:10px 8px}
+  #dash .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  #dash .stat{min-height:82px;padding:12px}
+  #dash .stat:nth-child(5){grid-column:1/-1;align-items:center;text-align:center}
+  #dash .two{grid-template-columns:1fr 1fr;gap:10px}
+  #dash .two>.card{min-width:0}
+}
+@media(max-width:430px){
+  #dash .two{grid-template-columns:1fr}
+}
+
 main{max-width:1050px;margin:auto;padding:16px 12px 50px}.view{display:none}.view.on{display:block}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.card,.item,.stat{background:#fff;border:1px solid var(--l);border-radius:14px;padding:15px;margin-bottom:10px;box-shadow:0 5px 16px #1632470b}.stat.actionable{cursor:pointer;text-align:left;width:100%;font:inherit;color:inherit}.stat.actionable:hover{border-color:#aac4d5;box-shadow:0 7px 20px #16324718}.stat.actionable:focus-visible{outline:3px solid #8bb6d1;outline-offset:2px}.big{font-size:1.8rem;font-weight:850}.muted,.small{color:var(--m);font-size:.88rem}.two{display:grid;grid-template-columns:1.1fr 1fr;gap:10px;margin-top:10px}.row,.top,.bar{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.row{border-top:1px solid #edf1f3;padding:9px 0}.row:first-child{border-top:0}.watch-link{width:100%;background:transparent;border-left:0;border-right:0;border-bottom:0;border-radius:0;text-align:left;font:inherit;color:inherit;cursor:pointer}.watch-link:hover{background:#f8fbfd}.watch-link:focus-visible{outline:3px solid #8bb6d1;outline-offset:2px}.collapse-head{display:flex;align-items:center;justify-content:space-between;width:100%;padding:9px 0;border:0;border-top:1px solid #edf1f3;background:transparent;color:inherit;text-align:left;font:inherit;cursor:pointer}.collapse-head:first-child{border-top:0}.collapse-head:hover{background:#f8fbfd}.collapse-head:focus-visible{outline:3px solid #8bb6d1;outline-offset:2px}.qstatus-list{padding:0 0 6px 10px}.qstatus-list .row{padding:7px 0}.title{font-weight:850}.meta{color:var(--m);font-size:.86rem;margin-top:3px}.pills,.actions,.filters{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}.pill{font-size:.8rem;padding:5px 8px;border-radius:99px;background:#eef3f6}.ok{background:#e9f5ee;color:var(--g)}.warn{background:#fff3db;color:var(--a)}.bad{background:#fdeaea;color:var(--r)}.compact{padding:11px 13px}.compact.oos-row{border:2px solid var(--r);background:#fff7f7;box-shadow:0 5px 18px #a32c2c18}.compact.oos-row .title{color:var(--r)}.compact .top{align-items:center}.compact .details{display:none;padding-top:10px}.aed-comment{margin-top:10px;padding:10px 12px;border:1px solid var(--l);border-radius:10px;background:#f8fbfd}.aed-comment b{display:block;color:var(--n);margin-bottom:4px}.aed-comment .comment-text{white-space:pre-wrap;line-height:1.35;color:var(--ink)}.compact.open .details{display:block}.chev{font-size:1.1rem;color:var(--m)}.filter.on{background:var(--n);color:#fff;border-color:var(--n)}
 .group-block{margin:14px 0}
 .group-banner{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;border:0;border-radius:12px;padding:12px 14px;background:linear-gradient(135deg,var(--n),#1c587f);color:#fff;text-align:left;box-shadow:0 5px 16px #16324718}
@@ -962,8 +983,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v216';
+const APP_VERSION='v217';
 const APP_CHANGELOG=[
+  {version:'v217',date:'2026-09-29',category:'Dashboard / Visual Balance',summary:'Balanced Dashboard actions and data displays without changing the restored scrollable layout.',details:['Quick Actions now use a symmetrical 2-by-2 grid with equal-width, equal-height controls.','Dashboard metric cards use consistent heights and spacing.','Expiration Watch and Quarterly Status use matching column widths and equal-height card treatment where space allows.','On narrow phones, lower data panels stack cleanly while preserving all existing data and scrolling behavior.']},
   {version:'v216',date:'2026-09-29',category:'Dashboard / Rollback',summary:'Restored the earlier scrollable mobile Dashboard behavior from v203.',details:['Removed the later one-screen dashboard body and viewport locking rules.','Dashboard again follows normal mobile document flow and can scroll vertically.','Removed dashboard-specific portrait header/navigation compression while preserving the existing Dashboard data and the later Inventory toolbar improvements.']},
   {version:'v215',date:'2026-09-29',category:'Dashboard / Rollback',summary:'Restored the original mobile Dashboard and app-shell behavior from before the recent portrait-layout changes.',details:['Restored the exact Dashboard/mobile shell implementation that was active at v206 before the latest Dashboard redesign attempts.','Removed the later full-viewport, fixed-shell, visualViewport and safe-area experiments introduced in v207-v214.','Preserved the original Dashboard data displays and interaction model.']},
   {version:'v206',date:'2026-09-29',category:'Dashboard / Portrait Mobile',summary:'Expanded the Home dashboard to use the full portrait mobile viewport.',details:['When Home is open in portrait mobile, the app header and navigation become more compact so more of the screen is dedicated to the dashboard.','The dashboard now runs edge-to-edge across the available content area instead of sitting inside an inset rounded card.','All five status metrics stay on one compact row in portrait mobile while preserving their existing tap behavior and data.','Quick Actions retain large touch targets while the lower Expiration Watch and Quarterly Status panels expand to fill the remaining height.','The portrait-dashboard treatment applies only to Home; other app views keep their normal header and page spacing.']},
