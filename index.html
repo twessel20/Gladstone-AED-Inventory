@@ -309,58 +309,58 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
     flex-direction:column;
   }
   body.dashboard-view>header{
-    min-height:96px;
-    padding:calc(12px + env(safe-area-inset-top)) 12px 12px;
+    min-height:136px;
+    padding:calc(24px + env(safe-area-inset-top)) 16px 24px;
   }
   body.dashboard-view .app-header-inner{
-    gap:10px;
-    align-items:center;
+    gap:14px;
+    align-items:flex-end;
   }
   body.dashboard-view .app-header-logo{
-    width:58px;
-    height:58px;
-    border-radius:9px;
+    width:74px;
+    height:74px;
+    border-radius:10px;
   }
   body.dashboard-view .app-header-copy{
-    padding-top:16px;
-    padding-bottom:0;
+    padding-top:30px;
+    padding-bottom:2px;
   }
   body.dashboard-view .app-header-copy h1{
-    font-size:1.18rem;
-    line-height:1.08;
-    margin:2px 0 4px;
+    font-size:1.48rem;
+    line-height:1.16;
+    margin:3px 0 7px;
   }
   body.dashboard-view .app-header-copy p{
-    font-size:.72rem;
-    line-height:1.15;
+    font-size:.88rem;
+    line-height:1.35;
   }
   body.dashboard-view .k{
-    font-size:.63rem;
-    line-height:1.1;
+    font-size:.72rem;
+    line-height:1.25;
   }
   body.dashboard-view .header-account{
-    top:calc(6px + env(safe-area-inset-top));
-    right:7px;
+    top:calc(10px + env(safe-area-inset-top));
+    right:10px;
   }
   body.dashboard-view .header-account-btn{
-    max-width:150px;
-    min-height:28px;
-    padding:4px 6px;
-    font-size:.68rem;
+    max-width:170px;
+    min-height:0;
+    padding:6px 8px;
+    font-size:.73rem;
   }
-  body.dashboard-view .header-account-name{max-width:120px}
+  body.dashboard-view .header-account-name{max-width:138px}
 
   body.dashboard-view>nav{
-    min-height:44px;
-    padding:4px 5px;
-    gap:4px;
+    min-height:0;
+    padding:8px;
+    gap:6px;
   }
   body.dashboard-view>nav .tab,
   body.dashboard-view>nav>button{
-    min-height:36px;
-    padding:7px 10px;
-    border-radius:8px;
-    font-size:.75rem;
+    min-height:42px;
+    padding:10px 14px;
+    border-radius:9px;
+    font-size:inherit;
   }
 
   body.dashboard-view>main{
@@ -368,29 +368,29 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
     width:100%;
     min-height:0;
     overflow:hidden;
-    padding:0;
-    margin:0;
-    max-width:none;
+    padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+    margin:0 auto;
+    max-width:1050px;
   }
   body.dashboard-view #dash{
     height:100%;
     min-height:0;
     overflow:hidden;
-    border-left:0;
-    border-right:0;
-    border-bottom:0;
+    border:0;
     border-radius:0;
     box-shadow:none;
-    padding:8px 10px calc(7px + env(safe-area-inset-bottom));
+    background:transparent;
+    padding:0;
     gap:7px;
     grid-template-rows:auto auto auto minmax(0,1fr);
   }
   body.dashboard-view #dash>.card:first-child{
-    padding:0 0 7px;
-    border:0;
-    border-bottom:1px solid #e7edf1;
-    border-radius:0;
-    background:transparent;
+    padding:9px 10px;
+    border:1px solid var(--l);
+    border-radius:14px;
+    background:#fff;
+    box-shadow:0 5px 16px #1632470b;
+    margin:0;
   }
   body.dashboard-view #dash>.card:first-child h2{
     font-size:1rem;
@@ -414,11 +414,14 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
     gap:5px;
   }
   body.dashboard-view #dash .stat{
-    min-height:56px;
-    padding:6px 4px;
+    min-height:52px;
+    padding:5px 4px;
     align-items:center;
     text-align:center;
-    border-radius:10px;
+    border-radius:14px;
+    background:#fff;
+    border:1px solid var(--l);
+    box-shadow:0 5px 16px #1632470b;
   }
   body.dashboard-view #dash .stat:nth-child(5){
     grid-column:auto;
@@ -433,10 +436,13 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
     margin-top:3px;
   }
   body.dashboard-view #shockOosCard{
-    max-height:84px;
+    max-height:76px;
     overflow:auto;
-    padding:7px;
-    border-radius:10px;
+    padding:7px 9px;
+    border-radius:14px;
+    background:#fff;
+    border:1px solid var(--l);
+    box-shadow:0 5px 16px #1632470b;
   }
   body.dashboard-view #dash .two{
     grid-template-columns:1fr 1fr;
@@ -444,9 +450,12 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
   }
   body.dashboard-view #dash .two>.card{
     min-height:0;
-    padding:8px;
-    border-radius:10px;
+    padding:8px 9px;
+    border-radius:14px;
     overflow:hidden;
+    background:#fff;
+    border:1px solid var(--l);
+    box-shadow:0 5px 16px #1632470b;
   }
   body.dashboard-view #dash .two>.card h2{
     font-size:.88rem;
@@ -1276,8 +1285,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v208';
+const APP_VERSION='v209';
 const APP_CHANGELOG=[
+  {version:'v209',date:'2026-09-29',category:'Dashboard / Visual Consistency',summary:'Matched the one-screen Dashboard shell to the Inventory experience.',details:['Dashboard now uses the same mobile header sizing and typography as Inventory and the other primary tabs.','Restored the standard navigation height, padding and tab sizing when Dashboard is active.','Removed the dashboard-only white page wrapper so the normal light-gray application background remains visible.','Restored standard white card surfaces, borders, rounded corners and subtle shadows for Quick Actions, status metrics, Out-of-Service alerts, Expiration Watch and Quarterly Status.','Preserved all dashboard data, five status metrics, quick actions, expiration data and quarterly data while retaining the no-page-scroll portrait dashboard.']},
   {version:'v208',date:'2026-09-29',category:'Dashboard / Portrait Mobile',summary:'Restored the one-screen portrait dashboard with better-balanced compression.',details:['Portrait Home is again locked to the visible phone viewport with no page scrolling.','Returned the five status cards to a single row and kept Expiration Watch and Quarterly Status side-by-side.','Reduced wasted spacing while slightly increasing usable card area and button size versus the earlier compressed layout.','Kept lower dashboard panels internally scrollable only when their content exceeds the available card space, so the overall dashboard itself never scrolls.']},
   {version:'v207',date:'2026-09-29',category:'Dashboard / Portrait Mobile',summary:'Opened up the mobile Home dashboard for a roomier portrait layout.',details:['Removed the forced one-screen portrait compression so the dashboard can use natural vertical space.','Changed the five dashboard status cards from a tiny five-across row to larger two-column cards, with Quarterly Checked spanning the full row.','Stacked Expiration Watch and Quarterly Status vertically on portrait phones for easier reading and tapping.','Increased Quick Action button height, card padding, typography and row spacing while keeping the full-width phone layout.','Portrait Home now allows normal page scrolling instead of hiding overflow.']},
   {version:'v206',date:'2026-09-29',category:'Dashboard / Portrait Mobile',summary:'Expanded the Home dashboard to use the full portrait mobile viewport.',details:['When Home is open in portrait mobile, the app header and navigation become more compact so more of the screen is dedicated to the dashboard.','The dashboard now runs edge-to-edge across the available content area instead of sitting inside an inset rounded card.','All five status metrics stay on one compact row in portrait mobile while preserving their existing tap behavior and data.','Quick Actions retain large touch targets while the lower Expiration Watch and Quarterly Status panels expand to fill the remaining height.','The portrait-dashboard treatment applies only to Home; other app views keep their normal header and page spacing.']},
