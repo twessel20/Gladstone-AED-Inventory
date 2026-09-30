@@ -1338,18 +1338,18 @@ window.saveSpecificReport=async(aid,cid)=>{
 }
 window.shareIndividualReport=async(aid,cid)=>{
   let a=db.aeds.find(x=>x.id===aid),ch=a&&(a.checks||[]).find(x=>x.id===cid);if(!a||!ch)return;
-  const title='AED Inspection - '+a.location+' - '+ch.date,filename='aed-inspection-'+a.location.replace(/[^a-z0-9]+/ig,'-').toLowerCase()+'-'+ch.date+'.pdf',summary='Gladstone Fire/EMS AED inspection: '+a.location+', '+fmt(ch.date)+', '+(ch.auditResult||'Inspection complete')+', status '+(ch.status||a.status)+'.';
+  const title='Gladstone Fire/EMS AED Inspection — '+a.location+' — '+fmt(ch.date),filename='gfd-aed-inspection-'+a.location.replace(/[^a-z0-9]+/ig,'-').toLowerCase()+'-'+String(a.serial||'').replace(/[^a-z0-9]+/ig,'-').toLowerCase()+'-'+ch.date+'.pdf',summary='Gladstone Fire/EMS AED inspection: '+a.location+', '+fmt(ch.date)+', '+(ch.auditResult||'Inspection complete')+', status '+(ch.status||a.status)+'.';
   const sheet=visibleReportSheet();if(sheet)return pdfV2().shareElement(sheet,filename,title,summary);
   return sharePdfHtml(buildReportHTML(a,ch),filename,title,summary);
 }
 window.previewQuarterReport=async()=>{const year=Number($('reportYear').value),quarter=Number($('reportQuarter').value),filename='gfd-aed-quarterly-report-q'+quarter+'-'+year+'.pdf',title='Gladstone Fire EMS AED Quarterly Report - Q'+quarter+' '+year,summary='Gladstone Fire/EMS AED quarterly inspection report for Q'+quarter+' '+year+'.';const html=buildUnifiedQuarterPacket(year,quarter);if(html)return pdfV2().previewHtml(html,filename,title,summary)}
 window.printQuarterReport=async()=>{const year=Number($('reportYear').value),quarter=Number($('reportQuarter').value),filename='gfd-aed-quarterly-report-q'+quarter+'-'+year+'.pdf';const html=buildUnifiedQuarterPacket(year,quarter);if(html)return pdfV2().printHtml(html,filename)}
 window.saveQuarterReport=async()=>{const year=Number($('reportYear').value),quarter=Number($('reportQuarter').value),filename='gfd-aed-quarterly-report-q'+quarter+'-'+year+'.pdf';const html=buildUnifiedQuarterPacket(year,quarter);if(html)return pdfV2().saveHtml(html,filename)}
-window.shareQuarterReport=async(year,quarter)=>{const title='Gladstone Fire EMS AED Quarterly Report - Q'+quarter+' '+year,filename='gfd-aed-quarterly-report-q'+quarter+'-'+year+'.pdf',summary='Gladstone Fire/EMS AED quarterly inspection report for Q'+quarter+' '+year+'.';const html=buildUnifiedQuarterPacket(year,quarter);if(html)return pdfV2().shareHtml(html,filename,title,summary)}
+window.shareQuarterReport=async(year,quarter)=>{const title='Gladstone Fire/EMS AED Quarterly Report — Q'+quarter+' '+year,filename='gfd-aed-quarterly-report-q'+quarter+'-'+year+'.pdf',summary='Gladstone Fire/EMS AED quarterly inspection report for Q'+quarter+' '+year+'.';const html=buildUnifiedQuarterPacket(year,quarter);if(html)return pdfV2().shareHtml(html,filename,title,summary)}
 window.previewAnnualReport=async()=>{const year=Number($('reportYear').value),filename='gfd-aed-annual-report-'+year+'.pdf',title='Gladstone Fire EMS AED Annual Program Report - '+year,summary='Gladstone Fire/EMS AED annual program report for '+year+'.';const html=buildUnifiedAnnualPacket(year);if(html)return pdfV2().previewHtml(html,filename,title,summary)}
 window.printAnnualReport=async()=>{const year=Number($('reportYear').value),filename='gfd-aed-annual-report-'+year+'.pdf';const html=buildUnifiedAnnualPacket(year);if(html)return pdfV2().printHtml(html,filename)}
 window.saveAnnualReport=async()=>{const year=Number($('reportYear').value),filename='gfd-aed-annual-report-'+year+'.pdf';const html=buildUnifiedAnnualPacket(year);if(html)return pdfV2().saveHtml(html,filename)}
-window.shareAnnualReport=async(year)=>{const title='Gladstone Fire EMS AED Annual Program Report - '+year,filename='gfd-aed-annual-report-'+year+'.pdf',summary='Gladstone Fire/EMS AED annual program report for '+year+'.';const html=buildUnifiedAnnualPacket(year);if(html)return pdfV2().shareHtml(html,filename,title,summary)}
+window.shareAnnualReport=async(year)=>{const title='Gladstone Fire/EMS AED Annual Program Report — '+year,filename='gfd-aed-annual-report-'+year+'.pdf',summary='Gladstone Fire/EMS AED annual program report for '+year+'.';const html=buildUnifiedAnnualPacket(year);if(html)return pdfV2().shareHtml(html,filename,title,summary)}
 
 function auditExportRange(){
   const scope=$('auditExportScope')?.value||'all',now=new Date(),year=Number($('auditExportYear')?.value||now.getFullYear());
@@ -1364,8 +1364,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v253';
+const APP_VERSION='v254';
 const APP_CHANGELOG=[
+  {version:'v254',date:'2026-09-30',category:'PDF Sharing / Email',summary:'Added descriptive subject metadata to shared and emailed AED PDFs.',details:['PDF share metadata now includes a descriptive report title that mail and supported share targets can use as the email subject.','Quarterly, annual, individual AED, audit-log and version-history exports identify the report type and applicable period or AED in the subject.','Individual AED PDF filenames now include the AED location, serial number and inspection date for clearer attachments.','The share payload still sends the PDF as a true file attachment and does not inject body text, preserving the prior iOS Mail attachment fix.']},
   {version:'v253',date:'2026-09-30',category:'Signatures / Workflow',summary:'Restored Use Signature as an explicit confirmation action without opening full-screen signing.',details:['Use Signature now commits the signature currently drawn in the inline pad.','Use Signature never launches the full-screen signer.','Full Screen Signature remains a separate explicit control.','Added the same explicit Use Signature behavior to the Quarterly auditor signature.']},
   {version:'v252',date:'2026-09-30',category:'Authentication / Signatures',summary:'Auto-filled signed-in user names and stopped Use Signature from opening full-screen signing.',details:['Employee Profile now stores the signed-in user name with the employee number.','Quarterly Inspection and Overall Report Certification auto-fill both name and employee number.','Lifecycle Event documentation auto-fills the signed-in documenter name and employee number.','Use Signature now confirms the inline signature instead of opening the full-screen signer.','Full Screen Signature remains a separate explicit action; witness identity remains manual.']},
   {version:'v251',date:'2026-09-30',category:'Authentication / Employee Profile',summary:'Associated employee numbers with signed-in AED app users for automatic form population.',details:['Added Employee Profile to the signed-in account menu.','Employee number is stored against the authenticated username in the shared AED data so it follows the user after cloud sync.','Quarterly Inspection and Overall Report Certification automatically populate the signed-in user employee number.','Lifecycle Event documentation automatically populates the signed-in documenter employee number while witness employee numbers remain manual.','Employee number validation remains numeric-only.']},
@@ -1560,7 +1561,7 @@ function versionExportHTML(){
 async function previewVersionExport(){return pdfV2().previewHtml(versionExportHTML(),versionExportFilename('pdf'),'AED App Version History',versionRangeLabel())}
 async function saveVersionExport(){return pdfV2().saveHtml(versionExportHTML(),versionExportFilename('pdf'))}
 async function printVersionExport(){return pdfV2().printHtml(versionExportHTML(),versionExportFilename('pdf'))}
-async function shareVersionExport(){return pdfV2().shareHtml(versionExportHTML(),versionExportFilename('pdf'),'Gladstone Fire EMS AED App Version History','Version history: '+versionRangeLabel())}
+async function shareVersionExport(){const label=versionRangeLabel();return pdfV2().shareHtml(versionExportHTML(),versionExportFilename('pdf'),'Gladstone Fire/EMS AED App Version History — '+label,'Version history: '+label)}
 function versionCsvEscape(v){const t=String(v??'');return /[",\r\n]/.test(t)?'"'+t.replace(/"/g,'""')+'"':t}
 function exportVersionCsv(){
   const data=versionExportRows(),headers=['Record Type','Version / Build','Release / Commit Date','Category','Summary','Change Details','Commit SHA'];
@@ -1688,7 +1689,7 @@ function auditExportFilename(){const r=auditExportRange();return 'gfd-aed-audit-
 async function previewAuditExport(){return pdfV2().previewHtml(auditExportHTML(),auditExportFilename(),'AED Audit Log',auditExportRange().label)}
 async function saveAuditExport(){return pdfV2().saveHtml(auditExportHTML(),auditExportFilename())}
 async function printAuditExport(){return pdfV2().printHtml(auditExportHTML(),auditExportFilename())}
-async function shareAuditExport(){return pdfV2().shareHtml(auditExportHTML(),auditExportFilename(),'Gladstone Fire EMS AED Audit Log','Audit log export for '+auditExportRange().label+'.')}
+async function shareAuditExport(){const label=auditExportRange().label;return pdfV2().shareHtml(auditExportHTML(),auditExportFilename(),'Gladstone Fire/EMS AED Audit Log — '+label,'Audit log export for '+label+'.')}
 function syncAuditExportControls(){
   const scope=$('auditExportScope')?.value||'all';
   $('auditYearWrap').style.display=(scope==='quarter'||scope==='year')?'grid':'none';
