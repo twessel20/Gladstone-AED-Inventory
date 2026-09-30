@@ -26,36 +26,40 @@ function daysTo(v){if(!v)return null;const d=new Date(String(v).slice(0,10)+'T12
 function reportHasPediatricPads(a){return !!a&&(String(a.serial||'')==='X17L979521'||a.pedConfig!=='N/A')}
 function components(a){const x=[{name:'Adult pads',date:a.adult},{name:'Battery',date:a.battery}];if(reportHasPediatricPads(a))x.splice(1,0,{name:'Pediatric pads',date:a.ped});return x}
 function healthData(units,year,quarter){
-  let oos=0,retired=0,expired=0,due30=0,due180=0,missing=0,checksComplete=0,deployments=0,shocks=0,issues=[],failures=[];
+  let oos=0,retired=0,expired=0,due30=0,due180=0,missing=0,checksComplete=0,deployments=0,shocks=0,issues=[],failures=[],eligible=0,passing=0;
   units.forEach(a=>{
     const label=a.location+(a.descriptor?' — '+a.descriptor:'');
     const state=String(a.status||'In Service');
     const knownInactive=/removed\s*\/\s*retired|retired|destroyed|beyond repair|end[- ]?of[- ]?life/i.test(state);
+    let unitPass=true;
     if(knownInactive){
       retired++;
     }else{
+      eligible++;
       if(state!=='In Service'){
-        oos++;const msg=label+': '+state;issues.push(msg);failures.push(msg)
+        oos++;unitPass=false;const msg=label+': '+state;issues.push(msg);failures.push(msg)
       }
       components(a).forEach(comp=>{
         const d=daysTo(comp.date);
-        if(d===null){missing++;issues.push(label+': '+comp.name+' expiration not recorded')}
-        else if(d<0){expired++;const msg=label+': '+comp.name+' expired '+dateFmt(comp.date);issues.push(msg);failures.push(msg)}
-        else if(d<=30){due30++;due180++;issues.push(label+': '+comp.name+' expires in '+d+' day'+(d===1?'':'s')+' ('+dateFmt(comp.date)+')')}
-        else if(d<=180){due180++}
+        if(d===null){missing++;unitPass=false;issues.push(label+': '+comp.name+' expiration not recorded')}
+        else if(d<0){expired++;unitPass=false;const msg=label+': '+comp.name+' expired '+dateFmt(comp.date);issues.push(msg);failures.push(msg)}
+        else if(d<=30){due30++;due180++;unitPass=false;issues.push(label+': '+comp.name+' expires in '+d+' day'+(d===1?'':'s')+' ('+dateFmt(comp.date)+')')}
+        else if(d<=180){due180++;unitPass=false;issues.push(label+': '+comp.name+' expires within 180 days ('+dateFmt(comp.date)+')')}
       });
+      if(!periodChecks(a,year,quarter).length){unitPass=false;issues.push(label+': quarterly inspection not complete')}
+      else checksComplete++;
+      if(unitPass)passing++;
     }
-    if(periodChecks(a,year,quarter).length)checksComplete++;
     (a.deps||[]).filter(d=>periodDate(d.date,year,quarter)).forEach(d=>{deployments++;if(d.shock)shocks++})
   });
-  const critical=oos+expired,watch=due30+missing;
-  const health=critical?'CRITICAL FAIL':watch?'GOOD WITH ATTENTION':'GOOD';
-  const healthText=critical
-    ?'Critical readiness failure identified in an AED expected to remain available for service.'
-    :watch
-      ?'Operational AEDs remain serviceable, but one or more items require attention because an expiration is within 30 days or an expiration date is missing.'
-      :'Operational AEDs in this report have no current readiness failures, expired required components, missing expiration dates, or component expirations within the next 30 days.';
-  return {oos,retired,expired,due30,due180,missing,checksComplete,deployments,shocks,issues:[...new Set(issues)],failures:[...new Set(failures)],health,healthText}
+  const healthPct=eligible?Math.round((passing/eligible)*100):100;
+  const health=healthPct===100?'GOOD':healthPct>=90?'NEEDS ATTENTION':'CRITICAL';
+  const healthText=healthPct===100
+    ?'All evaluated AEDs meet current readiness criteria: in service, required components in date, and quarterly inspection complete.'
+    :healthPct>=90
+      ?'Program readiness is below 95% and requires attention. One or more evaluated AEDs do not currently meet all readiness criteria.'
+      :'Program readiness is below 90%. Multiple or significant readiness deficiencies require corrective action.';
+  return {oos,retired,expired,due30,due180,missing,checksComplete,deployments,shocks,issues:[...new Set(issues)],failures:[...new Set(failures)],health,healthPct,eligible,passing,healthText}
 }
 function pageHeaderHTML(title,scope,year,quarter,pageId){
   return '<div class="report-header packet-header"><img src="gfd-patch.jpg" alt="Gladstone Fire EMS"><div class="report-title"><div class="packet-header-kicker">GLADSTONE FIRE / EMS · AED REPORT</div><h1>'+safe(title)+'</h1><p><b>Scope:</b> '+safe(scope)+' · <b>Period:</b> Q'+quarter+' '+year+' · '+safe(quarterDateRange(year,quarter))+'</p><p class="packet-page-id">'+safe(pageId)+'</p></div></div>'
@@ -77,19 +81,19 @@ function coverPage(title,subtitle,scope,year,quarter,count,generated){
 }
 function executiveSummaryPage(units,year,quarter,mode,groupName,title,subtitle,generated){
   const h=healthData(units,year,quarter),scope=mode==='group'?groupName:mode==='individual'?(units[0].location+(units[0].descriptor?' — '+units[0].descriptor:'')):'Selected AEDs',complete=h.checksComplete===units.length;
-  const healthClass=h.health==='CRITICAL FAIL'?'health-attention':'health-good';
+  const healthClass=h.health==='CRITICAL'?'health-critical':h.health==='NEEDS ATTENTION'?'health-attention':'health-good';
   const failureBlock=h.failures.length
     ?'<div class="report-box critical-findings"><h3>Critical Failure Findings</h3><ul>'+h.failures.map(x=>'<li>'+safe(x)+'</li>').join('')+'</ul></div>'
     :'';
   const attentionBlock=h.issues.length
-    ?'<div class="report-box"><h3>'+(h.health==='CRITICAL FAIL'?'Additional Findings / Attention Items':'Attention Items')+'</h3><ul>'+h.issues.slice(0,6).map(x=>'<li>'+safe(x)+'</li>').join('')+(h.issues.length>6?'<li>+'+(h.issues.length-6)+' additional item(s) detailed in this report.</li>':'')+'</ul></div>'
+    ?'<div class="report-box"><h3>'+(h.health==='CRITICAL'?'Additional Findings / Attention Items':'Attention Items')+'</h3><ul>'+h.issues.slice(0,6).map(x=>'<li>'+safe(x)+'</li>').join('')+(h.issues.length>6?'<li>+'+(h.issues.length-6)+' additional item(s) detailed in this report.</li>':'')+'</ul></div>'
     :'<div class="report-box"><h3>Attention Items</h3><p>None identified from the recorded inventory data.</p></div>';
   const split=Math.ceil(units.length/2),left=units.slice(0,split),right=units.slice(split);
   const listCol=(arr,offset)=>'<div class="packet-aed-list-col">'+arr.map((a,i)=>'<div><span class="packet-aed-num">'+(offset+i+1)+'.</span><span class="packet-aed-name"><b>'+safe(a.location)+'</b>'+(a.descriptor?'<span class="packet-aed-desc"> — '+safe(a.descriptor)+'</span>':'')+'</span><span class="packet-aed-serial">'+safe(a.serial)+'</span></div>').join('')+'</div>';
   const included='<div class="report-box packet-included-aeds"><h3>AEDs Included</h3><div class="packet-aed-list">'+listCol(left,0)+listCol(right,split)+'</div></div>';
   return '<section class="packet-page packet-executive-page">'+pageHeaderHTML(title,scope,year,quarter,'Executive Summary & Overall Health')+
     '<div class="exec-summary packet-exec"><h2>Executive Summary</h2><p><b>Scope:</b> '+safe(scope)+' · Q'+quarter+' '+year+' · '+units.length+' AED'+(units.length===1?'':'s')+'</p>'+
-    '<div class="report-grid"><div class="report-box"><h3>Overall Health</h3><div class="health '+healthClass+' packet-health">'+safe(h.health)+'</div><p>'+safe(h.healthText)+'</p></div>'+
+    '<div class="report-grid"><div class="report-box"><h3>Overall Health</h3><div class="health '+healthClass+' packet-health">'+safe(h.health)+' · '+h.healthPct+'%</div><p>'+safe(h.healthText)+'</p></div>'+
     '<div class="report-box"><h3>Quarterly Status</h3><div class="kv"><b>Inspections completed</b><div>'+h.checksComplete+' / '+units.length+'</div></div><div class="kv"><b>Quarter complete</b><div>'+(complete?'Yes':'No')+'</div></div></div></div>'+
     '<div class="report-grid"><div class="report-box"><h3>Readiness</h3><div class="kv"><b>Out of service</b><div>'+h.oos+'</div></div><div class="kv"><b>Retired / end-of-life</b><div>'+h.retired+'</div></div><div class="kv"><b>Expired components</b><div>'+h.expired+'</div></div><div class="kv"><b>Expiration ≤30 days</b><div>'+h.due30+'</div></div><div class="kv"><b>Expiration 31–180 days</b><div>'+Math.max(0,h.due180-h.due30)+'</div></div><div class="kv"><b>Missing expiration dates</b><div>'+h.missing+'</div></div></div>'+
     '<div class="report-box"><h3>Activity This Quarter</h3><div class="kv"><b>Deployments</b><div>'+h.deployments+'</div></div><div class="kv"><b>Shock-delivery events</b><div>'+h.shocks+'</div></div></div></div>'+
