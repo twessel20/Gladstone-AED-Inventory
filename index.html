@@ -587,6 +587,13 @@ if(a.serial==='X11L529144'&&!a.descriptor){a.location='Police Department Records
 if(a.serial==='X11L528791'&&!a.descriptor){a.location='Police Department';a.descriptor='Time Clock Area · Lower Level';migrated=true}
 if(a.serial==='X19D140932'&&!a.descriptor){a.location='Community Center';a.descriptor='Lobby';migrated=true}
 if(a.serial==='X20A241496'&&!a.descriptor){a.location='Community Center';a.descriptor='2nd Floor';migrated=true}
+const FIXED_LOCATION_DESCRIPTORS={
+  'X11L529144':'Upper Level',
+  'X11L528791':'Time Clock Area · Lower Level',
+  'X19D140932':'Lobby',
+  'X20A241496':'2nd Floor'
+};
+if(FIXED_LOCATION_DESCRIPTORS[a.serial]&&a.descriptor!==FIXED_LOCATION_DESCRIPTORS[a.serial]){a.descriptor=FIXED_LOCATION_DESCRIPTORS[a.serial];migrated=true}
 if(a.location==='Atkins-Johnson Farm'&&a.descriptor!=='Behind Desk'){a.descriptor='Behind Desk';migrated=true}
 if(a.location==='Atkins-Johnson Farm'&&a.group!=='Community Center / Parks & Recreation'){a.group='Community Center / Parks & Recreation';migrated=true}
 if(a.serial==='X19D141892'){
@@ -1010,8 +1017,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v220';
+const APP_VERSION='v221';
 const APP_CHANGELOG=[
+  {version:'v221',date:'2026-09-29',category:'AED Locations / Descriptors',summary:'Protected floor and internal-location descriptors when facility addresses are added.',details:['Street addresses remain separate from the AED internal location descriptor.','Police Records retains Upper Level.','Police Department retains Time Clock Area · Lower Level.','Community Center units retain Lobby and 2nd Floor descriptors where applicable.','Map links continue to use the facility street address while inventory views retain the precise in-building location.']},
   {version:'v220',date:'2026-09-29',category:'AED Inventory / Location',summary:'Identified the previously unassigned AED as the Community Center Leisure Pool unit.',details:['Serial X19D141892 is now labeled Leisure Pool.','Assigned it to Community Center / Parks & Recreation.','Added Community Center as the location descriptor.','Applied the Community Center address so View Map opens the correct facility.']},
   {version:'v219',date:'2026-09-29',category:'AED Locations / Maps',summary:'Added verified stationary AED addresses and one-tap map access.',details:['Added an editable Address field to AED records.','Auto-filled verified addresses for Community Center, Outdoor Pool, Linden Square, City Hall/Police locations, Public Works, Gladstone Animal Shelter, Happy Rock East, Water Plant, Atkins-Johnson Farm and AJ Barn.','Police patrol cars remain addressless because their locations are dynamic; Unassigned remains blank.','Inventory search now includes address text.','Stationary AEDs with an address show a View Map button that opens the address in Apple Maps on iPhone.']},
   {version:'v218',date:'2026-09-29',category:'Dashboard / Quarterly Status',summary:'Added completion-based color coding to the Quarterly Checked dashboard metric.',details:['Quarterly Checked is red when fewer than 50% of tracked AEDs are complete.','It turns yellow from 50% through 99% complete.','It turns green only when all tracked AEDs are checked.','The existing completed/total count and tap behavior are unchanged.']},
