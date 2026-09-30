@@ -258,6 +258,9 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
   .signature-block img{max-height:170px}
 }
 .signature-fullscreen-btn{margin-left:4px}
+@media(max-width:700px) and (orientation:portrait){
+  .signature-fullscreen-btn{display:none!important}
+}
 #signatureFullscreenDlg{position:fixed;inset:0;width:100vw;max-width:none;height:100dvh;max-height:none;margin:0;border:0;border-radius:0;padding:0;background:#f4f7f9;overflow:hidden}
 #signatureFullscreenDlg::backdrop{background:#0008}
 .signature-fullscreen-shell{height:100dvh;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:calc(8px + env(safe-area-inset-top)) calc(10px + env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) calc(10px + env(safe-area-inset-left));box-sizing:border-box;overflow:hidden;gap:7px}
@@ -397,12 +400,14 @@ function setupSignatureFullscreen(){
   window.addEventListener('resize',()=>{if(dlg.open)setTimeout(sizeCanvas,60)});
   window.addEventListener('orientationchange',()=>{if(dlg.open)setTimeout(sizeCanvas,180);setTimeout(()=>document.querySelectorAll('canvas.signature-pad').forEach(cv=>{const hiddenId=cv.dataset.signatureDataId;if(hiddenId){const v=$(hiddenId)?.value||'';sizeSignatureCanvasToDisplay(cv,v)}}),260)});
   window.openSignatureFullscreen=(canvasId,dataId,title='Signature')=>{
+    const portraitMobile=window.matchMedia?.('(max-width: 700px) and (orientation: portrait)')?.matches;
+    if(portraitMobile){const inline=$(canvasId);if(inline){inline.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>inline.focus?.(),250)}return}
     fullscreenSignatureTarget={canvasId,dataId};fullscreenSignatureDirty=false;$('signatureFullscreenTitle').textContent=title;
     dlg.showModal();setTimeout(()=>{const r=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.max(800,Math.round(r.width*dpr));canvas.height=Math.max(300,Math.round(r.height*dpr));ctx.lineWidth=4*dpr;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#172838';ctx.clearRect(0,0,canvas.width,canvas.height);const v=$(dataId)?.value||'';if(v){const img=new Image();img.onload=()=>drawSignatureContain(ctx,img,canvas,Math.round(18*dpr));img.src=v}},60)
   };
 }
 function bindSignatureCanvas(canvasId,dataId,clearId){
-  const canvas=$(canvasId),data=$(dataId),clear=$(clearId);if(!canvas||!data)return;canvas.dataset.signatureDataId=dataId;
+  const canvas=$(canvasId),data=$(dataId),clear=$(clearId);if(!canvas||!data)return;canvas.dataset.signatureDataId=dataId;if(!canvas.hasAttribute('tabindex'))canvas.tabIndex=0;
   const ctx=canvas.getContext('2d');ctx.lineWidth=2.2;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#172838';let drawing=false,moved=false;
   const point=e=>{const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*(canvas.width/r.width),y:(e.clientY-r.top)*(canvas.height/r.height)}};
   const start=e=>{drawing=true;moved=false;const p=point(e);ctx.beginPath();ctx.moveTo(p.x,p.y);canvas.setPointerCapture?.(e.pointerId);e.preventDefault()};
@@ -861,8 +866,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v192';
+const APP_VERSION='v193';
 const APP_CHANGELOG=[
+  {version:'v193',date:'2026-09-29',category:'Signatures / Mobile UX',summary:'Kept signature capture inline on portrait phones.',details:['Portrait mobile no longer opens the full-screen signature dialog from Use Signature or Full Screen Signature controls.','The full-screen signature launch controls are hidden in portrait mobile because the inline signature pad is already sized for direct signing.','Landscape mobile retains the full-screen signing workflow where the wider canvas is useful.','Tablet and desktop retain the larger signature-view option.']},
   {version:'v192',date:'2026-09-29',category:'Reports / Program Health',summary:'Excluded retired and disposal-queue AEDs from program health evaluation.',details:['AEDs in terminal lifecycle states are excluded from Good / Needs Review / Critical health scoring.','Exclusion applies to Damage Beyond Repair, End of Life / Retired, Destroyed and Final Disposal lifecycle paths, including units that still temporarily show an Out of Service status while awaiting disposal.','Excluded AEDs remain fully retained in inventory history, lifecycle records and accountability reporting.','Critical health now reflects out-of-service AEDs that are still part of the serviceable fleet, while component expiration and quarterly review calculations use the same health-eligible fleet.']},
   {version:'v191',date:'2026-09-29',category:'Reports / Program Health',summary:'Standardized AED program health terminology and color logic.',details:['Green health status is labeled Good.','Yellow health status is now labeled Needs Review.','Needs Review covers noncritical follow-up such as due-soon components, missing quarterly checks, or inspection issues that do not place the AED out of service.','Red is reserved for Critical conditions such as an out-of-service AED or an expired required component.','Updated the Inventory filter label from Needs Attention to Needs Review for consistent terminology.']},
   {version:'v190',date:'2026-09-29',category:'Quarterly / PDF / Signatures',summary:'Updated quarterly due status, report packet pagination, signature handling and PDF preview controls.',details:['AEDs with no completed/current quarterly check now display Quarterly Due instead of OK, including a clear no-completed-check message.','PDF packets remain portrait and keep AED records atomic: a complete AED may share a page with another complete AED when both fit, but an AED record is never split across pages.','AEDs are kept together by group; every new group starts on a fresh page, blank space at the end of a group is allowed, and report headers repeat throughout the packet.','Fixed the landscape Use Signature workflow so captured signatures preserve their aspect ratio when returned to portrait forms and redraw correctly after orientation changes.','Quarterly and annual reports now use the shared Generated PDF Preview experience used by single/group reports, with Print, Share, Cancel and Close controls at the top and bottom.','Employee-number fields now request the native digits-only keypad with no decimal keyboard while preserving the entered identifier as text.']},
