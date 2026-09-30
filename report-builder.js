@@ -281,23 +281,31 @@ function annualHealthData(units,year){
           if(String(latest.status||state)!=='In Service'){quarterIssue=true}
         }
       }
-      if(completeQuarters<4){unitPass=false;issues.push(label+': '+completeQuarters+'/4 quarterly inspections completed')}
-      if(quarterIssue){unitPass=false;issues.push(label+': one or more quarterly inspections documented issues')}
+      if(year!==2026&&completeQuarters<4){unitPass=false;issues.push(label+': '+completeQuarters+'/4 quarterly inspections completed')}
+      if(year===2026&&completeQuarters<4){issues.push(label+': '+completeQuarters+'/4 quarterly inspections recorded · 2026 implementation-year history may be incomplete')}
+      if(quarterIssue){unitPass=false;issues.push(label+': one or more recorded quarterly inspections documented issues')}
       if(unitPass)passing++;
     }
     (a.deps||[]).filter(d=>String(d.date||'').startsWith(String(year)+'-')).forEach(d=>{deployments++;if(d.shock)shocks++});
   });
   const healthPct=eligible?Math.round((passing/eligible)*100):100;
   const health=healthPct>=95?'GOOD':healthPct>=90?'NEEDS ATTENTION':'CRITICAL';
-  const healthText=healthPct>=95
-    ?(healthPct===100?'All evaluated AEDs meet annual readiness criteria with no identified readiness deficiencies.':'Overall annual readiness remains in the green range at 95% or greater.')
-    :healthPct>=90?'Overall annual readiness is below 95% and requires attention.':'Overall annual readiness is below 90% and requires corrective action.';
+  const healthText=year===2026
+    ?(healthPct>=95
+      ?'2026 is an implementation-year report. The health grade reflects current readiness and recorded 2026 findings; missing pre-implementation quarterly history is not scored as a deficiency.'
+      :healthPct>=90
+        ?'2026 is an implementation-year report. Recorded readiness findings place the program below 95%; missing pre-implementation quarterly history is not scored as a deficiency.'
+        :'2026 is an implementation-year report. Recorded readiness findings place the program below 90%; missing pre-implementation quarterly history is not scored as a deficiency.')
+    :healthPct>=95
+      ?(healthPct===100?'All evaluated AEDs meet annual readiness criteria with no identified readiness deficiencies.':'Overall annual readiness remains in the green range at 95% or greater.')
+      :healthPct>=90?'Overall annual readiness is below 95% and requires attention.':'Overall annual readiness is below 90% and requires corrective action.';
   return {oos,retired,expired,due30,due180,missing,deployments,shocks,issues:[...new Set(issues)],failures:[...new Set(failures)],eligible,passing,healthPct,health,healthText,totalQuarterChecks}
 }
 function annualCoverPage(title,subtitle,scope,year,count,generated){
   return '<section class="packet-page packet-cover-page">'+
     '<div class="packet-cover-hero"><img class="packet-cover-logo" src="gfd-patch.jpg" alt="Gladstone Fire EMS"><div class="packet-kicker">GLADSTONE FIRE / EMS</div><h1>'+safe(title)+'</h1><p class="packet-cover-subtitle">'+safe(subtitle)+'</p><p class="packet-cover-range">'+safe(annualDateRange(year))+'</p></div>'+
     '<div class="packet-cover-body"><p class="packet-cover-description">Annual program report summarizing AED readiness, quarterly inspection completion, component expirations, deployments, status changes and documented return-to-service activity across the full calendar year.</p>'+
+    (year===2026?'<div class="report-box annual-partial-data-note"><h3>2026 Implementation-Year Data Notice</h3><p>This AED system was implemented during 2026. Records from before implementation may not be available in the application. Missing pre-implementation inspections or historical events are treated as unavailable historical data and are not scored as readiness failures. The 2026 annual health grade is based on current readiness and the records actually captured in the system.</p></div>':'')+
     '<div class="report-grid packet-cover-grid"><div class="report-box"><h3>Report Information</h3><div class="kv"><b>Scope</b><div>'+safe(scope)+'</div></div><div class="kv"><b>Reporting Period</b><div>'+year+'</div></div><div class="kv"><b>Date Range</b><div>'+safe(annualDateRange(year))+'</div></div><div class="kv"><b>AEDs Included</b><div>'+count+'</div></div></div>'+
     '<div class="report-box"><h3>Packet Structure</h3><div class="kv"><b>Page 2</b><div>Executive Summary & Annual Health</div></div><div class="kv"><b>Following Pages</b><div>Quarterly performance and AED detail</div></div><div class="kv"><b>Final Report Page</b><div>Certification & Attestation</div></div></div></div></div>'+
     packetFooterHTML(generated)+'</section>'
@@ -314,6 +322,7 @@ function annualExecutiveSummaryPage(units,year,title,scope,generated){
   return '<section class="packet-page packet-executive-page">'+
     '<div class="report-header packet-header"><img src="gfd-patch.jpg" alt="Gladstone Fire EMS"><div class="report-title"><div class="packet-header-kicker">GLADSTONE FIRE / EMS · AED REPORT</div><h1>'+safe(title)+'</h1><p><b>Scope:</b> '+safe(scope)+' · <b>Period:</b> '+year+' · '+safe(annualDateRange(year))+'</p><p class="packet-page-id">Executive Summary & Annual Health</p></div></div>'+
     '<div class="exec-summary packet-exec"><h2>Executive Summary</h2><p><b>Scope:</b> '+safe(scope)+' · '+year+' · '+units.length+' AED'+(units.length===1?'':'s')+'</p>'+
+    (year===2026?'<div class="report-box annual-partial-data-note"><h3>Partial Historical Coverage</h3><p>2026 is the implementation year. Missing pre-implementation quarterly records are excluded from health scoring. Recorded deficiencies, current out-of-service status, expired components, missing required expiration dates, and documented inspection issues still affect the health grade.</p></div>':'')+
     '<div class="report-grid"><div class="report-box"><h3>Overall Health</h3><div class="health '+healthClass+' packet-health">'+safe(h.health)+' · '+h.healthPct+'%</div><p>'+safe(h.healthText)+'</p></div>'+
     '<div class="report-box"><h3>Quarterly Completion</h3>'+quarterRows+'</div></div>'+
     '<div class="report-grid"><div class="report-box"><h3>Readiness</h3><div class="kv"><b>Out of service</b><div>'+h.oos+'</div></div><div class="kv"><b>Retired / end-of-life</b><div>'+h.retired+'</div></div><div class="kv"><b>Expired components</b><div>'+h.expired+'</div></div><div class="kv"><b>Expiration ≤30 days</b><div>'+h.due30+'</div></div><div class="kv"><b>Expiration 31–180 days</b><div>'+Math.max(0,h.due180-h.due30)+'</div></div><div class="kv"><b>Missing expiration dates</b><div>'+h.missing+'</div></div></div>'+
@@ -334,20 +343,27 @@ function annualReportSection(a,year){
   const shocks=deps.filter(d=>d.shock).length;
   const rts=deps.filter(d=>d.rts).length;
   const audit=(db.audit||[]).filter(e=>e.id===a.id&&String(e.time||'').startsWith(String(year)+'-')&&/Status Change|Return|Deployment/i.test(e.type||'')).sort((x,y)=>String(y.time||'').localeCompare(String(x.time||'')));
-  const annualReady=String(a.status||'In Service')==='In Service'&&!hasExpiredComponent(a)&&completed===4&&issueChecks===0&&oosChecks===0;
-  const annualHealth=annualReady?'GOOD':(completed>=3&&String(a.status||'In Service')==='In Service'&&!hasExpiredComponent(a)?'NEEDS ATTENTION':'CRITICAL');
+  const implementationYear=year===2026;
+  const annualReady=String(a.status||'In Service')==='In Service'&&!hasExpiredComponent(a)&&(implementationYear||completed===4)&&issueChecks===0&&oosChecks===0;
+  const annualHealth=annualReady?'GOOD':((implementationYear||completed>=3)&&String(a.status||'In Service')==='In Service'&&!hasExpiredComponent(a)?'NEEDS ATTENTION':'CRITICAL');
   const annualClass=annualHealth==='CRITICAL'?'health-critical':annualHealth==='NEEDS ATTENTION'?'health-attention':'health-good';
   const quarterRows=quarters.map(x=>{
     const ch=x.check;
-    return '<tr><td><b>Q'+x.q+'</b></td><td>'+(ch?dateFmt(ch.date):'<span class="bad">Not completed</span>')+'</td><td>'+(ch?safe(ch.inspector||'N/A')+(ch.employeeNumber?' · #'+safe(ch.employeeNumber):''):'—')+'</td><td>'+(ch?safe(ch.auditResult||ch.status||'Completed'):'—')+'</td><td>'+(ch?safe(ch.notes||'None documented'):'—')+'</td></tr>'
+    return '<tr><td><b>Q'+x.q+'</b></td><td>'+(ch?dateFmt(ch.date):(implementationYear?'<span class="muted">Historical data unavailable</span>':'<span class="bad">Not completed</span>'))+'</td><td>'+(ch?safe(ch.inspector||'N/A')+(ch.employeeNumber?' · #'+safe(ch.employeeNumber):''):'—')+'</td><td>'+(ch?safe(ch.auditResult||ch.status||'Completed'):(implementationYear?'Not scored':'—'))+'</td><td>'+(ch?safe(ch.notes||'None documented'):(implementationYear?'Pre-implementation record may not exist in system':'—'))+'</td></tr>'
   }).join('');
   const depRows=deps.length?deps.map(d=>'<tr><td>'+dateFmt(d.date)+'</td><td>'+safe(d.report||d.agencyReport||'N/A')+'</td><td>'+[(d.shock?'Shock delivered':'No shock'),d.adultPadsUsed?'Adult pads used':'',d.pediatricPadsUsed?'Pediatric pads used':'',d.rts?'Returned to service'+(d.rtsDate?' '+dateFmt(d.rtsDate):''):'',d.notes?safe(d.notes):''].filter(Boolean).join(' · ')+'</td></tr>').join(''):'<tr><td colspan="3">No deployments recorded.</td></tr>';
   const statusRows=audit.length?audit.map(e=>'<tr><td>'+dateFmt(String(e.time||'').slice(0,10))+'</td><td>'+safe(e.type||'Event')+'</td><td>'+safe(e.detail||'')+'</td></tr>').join(''):'<tr><td colspan="3">No status or return-to-service events recorded.</td></tr>';
   const summaryText=annualReady
-    ?'This AED completed all four quarterly inspections without documented inspection issues and is currently in service with required components in date.'
+    ?(implementationYear
+      ?'This AED is currently in service with required components in date and no documented readiness issue in the 2026 records available to this system. Missing pre-implementation quarterly history is not treated as a failure.'
+      :'This AED completed all four quarterly inspections without documented inspection issues and is currently in service with required components in date.')
     :annualHealth==='NEEDS ATTENTION'
-      ?'This AED remained generally serviceable during the year but has one or more annual documentation or readiness items requiring attention.'
-      :'This AED has an annual readiness deficiency because of incomplete quarterly inspections, an out-of-service condition, expired required components, or documented inspection issues.';
+      ?(implementationYear
+        ?'This AED has one or more documented 2026 readiness or inspection items requiring attention. Missing pre-implementation quarterly history is not part of this determination.'
+        :'This AED remained generally serviceable during the year but has one or more annual documentation or readiness items requiring attention.')
+      :(implementationYear
+        ?'This AED has a documented 2026 readiness deficiency based on current status, component condition, or a recorded inspection issue. Missing pre-implementation quarterly history is not the cause of this grade.'
+        :'This AED has an annual readiness deficiency because of incomplete quarterly inspections, an out-of-service condition, expired required components, or documented inspection issues.');
   return '<section class="report-box annual-aed-summary" style="margin:0;break-inside:avoid">'+
     '<div class="annual-aed-head"><div><h2 style="margin:0;color:#123a5a">'+safe(a.location)+(a.descriptor?' — '+safe(a.descriptor):'')+'</h2><p class="muted" style="margin:4px 0 0">Serial: '+safe(a.serial)+' · Group: '+safe(canonicalGroup(a))+'</p></div><div class="health '+annualClass+'">'+safe(annualHealth)+'</div></div>'+
     '<div class="report-grid annual-aed-overview"><div class="report-box"><h3>Year-End Readiness</h3><div class="kv"><b>Current Status</b><div>'+status(a)+'</div></div><div class="kv"><b>Quarterly Checks</b><div>'+completed+' / 4</div></div><div class="kv"><b>Inspections With Issues</b><div>'+issueChecks+'</div></div><div class="kv"><b>Out-of-Service Inspection Statuses</b><div>'+oosChecks+'</div></div></div>'+
