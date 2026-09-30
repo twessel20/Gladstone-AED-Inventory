@@ -195,20 +195,20 @@ async function reportPdfBlob(source,filename){
     await Promise.all(imgs.map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));
 
     const doc=new JsPDF({unit:'in',format:'letter',orientation:'portrait',compress:true});
-    const pageW=8.5,pageH=11,margin=.26,maxW=pageW-margin*2,maxH=pageH-margin*2;
+    const pageW=8.5,pageH=11,margin=.25,maxW=pageW-margin*2,maxH=pageH-margin*2;
 
     for(let i=0;i<pages.length;i++){
       const node=pages[i];
-      const canvas=await capture(node,{scale:2,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:960,width:node.scrollWidth,height:node.scrollHeight});
+      const canvas=await capture(node,{scale:2.75,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:960,width:node.scrollWidth,height:node.scrollHeight});
       const data=canvas.toDataURL('image/jpeg',0.985);
       const aspect=canvas.width/canvas.height;
       let w=maxW,h=w/aspect;
       if(h>maxH){h=maxH;w=h*aspect}
       const x=(pageW-w)/2,y=margin;
       if(i>0)doc.addPage();
-      doc.addImage(data,'JPEG',x,y,w,h,undefined,'FAST');
+      doc.addImage(data,'PNG',x,y,w,h,undefined,'FAST');
       doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(104,123,138);
-      doc.text('Page '+(i+1)+' of '+pages.length,pageW-margin-.72,pageH-.13);
+      doc.text('Page '+(i+1)+' of '+pages.length,pageW-margin-.90,pageH-.30);
     }
 
     const blob=doc.output('blob');
