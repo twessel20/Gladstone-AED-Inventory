@@ -6,12 +6,13 @@ const dateFmt=v=>typeof fmt==='function'?fmt(v):(v||'N/A');
 function allAeds(){return (db?.aeds||[])}
 function tracked(){return allAeds().filter(a=>typeof isInventoryTracked==='function'?isInventoryTracked(a):true)}
 function canonicalGroup(a){
+  if(String(a?.group||'').trim())return String(a.group).trim();
   const serial=String(a?.serial||'');
   if(['X11L528611','X11L529465','X11L528795','X11L529221','X11L529205','X11L528608','X11L528858','X11L528613','X11L528619','X16J868825','X11L528627'].includes(serial))return 'Police Patrol Cars';
   if(['X11L529144','X11L528791','X11L528628','X11L529451','X19D142339'].includes(serial))return 'Police Department / City Hall';
-  if(['X11L528801','X11L528610'].includes(serial))return 'Public Works / Animal Control';
-  if(['X19D140932','X20A241496','X19D140968','X11L529367','X11L528800','X17L979521'].includes(serial))return 'Community Center / Parks & Recreation';
-  return a?.group||a?.location||'Unassigned';
+  if(['X11L528801','X11L528610'].includes(serial))return 'Public Works / Animal Shelter';
+  if(['X19D140932','X20A241496','X19D140968','X11L529367','X11L528800','X17L979521','X19D141892'].includes(serial))return 'Community Center / Parks & Recreation';
+  return a?.location||'Unassigned';
 }
 function groups(){return [...new Set(allAeds().map(canonicalGroup))].sort((a,b)=>a.localeCompare(b))}
 function period(){return {year:Number($id('reportYear')?.value||new Date().getFullYear()),quarter:Number($id('reportQuarter')?.value||1)}}
@@ -220,6 +221,19 @@ async function shareReportPdf(source,filename,title,summary){
   const blob=await reportPdfBlob(source,filename),file=new File([blob],filename,{type:'application/pdf'});if(navigator.share&&(!navigator.canShare||navigator.canShare({files:[file]}))){await navigator.share({title,files:[file],text:summary||title});return}const url=URL.createObjectURL(blob);window.open(url,'_blank');setTimeout(()=>URL.revokeObjectURL(url),120000)
 }
 function reportSection(a,year,quarter){const checks=periodChecks(a,year,quarter),deps=(a.deps||[]).filter(d=>periodDate(d.date,year,quarter)).sort((x,y)=>String(y.date||'').localeCompare(String(x.date||'')));const audit=(db.audit||[]).filter(e=>e.id===a.id&&periodDate(e.time,year,quarter)&&/Status Change|Return|Deployment/i.test(e.type||'')).sort((x,y)=>String(y.time||'').localeCompare(String(x.time||'')));const checkRows=checks.length?checks.map(c=>'<tr><td>'+dateFmt(c.date)+'</td><td>'+safe(c.inspector||'N/A')+(c.employeeNumber?' · #'+safe(c.employeeNumber):'')+'</td><td>'+safe(c.auditResult||c.status||'Completed')+'</td></tr><tr class="inspection-comment-row"><td colspan="3"><b>Inspection Comments:</b> '+safe(c.notes||'None documented')+'</td></tr>').join(''):'<tr><td colspan="3">No quarterly inspection recorded.</td></tr>';const depRows=deps.length?deps.map(d=>'<tr><td>'+dateFmt(d.date)+'</td><td>'+safe(d.report||d.agencyReport||'N/A')+'</td><td>'+(d.shock?'Shock delivered':'No shock')+(d.adultPadsUsed?' · Adult pads used':'')+(d.pediatricPadsUsed?' · Pediatric pads used':'')+(d.rts?' · Returned to service':'')+'</td></tr>').join(''):'<tr><td colspan="3">No deployments recorded.</td></tr>';const auditRows=audit.length?audit.map(e=>'<tr><td>'+dateFmt(String(e.time||'').slice(0,10))+'</td><td>'+safe(e.type)+'</td><td>'+safe(e.detail||'')+'</td></tr>').join(''):'<tr><td colspan="3">No status/return-to-service events recorded.</td></tr>';return '<section class="report-box" style="margin:0 0 18px;break-inside:avoid"><h2 style="margin:0;color:#123a5a">'+safe(a.location)+(a.descriptor?' — '+safe(a.descriptor):'')+'</h2><p class="muted" style="margin:4px 0 12px">Serial: '+safe(a.serial)+' · Group: '+safe(a.group||'Unassigned')+' · Current Status: '+status(a)+'</p><div class="report-grid"><div class="report-box"><h3>Current Components</h3><div class="kv"><b>Adult Pads</b><div>'+dateFmt(a.adult)+'</div></div>'+(reportHasPediatricPads(a)?'<div class="kv"><b>Pediatric Pads</b><div>'+dateFmt(a.ped)+'</div></div>':'')+'<div class="kv"><b>Battery</b><div>'+dateFmt(a.battery)+'</div></div></div><div class="report-box"><h3>Quarterly Inspection</h3><table class="summary-table"><thead><tr><th>Date</th><th>Inspector</th><th>Result</th></tr></thead><tbody>'+checkRows+'</tbody></table></div></div><h3>Deployments</h3><table class="summary-table"><thead><tr><th>Date</th><th>Report #</th><th>Event</th></tr></thead><tbody>'+depRows+'</tbody></table><h3>Status / Return-to-Service History</h3><table class="summary-table"><thead><tr><th>Date</th><th>Event</th><th>Details</th></tr></thead><tbody>'+auditRows+'</tbody></table></section>'}
+function buildQuarterlyPacketMarkup(year,quarter,sig){
+  const units=tracked().slice().sort((a,b)=>canonicalGroup(a).localeCompare(canonicalGroup(b))||String(a.location||'').localeCompare(String(b.location||''))||String(a.descriptor||'').localeCompare(String(b.descriptor||''))||String(a.serial||'').localeCompare(String(b.serial||'')));
+  const title='AED Quarterly Program Report',scope='All Tracked AEDs',subtitle='Gladstone Fire / EMS · Q'+quarter+' '+year,generated='Generated '+new Date().toLocaleString()+'.';
+  const cover=coverPage(title,subtitle,scope,year,quarter,units.length,generated);
+  const exec=executiveSummaryPage(units,year,quarter,'selected','',title,subtitle,generated);
+  const groupedUnits=[];
+  units.forEach(a=>{const group=canonicalGroup(a);let bucket=groupedUnits.find(x=>x.group===group);if(!bucket){bucket={group,items:[]};groupedUnits.push(bucket)}bucket.items.push(a)});
+  const details=groupedUnits.map(bucket=>'<section class="packet-group-source" data-group="'+safe(bucket.group)+'"><div class="packet-group-page-header">'+pageHeaderHTML(title,scope,year,quarter,'AED DETAIL · Group: '+bucket.group)+'</div><div class="packet-group-banner"><span>GROUP</span><b>'+safe(bucket.group)+'</b></div><div class="packet-group-entries">'+bucket.items.map(a=>'<div class="packet-aed-entry" data-aed-id="'+safe(a.id)+'">'+reportSection(a,year,quarter)+'</div>').join('')+'</div><div class="packet-group-page-footer">'+packetFooterHTML(generated)+'</div></section>').join('');
+  const cert='<section class="packet-page packet-cert-page">'+pageHeaderHTML(title,scope,year,quarter,'CERTIFICATION & ATTESTATION · Q'+quarter+' '+year)+'<div class="packet-cert-body">'+(typeof certificationAttestationHTML==='function'?certificationAttestationHTML():'')+(typeof overallSignatureHTML==='function'?overallSignatureHTML(sig):'')+'<p class="packet-cert-note">This certification page marks the end of the certified quarterly report packet.</p></div>'+packetFooterHTML(generated)+'</section>';
+  return '<div class="report-sheet packet-report unified-report-format" id="generatedReportSheet">'+cover+exec+details+cert+'</div>';
+}
+window.GFDAEDReportBuilder=Object.assign(window.GFDAEDReportBuilder||{},{buildQuarterlyPacketMarkup});
+
 function build(){
   const units=choose().slice().sort((a,b)=>canonicalGroup(a).localeCompare(canonicalGroup(b))||String(a.location||'').localeCompare(String(b.location||''))||String(a.descriptor||'').localeCompare(String(b.descriptor||''))||String(a.serial||'').localeCompare(String(b.serial||'')));if(!units.length){alert('Select at least one AED.');return}
   const sig=typeof overallReportSignature==='function'?overallReportSignature(true):null;if(!sig)return;
