@@ -184,7 +184,7 @@ dialog::backdrop{background:#10202d77}
   <div class="lifecycle-step-head"><span class="lifecycle-step-num">3</span><div><div class="lifecycle-step-title">Documented By</div><div class="lifecycle-step-sub">Identify the employee entering the lifecycle record.</div></div></div>
   <div class="grid">
     <label>Name<input id="eventBy" required placeholder="Name" autocomplete="name"></label>
-    <label>Employee Number<input id="eventEmp" type="number" inputmode="numeric" min="0" step="1" required placeholder="Employee #"></label>
+    <label>Employee Number<input type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" id="eventEmp" min="0" step="1" required placeholder="Employee #"></label>
   </div>
 </section>
 
@@ -225,7 +225,7 @@ dialog::backdrop{background:#10202d77}
   <div class="lifecycle-step-head"><span class="lifecycle-step-num">6</span><div><div id="witnessSignatureTitle" class="lifecycle-step-title">Final Disposal Witness</div><div class="lifecycle-step-sub">Required only when the AED is being finally disposed.</div></div></div>
   <div class="grid">
     <label>Witness Name<input id="witnessName" placeholder="Witness name"></label>
-    <label>Witness Employee Number<input id="witnessEmp" type="number" inputmode="numeric" min="0" step="1" placeholder="Employee #"></label>
+    <label>Witness Employee Number<input type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" id="witnessEmp" min="0" step="1" placeholder="Employee #"></label>
   </div>
   <canvas id="witnessSigCanvas" class="signature-pad" style="margin-top:10px"></canvas>
   <input id="witnessSigData" type="hidden">
