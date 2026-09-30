@@ -12,7 +12,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{--n:#123a5a;--b:#1f608e;--bg:#f4f7f9;--ink:#172838;--m:#687b8a;--l:#d9e3ea;--g:#1f754a;--a:#946100;--r:#a32c2c}
-*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);padding-bottom:env(safe-area-inset-bottom)}
+*{box-sizing:border-box}html{margin:0;width:100%;height:100%;background:var(--bg)}body{margin:0;width:100%;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);padding:0}
 header{padding:calc(22px + env(safe-area-inset-top)) 18px 22px;color:#fff;background:linear-gradient(135deg,var(--n),#1c587f);min-height:118px}.app-header-inner{max-width:1050px;margin:auto;display:flex;align-items:center;gap:18px}.app-header-logo{width:82px;height:82px;object-fit:contain;flex:0 0 auto;border-radius:10px;background:#fff;padding:3px;box-shadow:0 3px 10px #0003}.app-header-copy{min-width:0}.app-header-copy h1{margin:2px 0 4px;font-size:1.75rem;line-height:1.12}.app-header-copy p{margin:0;opacity:.92;font-size:.96rem}.k{font-size:.76rem;letter-spacing:.14em;font-weight:800}
 .header-account{margin-left:auto;position:relative;align-self:flex-start;padding-top:2px}
 .header-account-btn{display:inline-flex;align-items:center;gap:6px;max-width:260px;padding:6px 8px;border:1px solid #ffffff33;border-radius:8px;background:#ffffff12;color:#fff;font-size:.78rem;font-weight:650;line-height:1;box-shadow:none}
@@ -86,11 +86,19 @@ main{max-width:1050px;margin:auto;padding:16px 12px 50px}.view{display:none}.vie
 .group-block.collapsed .group-items{display:none}
 input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd7df;border-radius:9px;background:#fff}.search{margin:0 0 10px}.bar{margin-bottom:12px}.bar h2{margin:0}.bar p{margin:3px 0 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}label{display:grid;gap:5px;font-weight:650;font-size:.9rem}textarea{min-height:80px}dialog{width:min(94vw,680px);border:0;border-radius:16px;padding:18px;box-shadow:0 24px 70px #0005}dialog::backdrop{background:#10202d77}.da{display:flex;justify-content:flex-end;gap:7px;margin-top:14px}.check{display:flex;gap:8px;align-items:flex-start;margin-top:10px}.check input{width:auto}.install{background:#eef5fa}.update-banner{display:none;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;background:#fff;border:1px solid var(--l);border-radius:14px;padding:12px 14px;box-shadow:0 12px 36px #10202d33}.update-banner.show{display:flex;justify-content:space-between;align-items:center;gap:12px}.update-banner .text{min-width:0}.update-banner b{display:block;color:var(--n)}
 @media(max-width:700px){
+  html{
+    height:100%;
+    min-height:100dvh;
+    overflow:hidden;
+    background:var(--bg);
+  }
   body{
-    height:100dvh;
+    height:100%;
+    min-height:100dvh;
     overflow:hidden;
     display:flex;
     flex-direction:column;
+    background:var(--bg);
   }
   body>header,
   body>nav{flex:0 0 auto}
@@ -102,12 +110,15 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
     overflow-x:hidden;
     -webkit-overflow-scrolling:touch;
     overscroll-behavior-y:contain;
+    background:var(--bg);
+    padding-bottom:calc(18px + env(safe-area-inset-bottom));
   }
   body.dashboard-view>main{
     overflow:hidden;
     padding:8px 12px calc(8px + env(safe-area-inset-bottom));
     display:flex;
     flex-direction:column;
+    background:var(--bg);
   }
   body.dashboard-view #dash{
     flex:1 1 auto;
@@ -318,7 +329,7 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
     width:100%;
     min-height:0;
     overflow:hidden;
-    padding:8px 12px calc(10px + env(safe-area-inset-bottom));
+    padding:8px 12px calc(8px + env(safe-area-inset-bottom));
     margin:0 auto;
     max-width:1050px;
   }
@@ -1236,8 +1247,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v211';
+const APP_VERSION='v212';
 const APP_CHANGELOG=[
+  {version:'v212',date:'2026-09-29',category:'Mobile Shell / Safe Area',summary:'Removed the persistent bottom gap across the mobile app.',details:['Moved iPhone bottom safe-area handling off the document body and into the shared content viewport.','Explicitly matched the html, body and main viewport backgrounds so the root document cannot show as a separate white band.','Normalized the mobile shell to fill the complete standalone PWA viewport.','Dashboard retains its one-screen portrait layout and now uses the same bottom safe-area treatment as the rest of the app.']},
   {version:'v211',date:'2026-09-29',category:'Dashboard / Portrait Fill',summary:'Made the Dashboard consume the full remaining portrait phone display.',details:['Removed the unused white gap at the bottom of the Dashboard viewport.','Dashboard now flexes to the full height available below the shared header and navigation.','Expiration Watch and Quarterly Status expand vertically to absorb remaining space while preserving all existing data and the one-screen no-page-scroll layout.','Safe-area padding is retained at the bottom for iPhone home-indicator clearance.']},
   {version:'v210',date:'2026-09-29',category:'Navigation / Mobile Shell',summary:'Eliminated the visual viewport jump between Dashboard and the other primary tabs.',details:['All phone tabs now share the same fixed-height application shell, header and navigation geometry.','Inventory, Quarterly, Deployments, Reports, Audit Log, Repository and Updates now scroll inside the same content viewport instead of changing the overall page flow.','Dashboard uses that identical content viewport but keeps its no-page-scroll one-screen presentation.','Removed Dashboard-only header, logo, account control and navigation sizing overrides so app chrome no longer changes when switching tabs.','Preserved all Dashboard metrics, alerts, expiration data, quarterly data and quick actions.']},
   {version:'v209',date:'2026-09-29',category:'Dashboard / Visual Consistency',summary:'Matched the one-screen Dashboard shell to the Inventory experience.',details:['Dashboard now uses the same mobile header sizing and typography as Inventory and the other primary tabs.','Restored the standard navigation height, padding and tab sizing when Dashboard is active.','Removed the dashboard-only white page wrapper so the normal light-gray application background remains visible.','Restored standard white card surfaces, borders, rounded corners and subtle shadows for Quick Actions, status metrics, Out-of-Service alerts, Expiration Watch and Quarterly Status.','Preserved all dashboard data, five status metrics, quick actions, expiration data and quarterly data while retaining the no-page-scroll portrait dashboard.']},
