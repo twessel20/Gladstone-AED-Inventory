@@ -11,7 +11,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-:root{--n:#123a5a;--b:#1f608e;--bg:#f4f7f9;--ink:#172838;--m:#687b8a;--l:#d9e3ea;--g:#1f754a;--a:#946100;--r:#a32c2c}
+:root{--n:#123a5a;--b:#1f608e;--bg:#f4f7f9;--ink:#172838;--m:#687b8a;--l:#d9e3ea;--g:#1f754a;--a:#946100;--r:#a32c2c;--app-height:100dvh}
 *{box-sizing:border-box}html{margin:0;width:100%;height:100%;background:var(--bg)}body{margin:0;width:100%;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);padding:0}
 header{padding:calc(22px + env(safe-area-inset-top)) 18px 22px;color:#fff;background:linear-gradient(135deg,var(--n),#1c587f);min-height:118px}.app-header-inner{max-width:1050px;margin:auto;display:flex;align-items:center;gap:18px}.app-header-logo{width:82px;height:82px;object-fit:contain;flex:0 0 auto;border-radius:10px;background:#fff;padding:3px;box-shadow:0 3px 10px #0003}.app-header-copy{min-width:0}.app-header-copy h1{margin:2px 0 4px;font-size:1.75rem;line-height:1.12}.app-header-copy p{margin:0;opacity:.92;font-size:.96rem}.k{font-size:.76rem;letter-spacing:.14em;font-weight:800}
 .header-account{margin-left:auto;position:relative;align-self:flex-start;padding-top:2px}
@@ -94,9 +94,11 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
   }
   body{
     position:fixed;
-    inset:0;
+    top:0;
+    left:0;
+    right:0;
     width:100%;
-    height:auto;
+    height:var(--app-height);
     min-height:0;
     overflow:hidden;
     display:flex;
@@ -125,8 +127,9 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
   }
   body.dashboard-view #dash{
     flex:1 1 0;
+    width:100%;
     height:100%;
-    min-height:0;
+    min-height:100%;
     display:grid;
     grid-template-rows:auto auto auto minmax(0,1fr);
     gap:8px;
@@ -208,6 +211,7 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
   body.dashboard-view #dash .two{
     min-height:0;
     height:100%;
+    align-self:stretch;
     display:grid;
     grid-template-columns:1fr 1fr;
     grid-auto-rows:1fr;
@@ -1251,8 +1255,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v213';
+const APP_VERSION='v214';
 const APP_CHANGELOG=[
+  {version:'v214',date:'2026-09-29',category:'Mobile Shell / iOS Viewport',summary:'Changed the app to size itself from the actual iOS visual viewport.',details:['Added live visualViewport measurement instead of relying only on CSS viewport units.','The measured phone display height is applied to the entire mobile app shell and updates on resize and orientation changes.','Dashboard explicitly fills the complete shared content viewport so recovered lower-screen space flows into Expiration Watch and Quarterly Status.','This targets the persistent unused lower region visible in the supplied iPhone screenshots.']},
   {version:'v213',date:'2026-09-29',category:'Mobile Shell / Full Viewport',summary:'Pinned the mobile app shell to the full iPhone viewport and expanded Dashboard into the recovered space.',details:['Changed the mobile shell from calculated viewport height to a fixed inset-0 viewport container to eliminate the persistent bottom band seen in Dashboard and Inventory.','Main content now flexes into the complete physical display area beneath the shared header and navigation.','Dashboard remains a one-screen no-page-scroll view but now uses all available portrait height.','Expiration Watch and Quarterly Status stretch into the recovered lower-screen space instead of leaving unused area.','Reduced duplicate bottom padding while preserving iPhone home-indicator safe-area clearance.']},
   {version:'v212',date:'2026-09-29',category:'Mobile Shell / Safe Area',summary:'Removed the persistent bottom gap across the mobile app.',details:['Moved iPhone bottom safe-area handling off the document body and into the shared content viewport.','Explicitly matched the html, body and main viewport backgrounds so the root document cannot show as a separate white band.','Normalized the mobile shell to fill the complete standalone PWA viewport.','Dashboard retains its one-screen portrait layout and now uses the same bottom safe-area treatment as the rest of the app.']},
   {version:'v211',date:'2026-09-29',category:'Dashboard / Portrait Fill',summary:'Made the Dashboard consume the full remaining portrait phone display.',details:['Removed the unused white gap at the bottom of the Dashboard viewport.','Dashboard now flexes to the full height available below the shared header and navigation.','Expiration Watch and Quarterly Status expand vertically to absorb remaining space while preserving all existing data and the one-screen no-page-scroll layout.','Safe-area padding is retained at the bottom for iPhone home-indicator clearance.']},
@@ -1749,6 +1754,19 @@ window.openCheck=id=>{let a=db.aeds.find(x=>x.id==id);checkForm.reset();clearSig
 $('saveCheckDraft').onclick=()=>{let id=$('cid').value,a=db.aeds.find(x=>x.id==id);if(!a)return;a.checkDraft=collectCheckDraft(a);log('Quarterly Inspection Draft',id,'Quarterly inspection draft saved'+(a.checkDraft.inspector?' by '+a.checkDraft.inspector:'')+(a.checkDraft.employeeNumber?' · Employee #'+a.checkDraft.employeeNumber:'' )+'.',a.checkDraft.inspector||'System');checkDlg.close();save()};
 checkForm.onsubmit=e=>{e.preventDefault();if($('auditResult').value==='Issues found'&&!$('notes').value.trim()){$('notes').required=true;$('issueHint').style.display='block';$('notes').focus();return}let id=$('cid').value,a=db.aeds.find(x=>x.id==id),d=dt($('cdate').value),c={id:crypto.randomUUID(),date:$('cdate').value,quarter:q(d),year:d.getFullYear(),inspector:$('insp').value.trim(),employeeNumber:$('inspEmp').value.trim(),ready:$('ready').value,physical:$('phys').value,adult:$('ast').value,ped:$('pst').value,battery:$('bst').value,adultExp:$('checkAdultExp').value,pedExp:!hasPediatricPads(a)?'':$('checkPedExp').value,batteryExp:$('checkBatteryExp').value,accessories:$('acc').value,auditResult:$('auditResult').value,status:$('auditStatus').value,statusDate:$('statusDate').value,statusNotes:$('statusNotes').value.trim(),notes:$('notes').value.trim(),signature:$('auditorSigData').value};if(!c.signature){alert('Auditor signature is required to complete the inspection.');return}a.checks.push(c);a.checkDraft=null;a.adult=c.adultExp;if(hasPediatricPads(a))a.ped=c.pedExp;a.battery=c.batteryExp;let priorStatus=a.status||'In Service';a.status=c.status;if(priorStatus!==c.status){log('AED Status Change',id,'Status changed from '+priorStatus+' to '+c.status+(c.statusNotes?' — '+c.statusNotes:''),c.inspector)}log('Quarterly Inspection',id,'Q'+c.quarter+' '+c.year+' inspection completed. Result: '+c.auditResult+'. Ready: '+c.ready+'. Adult pads: '+c.adult+'; exp '+fmt(c.adultExp)+'. '+(!hasPediatricPads(a)?'Pediatric pads: N/A. ':'Pediatric pads: '+c.ped+'; exp '+fmt(c.pedExp)+'. ')+'Battery: '+c.battery+'; exp '+fmt(c.batteryExp)+'. Status: '+c.status+'. Employee #: '+c.employeeNumber+'.',c.inspector);checkDlg.close();save();openReport(id,c.id)};
 $('newdep').onclick=()=>{depForm.reset();$('ddate').value=today();$('shockPersonFields').style.display='none';$('shockBy').required=false;$('shockCityEmployee').required=false;$('shockPhone').required=false;syncDeploymentPadFields();depDlg.showModal()};depForm.onsubmit=e=>{e.preventDefault();let id=$('daed').value,a=db.aeds.find(x=>x.id==id),shock=$('shock').value==='Yes',adultPadsUsed=shock&&$('adultPadsUsed').checked,pedPadsUsed=shock&&hasPediatricPads(a)&&$('pedPadsUsed').checked;if(shock&&!adultPadsUsed&&!pedPadsUsed){alert('Select which AED pad set was used during the shock.');$('adultPadsUsed').focus();return}let d={date:$('ddate').value,report:$('report').value.trim(),agency:$('agency').value.trim(),agencyReport:$('agencyReport').value.trim(),by:$('dby').value.trim(),shock:shock,shockBy:$('shockBy').value.trim(),shockCityEmployee:$('shockCityEmployee').value,shockPhone:$('shockPhone').value.trim(),shockContact:$('shockContact').value.trim(),padsUsed:adultPadsUsed||pedPadsUsed,adultPadsUsed:adultPadsUsed,pediatricPadsUsed:pedPadsUsed,notes:$('dnotes').value.trim()};a.deps.push(d);if(d.shock){let priorStatus=a.status||'In Service';a.status='Out of Service - Repair';a.comments='Shock delivered. AED remains out of service until pads and battery are replaced with expiration dates documented, the internal AED event report is read/exported, and an operational test is completed.'+(d.notes?' '+d.notes:'');if(priorStatus!==a.status)log('AED Status Change',id,'Status changed from '+priorStatus+' to '+a.status+' — Shock deployment hold. Manual return-to-service workflow required.',d.by)}log('AED Deployment',id,'Deployment recorded'+(d.report?' for report '+d.report:'')+(d.agency?' · Agency: '+d.agency:'')+(d.agencyReport?' · Agency report: '+d.agencyReport:'')+(d.shock?' · Shock delivered: Yes'+(d.shockBy?' · Shock delivered by: '+d.shockBy:'')+(d.shockCityEmployee?' · City employee: '+d.shockCityEmployee:'')+(d.shockPhone?' · Phone: '+d.shockPhone:'')+(d.shockContact?' · Other contact: '+d.shockContact:''):' · Shock delivered: No')+'.',d.by);depDlg.close();save()};
+function syncAppViewportHeight(){
+  const vv=window.visualViewport;
+  const h=Math.round(vv&&vv.height?vv.height:window.innerHeight);
+  if(h>0)document.documentElement.style.setProperty('--app-height',h+'px');
+}
+syncAppViewportHeight();
+window.addEventListener('resize',syncAppViewportHeight,{passive:true});
+window.addEventListener('orientationchange',()=>setTimeout(syncAppViewportHeight,80),{passive:true});
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize',syncAppViewportHeight,{passive:true});
+  window.visualViewport.addEventListener('scroll',syncAppViewportHeight,{passive:true});
+}
+
 if('serviceWorker' in navigator){
   let reloading=false,swReg=null,updateBannerTimer=null;
   const showUpdateBanner=(title,message,duration=3500)=>{
