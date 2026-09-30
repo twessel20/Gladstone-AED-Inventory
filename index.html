@@ -11,8 +11,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-:root{--n:#123a5a;--b:#1f608e;--bg:#f4f7f9;--ink:#172838;--m:#687b8a;--l:#d9e3ea;--g:#1f754a;--a:#946100;--r:#a32c2c;--app-height:100dvh}
-*{box-sizing:border-box}html{margin:0;width:100%;height:100%;background:var(--bg)}body{margin:0;width:100%;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);padding:0}
+:root{--n:#123a5a;--b:#1f608e;--bg:#f4f7f9;--ink:#172838;--m:#687b8a;--l:#d9e3ea;--g:#1f754a;--a:#946100;--r:#a32c2c}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);padding-bottom:env(safe-area-inset-bottom)}
 header{padding:calc(22px + env(safe-area-inset-top)) 18px 22px;color:#fff;background:linear-gradient(135deg,var(--n),#1c587f);min-height:118px}.app-header-inner{max-width:1050px;margin:auto;display:flex;align-items:center;gap:18px}.app-header-logo{width:82px;height:82px;object-fit:contain;flex:0 0 auto;border-radius:10px;background:#fff;padding:3px;box-shadow:0 3px 10px #0003}.app-header-copy{min-width:0}.app-header-copy h1{margin:2px 0 4px;font-size:1.75rem;line-height:1.12}.app-header-copy p{margin:0;opacity:.92;font-size:.96rem}.k{font-size:.76rem;letter-spacing:.14em;font-weight:800}
 .header-account{margin-left:auto;position:relative;align-self:flex-start;padding-top:2px}
 .header-account-btn{display:inline-flex;align-items:center;gap:6px;max-width:260px;padding:6px 8px;border:1px solid #ffffff33;border-radius:8px;background:#ffffff12;color:#fff;font-size:.78rem;font-weight:650;line-height:1;box-shadow:none}
@@ -86,50 +86,24 @@ main{max-width:1050px;margin:auto;padding:16px 12px 50px}.view{display:none}.vie
 .group-block.collapsed .group-items{display:none}
 input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd7df;border-radius:9px;background:#fff}.search{margin:0 0 10px}.bar{margin-bottom:12px}.bar h2{margin:0}.bar p{margin:3px 0 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}label{display:grid;gap:5px;font-weight:650;font-size:.9rem}textarea{min-height:80px}dialog{width:min(94vw,680px);border:0;border-radius:16px;padding:18px;box-shadow:0 24px 70px #0005}dialog::backdrop{background:#10202d77}.da{display:flex;justify-content:flex-end;gap:7px;margin-top:14px}.check{display:flex;gap:8px;align-items:flex-start;margin-top:10px}.check input{width:auto}.install{background:#eef5fa}.update-banner{display:none;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;background:#fff;border:1px solid var(--l);border-radius:14px;padding:12px 14px;box-shadow:0 12px 36px #10202d33}.update-banner.show{display:flex;justify-content:space-between;align-items:center;gap:12px}.update-banner .text{min-width:0}.update-banner b{display:block;color:var(--n)}
 @media(max-width:700px){
-  html{
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    background:var(--bg);
-  }
-  body{
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    width:100%;
-    height:var(--app-height);
-    min-height:0;
+  body.dashboard-view{
+    height:100dvh;
     overflow:hidden;
     display:flex;
     flex-direction:column;
-    background:var(--bg);
   }
-  body>header,
-  body>nav{flex:0 0 auto}
-  body>main{
-    flex:1 1 0;
-    min-height:0;
-    width:100%;
-    overflow-y:auto;
-    overflow-x:hidden;
-    -webkit-overflow-scrolling:touch;
-    overscroll-behavior-y:contain;
-    background:var(--bg);
-    padding-bottom:calc(10px + env(safe-area-inset-bottom));
-  }
+  body.dashboard-view>header,
+  body.dashboard-view>nav{flex:0 0 auto}
   body.dashboard-view>main{
+    flex:1 1 auto;
+    min-height:0;
+    width:100%;
     overflow:hidden;
-    padding:8px 12px calc(6px + env(safe-area-inset-bottom));
-    display:flex;
-    flex-direction:column;
-    background:var(--bg);
+    padding:8px 10px 10px;
   }
   body.dashboard-view #dash{
-    flex:1 1 0;
-    width:100%;
     height:100%;
-    min-height:100%;
+    min-height:0;
     display:grid;
     grid-template-rows:auto auto auto minmax(0,1fr);
     gap:8px;
@@ -210,18 +184,14 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
   body.dashboard-view #shockOosCard .row{padding:5px 0}
   body.dashboard-view #dash .two{
     min-height:0;
-    height:100%;
-    align-self:stretch;
     display:grid;
     grid-template-columns:1fr 1fr;
-    grid-auto-rows:1fr;
     gap:8px;
     margin:0;
   }
   body.dashboard-view #dash .two>.card{
     min-width:0;
     min-height:0;
-    height:100%;
     display:flex;
     flex-direction:column;
     border:1px solid #e7edf1;
@@ -332,122 +302,107 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
   }
 }
 @media(max-width:700px) and (orientation:portrait){
+  body.dashboard-view>header{
+    min-height:96px;
+    padding:calc(12px + env(safe-area-inset-top)) 12px 12px;
+  }
+  body.dashboard-view .app-header-inner{
+    gap:10px;
+    align-items:center;
+  }
+  body.dashboard-view .app-header-logo{
+    width:58px;
+    height:58px;
+    border-radius:9px;
+  }
+  body.dashboard-view .app-header-copy{
+    padding-top:16px;
+    padding-bottom:0;
+  }
+  body.dashboard-view .app-header-copy h1{
+    font-size:1.18rem;
+    line-height:1.08;
+    margin:2px 0 4px;
+  }
+  body.dashboard-view .app-header-copy p{
+    font-size:.72rem;
+    line-height:1.15;
+  }
+  body.dashboard-view .k{
+    font-size:.63rem;
+    line-height:1.1;
+  }
+  body.dashboard-view .header-account{
+    top:calc(6px + env(safe-area-inset-top));
+    right:7px;
+  }
+  body.dashboard-view .header-account-btn{
+    max-width:150px;
+    min-height:28px;
+    padding:4px 6px;
+    font-size:.68rem;
+  }
+  body.dashboard-view .header-account-name{max-width:120px}
+
+  body.dashboard-view>nav{
+    min-height:44px;
+    padding:4px 5px;
+    gap:4px;
+  }
+  body.dashboard-view>nav .tab,
+  body.dashboard-view>nav>button{
+    min-height:36px;
+    padding:7px 10px;
+    border-radius:8px;
+    font-size:.75rem;
+  }
+
   body.dashboard-view>main{
-    flex:1 1 auto;
-    width:100%;
-    min-height:0;
-    overflow:hidden;
-    padding:8px 12px calc(8px + env(safe-area-inset-bottom));
-    margin:0 auto;
-    max-width:1050px;
+    padding:0;
+    margin:0;
+    max-width:none;
   }
   body.dashboard-view #dash{
-    flex:1 1 0;
-    height:100%;
-    min-height:0;
-    overflow:hidden;
-    border:0;
+    border-left:0;
+    border-right:0;
+    border-bottom:0;
     border-radius:0;
     box-shadow:none;
-    background:transparent;
-    padding:0;
-    gap:7px;
-    grid-template-rows:auto auto auto minmax(0,1fr);
+    padding:10px 10px calc(8px + env(safe-area-inset-bottom));
+    gap:8px;
   }
   body.dashboard-view #dash>.card:first-child{
-    padding:9px 10px;
-    border:1px solid var(--l);
-    border-radius:14px;
-    background:#fff;
-    box-shadow:0 5px 16px #1632470b;
-    margin:0;
-  }
-  body.dashboard-view #dash>.card:first-child h2{
-    font-size:1rem;
-  }
-  body.dashboard-view #dash>.card:first-child .muted{
-    font-size:.74rem;
-    line-height:1.18;
-  }
-  body.dashboard-view #dash>.card:first-child .actions{
-    gap:6px;
-    margin-top:6px!important;
+    padding-bottom:9px;
   }
   body.dashboard-view #dash>.card:first-child .actions button{
-    min-height:42px;
-    padding:7px 6px;
-    border-radius:9px;
-    font-size:.8rem;
+    min-height:44px;
+    font-size:.82rem;
   }
   body.dashboard-view #dash .stats{
     grid-template-columns:repeat(5,minmax(0,1fr));
     gap:5px;
   }
   body.dashboard-view #dash .stat{
-    min-height:52px;
-    padding:5px 4px;
+    min-height:58px;
+    padding:7px 4px;
     align-items:center;
     text-align:center;
-    border-radius:14px;
-    background:#fff;
-    border:1px solid var(--l);
-    box-shadow:0 5px 16px #1632470b;
   }
-  body.dashboard-view #dash .stat:nth-child(5){
-    grid-column:auto;
-  }
-  body.dashboard-view #dash .stat .big{
-    font-size:1.16rem;
-    line-height:1;
-  }
+  body.dashboard-view #dash .stat .big{font-size:1.18rem}
   body.dashboard-view #dash .stat .small{
-    font-size:.58rem;
-    line-height:1.02;
-    margin-top:3px;
-  }
-  body.dashboard-view #shockOosCard{
-    max-height:76px;
-    overflow:auto;
-    padding:7px 9px;
-    border-radius:14px;
-    background:#fff;
-    border:1px solid var(--l);
-    box-shadow:0 5px 16px #1632470b;
+    font-size:.59rem;
+    line-height:1.05;
   }
   body.dashboard-view #dash .two{
-    grid-template-columns:1fr 1fr;
     gap:7px;
   }
   body.dashboard-view #dash .two>.card{
-    min-height:0;
-    padding:8px 9px;
-    border-radius:14px;
-    overflow:hidden;
-    background:#fff;
-    border:1px solid var(--l);
-    box-shadow:0 5px 16px #1632470b;
+    padding:9px;
+    border-radius:10px;
   }
   body.dashboard-view #dash .two>.card h2{
-    font-size:.88rem;
-    margin-bottom:5px;
-  }
-  body.dashboard-view #watch,
-  body.dashboard-view #qstatus{
-    min-height:0;
-    overflow:auto;
-  }
-  body.dashboard-view #dash .two>.card .row,
-  body.dashboard-view #dash .two>.card .collapse-head{
-    padding:5px 0;
-    gap:5px;
-  }
-  body.dashboard-view #dash .two>.card .meta,
-  body.dashboard-view #dash .two>.card .small{
-    font-size:.69rem;
-    line-height:1.12;
-  }
-  body.dashboard-view #dash .two>.card b{
-    font-size:.75rem;
+    font-size:.9rem;
+    margin-bottom:6px;
   }
 }
 
@@ -1255,16 +1210,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v214';
+const APP_VERSION='v215';
 const APP_CHANGELOG=[
-  {version:'v214',date:'2026-09-29',category:'Mobile Shell / iOS Viewport',summary:'Changed the app to size itself from the actual iOS visual viewport.',details:['Added live visualViewport measurement instead of relying only on CSS viewport units.','The measured phone display height is applied to the entire mobile app shell and updates on resize and orientation changes.','Dashboard explicitly fills the complete shared content viewport so recovered lower-screen space flows into Expiration Watch and Quarterly Status.','This targets the persistent unused lower region visible in the supplied iPhone screenshots.']},
-  {version:'v213',date:'2026-09-29',category:'Mobile Shell / Full Viewport',summary:'Pinned the mobile app shell to the full iPhone viewport and expanded Dashboard into the recovered space.',details:['Changed the mobile shell from calculated viewport height to a fixed inset-0 viewport container to eliminate the persistent bottom band seen in Dashboard and Inventory.','Main content now flexes into the complete physical display area beneath the shared header and navigation.','Dashboard remains a one-screen no-page-scroll view but now uses all available portrait height.','Expiration Watch and Quarterly Status stretch into the recovered lower-screen space instead of leaving unused area.','Reduced duplicate bottom padding while preserving iPhone home-indicator safe-area clearance.']},
-  {version:'v212',date:'2026-09-29',category:'Mobile Shell / Safe Area',summary:'Removed the persistent bottom gap across the mobile app.',details:['Moved iPhone bottom safe-area handling off the document body and into the shared content viewport.','Explicitly matched the html, body and main viewport backgrounds so the root document cannot show as a separate white band.','Normalized the mobile shell to fill the complete standalone PWA viewport.','Dashboard retains its one-screen portrait layout and now uses the same bottom safe-area treatment as the rest of the app.']},
-  {version:'v211',date:'2026-09-29',category:'Dashboard / Portrait Fill',summary:'Made the Dashboard consume the full remaining portrait phone display.',details:['Removed the unused white gap at the bottom of the Dashboard viewport.','Dashboard now flexes to the full height available below the shared header and navigation.','Expiration Watch and Quarterly Status expand vertically to absorb remaining space while preserving all existing data and the one-screen no-page-scroll layout.','Safe-area padding is retained at the bottom for iPhone home-indicator clearance.']},
-  {version:'v210',date:'2026-09-29',category:'Navigation / Mobile Shell',summary:'Eliminated the visual viewport jump between Dashboard and the other primary tabs.',details:['All phone tabs now share the same fixed-height application shell, header and navigation geometry.','Inventory, Quarterly, Deployments, Reports, Audit Log, Repository and Updates now scroll inside the same content viewport instead of changing the overall page flow.','Dashboard uses that identical content viewport but keeps its no-page-scroll one-screen presentation.','Removed Dashboard-only header, logo, account control and navigation sizing overrides so app chrome no longer changes when switching tabs.','Preserved all Dashboard metrics, alerts, expiration data, quarterly data and quick actions.']},
-  {version:'v209',date:'2026-09-29',category:'Dashboard / Visual Consistency',summary:'Matched the one-screen Dashboard shell to the Inventory experience.',details:['Dashboard now uses the same mobile header sizing and typography as Inventory and the other primary tabs.','Restored the standard navigation height, padding and tab sizing when Dashboard is active.','Removed the dashboard-only white page wrapper so the normal light-gray application background remains visible.','Restored standard white card surfaces, borders, rounded corners and subtle shadows for Quick Actions, status metrics, Out-of-Service alerts, Expiration Watch and Quarterly Status.','Preserved all dashboard data, five status metrics, quick actions, expiration data and quarterly data while retaining the no-page-scroll portrait dashboard.']},
-  {version:'v208',date:'2026-09-29',category:'Dashboard / Portrait Mobile',summary:'Restored the one-screen portrait dashboard with better-balanced compression.',details:['Portrait Home is again locked to the visible phone viewport with no page scrolling.','Returned the five status cards to a single row and kept Expiration Watch and Quarterly Status side-by-side.','Reduced wasted spacing while slightly increasing usable card area and button size versus the earlier compressed layout.','Kept lower dashboard panels internally scrollable only when their content exceeds the available card space, so the overall dashboard itself never scrolls.']},
-  {version:'v207',date:'2026-09-29',category:'Dashboard / Portrait Mobile',summary:'Opened up the mobile Home dashboard for a roomier portrait layout.',details:['Removed the forced one-screen portrait compression so the dashboard can use natural vertical space.','Changed the five dashboard status cards from a tiny five-across row to larger two-column cards, with Quarterly Checked spanning the full row.','Stacked Expiration Watch and Quarterly Status vertically on portrait phones for easier reading and tapping.','Increased Quick Action button height, card padding, typography and row spacing while keeping the full-width phone layout.','Portrait Home now allows normal page scrolling instead of hiding overflow.']},
+  {version:'v215',date:'2026-09-29',category:'Dashboard / Rollback',summary:'Restored the original mobile Dashboard and app-shell behavior from before the recent portrait-layout changes.',details:['Restored the exact Dashboard/mobile shell implementation that was active at v206 before the latest Dashboard redesign attempts.','Removed the later full-viewport, fixed-shell, visualViewport and safe-area experiments introduced in v207-v214.','Preserved the original Dashboard data displays and interaction model.']},
   {version:'v206',date:'2026-09-29',category:'Dashboard / Portrait Mobile',summary:'Expanded the Home dashboard to use the full portrait mobile viewport.',details:['When Home is open in portrait mobile, the app header and navigation become more compact so more of the screen is dedicated to the dashboard.','The dashboard now runs edge-to-edge across the available content area instead of sitting inside an inset rounded card.','All five status metrics stay on one compact row in portrait mobile while preserving their existing tap behavior and data.','Quick Actions retain large touch targets while the lower Expiration Watch and Quarterly Status panels expand to fill the remaining height.','The portrait-dashboard treatment applies only to Home; other app views keep their normal header and page spacing.']},
   {version:'v205',date:'2026-09-29',category:'Inventory / Mobile UX',summary:'Reworked the mobile Inventory action area into a single intentional toolbar.',details:['Scan Serial, Manage Groups, Lifecycle Event and + Add AED now stay together in one balanced four-control row on mobile instead of wrapping into a stacked layout.','All four actions use consistent height, spacing and alignment inside a subtle toolbar container.','The Inventory title and helper text remain cleanly separated above the action rail.','Very narrow phones keep the same one-row action layout with tighter typography rather than stacking controls vertically.']},
   {version:'v204',date:'2026-09-29',category:'Dashboard / Mobile UX',summary:'Made the mobile Home dashboard fit within one phone viewport.',details:['The mobile Home dashboard now fills exactly the space remaining below the app header and navigation, eliminating page-level scrolling on the dashboard.','Quick Actions use a compact balanced 2-by-2 grid with consistent touch targets.','The five dashboard metrics use a compact responsive grid while preserving all existing data.','Expiration Watch and Quarterly Status remain visible side-by-side in the lower dashboard area.','Long Expiration or Quarterly lists scroll inside their own panel instead of making the entire Home dashboard scroll.','Other app sections retain normal page scrolling.']},
@@ -1754,19 +1702,6 @@ window.openCheck=id=>{let a=db.aeds.find(x=>x.id==id);checkForm.reset();clearSig
 $('saveCheckDraft').onclick=()=>{let id=$('cid').value,a=db.aeds.find(x=>x.id==id);if(!a)return;a.checkDraft=collectCheckDraft(a);log('Quarterly Inspection Draft',id,'Quarterly inspection draft saved'+(a.checkDraft.inspector?' by '+a.checkDraft.inspector:'')+(a.checkDraft.employeeNumber?' · Employee #'+a.checkDraft.employeeNumber:'' )+'.',a.checkDraft.inspector||'System');checkDlg.close();save()};
 checkForm.onsubmit=e=>{e.preventDefault();if($('auditResult').value==='Issues found'&&!$('notes').value.trim()){$('notes').required=true;$('issueHint').style.display='block';$('notes').focus();return}let id=$('cid').value,a=db.aeds.find(x=>x.id==id),d=dt($('cdate').value),c={id:crypto.randomUUID(),date:$('cdate').value,quarter:q(d),year:d.getFullYear(),inspector:$('insp').value.trim(),employeeNumber:$('inspEmp').value.trim(),ready:$('ready').value,physical:$('phys').value,adult:$('ast').value,ped:$('pst').value,battery:$('bst').value,adultExp:$('checkAdultExp').value,pedExp:!hasPediatricPads(a)?'':$('checkPedExp').value,batteryExp:$('checkBatteryExp').value,accessories:$('acc').value,auditResult:$('auditResult').value,status:$('auditStatus').value,statusDate:$('statusDate').value,statusNotes:$('statusNotes').value.trim(),notes:$('notes').value.trim(),signature:$('auditorSigData').value};if(!c.signature){alert('Auditor signature is required to complete the inspection.');return}a.checks.push(c);a.checkDraft=null;a.adult=c.adultExp;if(hasPediatricPads(a))a.ped=c.pedExp;a.battery=c.batteryExp;let priorStatus=a.status||'In Service';a.status=c.status;if(priorStatus!==c.status){log('AED Status Change',id,'Status changed from '+priorStatus+' to '+c.status+(c.statusNotes?' — '+c.statusNotes:''),c.inspector)}log('Quarterly Inspection',id,'Q'+c.quarter+' '+c.year+' inspection completed. Result: '+c.auditResult+'. Ready: '+c.ready+'. Adult pads: '+c.adult+'; exp '+fmt(c.adultExp)+'. '+(!hasPediatricPads(a)?'Pediatric pads: N/A. ':'Pediatric pads: '+c.ped+'; exp '+fmt(c.pedExp)+'. ')+'Battery: '+c.battery+'; exp '+fmt(c.batteryExp)+'. Status: '+c.status+'. Employee #: '+c.employeeNumber+'.',c.inspector);checkDlg.close();save();openReport(id,c.id)};
 $('newdep').onclick=()=>{depForm.reset();$('ddate').value=today();$('shockPersonFields').style.display='none';$('shockBy').required=false;$('shockCityEmployee').required=false;$('shockPhone').required=false;syncDeploymentPadFields();depDlg.showModal()};depForm.onsubmit=e=>{e.preventDefault();let id=$('daed').value,a=db.aeds.find(x=>x.id==id),shock=$('shock').value==='Yes',adultPadsUsed=shock&&$('adultPadsUsed').checked,pedPadsUsed=shock&&hasPediatricPads(a)&&$('pedPadsUsed').checked;if(shock&&!adultPadsUsed&&!pedPadsUsed){alert('Select which AED pad set was used during the shock.');$('adultPadsUsed').focus();return}let d={date:$('ddate').value,report:$('report').value.trim(),agency:$('agency').value.trim(),agencyReport:$('agencyReport').value.trim(),by:$('dby').value.trim(),shock:shock,shockBy:$('shockBy').value.trim(),shockCityEmployee:$('shockCityEmployee').value,shockPhone:$('shockPhone').value.trim(),shockContact:$('shockContact').value.trim(),padsUsed:adultPadsUsed||pedPadsUsed,adultPadsUsed:adultPadsUsed,pediatricPadsUsed:pedPadsUsed,notes:$('dnotes').value.trim()};a.deps.push(d);if(d.shock){let priorStatus=a.status||'In Service';a.status='Out of Service - Repair';a.comments='Shock delivered. AED remains out of service until pads and battery are replaced with expiration dates documented, the internal AED event report is read/exported, and an operational test is completed.'+(d.notes?' '+d.notes:'');if(priorStatus!==a.status)log('AED Status Change',id,'Status changed from '+priorStatus+' to '+a.status+' — Shock deployment hold. Manual return-to-service workflow required.',d.by)}log('AED Deployment',id,'Deployment recorded'+(d.report?' for report '+d.report:'')+(d.agency?' · Agency: '+d.agency:'')+(d.agencyReport?' · Agency report: '+d.agencyReport:'')+(d.shock?' · Shock delivered: Yes'+(d.shockBy?' · Shock delivered by: '+d.shockBy:'')+(d.shockCityEmployee?' · City employee: '+d.shockCityEmployee:'')+(d.shockPhone?' · Phone: '+d.shockPhone:'')+(d.shockContact?' · Other contact: '+d.shockContact:''):' · Shock delivered: No')+'.',d.by);depDlg.close();save()};
-function syncAppViewportHeight(){
-  const vv=window.visualViewport;
-  const h=Math.round(vv&&vv.height?vv.height:window.innerHeight);
-  if(h>0)document.documentElement.style.setProperty('--app-height',h+'px');
-}
-syncAppViewportHeight();
-window.addEventListener('resize',syncAppViewportHeight,{passive:true});
-window.addEventListener('orientationchange',()=>setTimeout(syncAppViewportHeight,80),{passive:true});
-if(window.visualViewport){
-  window.visualViewport.addEventListener('resize',syncAppViewportHeight,{passive:true});
-  window.visualViewport.addEventListener('scroll',syncAppViewportHeight,{passive:true});
-}
-
 if('serviceWorker' in navigator){
   let reloading=false,swReg=null,updateBannerTimer=null;
   const showUpdateBanner=(title,message,duration=3500)=>{
