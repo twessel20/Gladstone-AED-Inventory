@@ -174,3 +174,21 @@
 #generatedReportSheet.annual-report-format .annual-quarter-table td:nth-child(4){width:20%!important}
 #generatedReportSheet.annual-report-format .annual-quarter-table th:nth-child(5),
 #generatedReportSheet.annual-report-format .annual-quarter-table td:nth-child(5){width:35%!important}
+
+/* v98: implementation-year transparency notice. */
+#generatedReportSheet .annual-partial-data-note{
+  border:1px solid #c9d8e4!important;
+  border-left:5px solid #55788f!important;
+  background:#f6f9fb!important;
+  color:#314b5e!important;
+  margin:8px 0 12px!important;
+}
+#generatedReportSheet .annual-partial-data-note h3{
+  color:#31566f!important;
+  margin:0 0 5px!important;
+}
+#generatedReportSheet .annual-partial-data-note p{
+  margin:0!important;
+  font-size:11px!important;
+  line-height:1.4!important;
+}
