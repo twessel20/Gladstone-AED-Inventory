@@ -2,6 +2,9 @@
 'use strict';
 
 const LETTER={w:8.5,h:11};
+const PRINT_MARGIN=.25;
+const PRINT_CAPTURE_SCALE=2.75;
+const PAGE_NUMBER_Y=10.70;
 const PREVIEW_ID='pdfPreviewDlg';
 const renderCache=new WeakMap();
 const previewPages=new WeakMap();
@@ -97,7 +100,7 @@ async function buildFromElement(source,filename='aed-report.pdf'){
 
     const doc=new JsPDF({unit:'in',format:'letter',orientation:'portrait',compress:true});
     const previewImages=[];
-    const margin=.18,maxW=LETTER.w-margin*2,maxH=LETTER.h-margin*2;
+    const margin=PRINT_MARGIN,maxW=LETTER.w-margin*2,maxH=LETTER.h-margin*2;
     // Build logical group packet pages before PDF capture.
     // Each AED entry is atomic: never split an AED record across pages.
     // New groups always begin on a fresh page; headers/footers repeat on every group page.
@@ -167,7 +170,7 @@ async function buildFromElement(source,filename='aed-report.pdf'){
     const safeOnePage=forceOnePage||fitScale>=.72;
 
     if(safeOnePage){
-      const full=await capture(clone,{scale:2.5,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:clone.scrollWidth,height:clone.scrollHeight,imageTimeout:15000});
+      const full=await capture(clone,{scale:PRINT_CAPTURE_SCALE,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:clone.scrollWidth,height:clone.scrollHeight,imageTimeout:15000});
       if(!full.width||!full.height)throw new Error('The report could not be captured.');
       const img=full.toDataURL('image/png');
       previewImages.push(img);
@@ -176,7 +179,7 @@ async function buildFromElement(source,filename='aed-report.pdf'){
       const x=(LETTER.w-w)/2,y=(LETTER.h-h)/2;
       doc.addImage(img,'PNG',x,y,w,h,undefined,'FAST');
       doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(104,123,138);
-      doc.text('Page 1 of 1',7.28,10.83);
+      doc.text('Page 1 of 1',7.10,PAGE_NUMBER_Y);
       full.width=1;full.height=1;
     }else{
       const explicit=[...clone.children].filter(x=>x.classList?.contains('packet-page'));
@@ -195,7 +198,7 @@ async function buildFromElement(source,filename='aed-report.pdf'){
           const page=explicit[i];
           const captureHeight=Math.max(page.scrollHeight,page.offsetHeight,page.clientHeight,1);
           const captureWidth=Math.max(page.scrollWidth,page.offsetWidth,page.clientWidth,1);
-          const canvas=await capture(page,{scale:2.5,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:captureWidth,height:captureHeight,imageTimeout:15000});
+          const canvas=await capture(page,{scale:PRINT_CAPTURE_SCALE,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:captureWidth,height:captureHeight,imageTimeout:15000});
           if(!canvas.width||!canvas.height)throw new Error('A report page could not be captured.');
           const img=canvas.toDataURL('image/png');
           previewImages.push(img);
@@ -205,11 +208,11 @@ async function buildFromElement(source,filename='aed-report.pdf'){
           if(i)doc.addPage('letter','portrait');
           doc.addImage(img,'PNG',x,y,w,h,undefined,'FAST');
           doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(104,123,138);
-          doc.text('Page '+(i+1)+' of '+explicit.length,7.28,10.83);
+          doc.text('Page '+(i+1)+' of '+explicit.length,7.10,PAGE_NUMBER_Y);
           canvas.width=1;canvas.height=1;
         }
       }else{
-        const full=await capture(clone,{scale:2.5,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:clone.scrollWidth,height:clone.scrollHeight,imageTimeout:15000});
+        const full=await capture(clone,{scale:PRINT_CAPTURE_SCALE,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:clone.scrollWidth,height:clone.scrollHeight,imageTimeout:15000});
         if(!full.width||!full.height)throw new Error('The report could not be captured.');
         const cssPageHeight=Math.floor(width*(LETTER.h/LETTER.w)*0.94);
         const candidatesCss=breakCandidates(clone);
@@ -226,7 +229,7 @@ async function buildFromElement(source,filename='aed-report.pdf'){
           if(i)doc.addPage();
           doc.addImage(img,'PNG',x,y,w,h,undefined,'FAST');
           doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(104,123,138);
-          doc.text('Page '+(i+1)+' of '+slices.length,7.28,10.83);
+          doc.text('Page '+(i+1)+' of '+slices.length,7.10,PAGE_NUMBER_Y);
           part.width=1;part.height=1;
         }
         full.width=1;full.height=1;
