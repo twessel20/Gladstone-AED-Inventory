@@ -36,3 +36,52 @@
  #generatedReportSheet .kv{gap:8px!important}
 }
 @media print{@page{size:letter portrait;margin:.35in}body{background:#fff!important}#generatedReportSheet{width:7.8in!important;max-width:7.8in!important;margin:0!important;padding:0!important}#generatedReportSheet .report-grid{grid-template-columns:1fr 1fr!important}#generatedReportSheet .report-toolbar{display:none!important}}
+
+/* v94: strict portrait packet pagination and group delineation */
+#generatedReportSheet .packet-page{
+  break-after:page!important;
+  page-break-after:always!important;
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+}
+#generatedReportSheet .packet-aed-page{
+  width:100%!important;
+  min-height:0!important;
+  height:auto!important;
+  overflow:visible!important;
+}
+#generatedReportSheet .packet-aed-page .packet-header,
+#generatedReportSheet .packet-aed-page .report-header{
+  display:flex!important;
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+}
+#generatedReportSheet .packet-group-banner{
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  margin:0 0 12px!important;
+  padding:9px 12px!important;
+  border:1px solid #9db8cb!important;
+  border-left:6px solid #123a5a!important;
+  border-radius:8px!important;
+  background:#eef5fa!important;
+  color:#123a5a!important;
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+}
+#generatedReportSheet .packet-group-banner span{
+  font-size:9px!important;
+  letter-spacing:.13em!important;
+  font-weight:800!important;
+  color:#1f608e!important;
+}
+#generatedReportSheet .packet-group-banner b{
+  font-size:15px!important;
+  line-height:1.2!important;
+}
+@media print{
+  @page{size:letter portrait;margin:.35in}
+  #generatedReportSheet .packet-page{break-after:page!important;page-break-after:always!important}
+  #generatedReportSheet .packet-aed-page{break-inside:avoid!important;page-break-inside:avoid!important}
+}
