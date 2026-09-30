@@ -569,7 +569,7 @@ function inv(){
 
   const buckets={};
   arr.forEach(a=>{
-    const g=a.group||a.location||'Unassigned';
+    const g=isInventoryTracked(a)?(a.group||a.location||'Unassigned'):'Inactive AEDs';
     if(!buckets[g])buckets[g]=[];
     buckets[g].push(a);
   });
@@ -580,6 +580,9 @@ function inv(){
     return ua.rank-ub.rank||ua.days-ub.days||(groupOrder[a.serial]??999)-(groupOrder[b.serial]??999)||a.location.localeCompare(b.location,undefined,{numeric:true})||(a.descriptor||'').localeCompare(b.descriptor||'');
   }));
   const groups=Object.keys(buckets).sort((a,b)=>{
+    const aInactive=a==='Inactive AEDs',bInactive=b==='Inactive AEDs';
+    if(aInactive&&!bInactive)return 1;
+    if(bInactive&&!aInactive)return -1;
     const aUnassigned=a.trim().toLowerCase()==='unassigned';
     const bUnassigned=b.trim().toLowerCase()==='unassigned';
     if(aUnassigned&&!bUnassigned)return 1;
@@ -593,20 +596,19 @@ function inv(){
     const key='group-'+g.replace(/[^a-z0-9]+/gi,'-').toLowerCase();
     const collapsed=!expandedGroupKeys.has(key);
     const items=buckets[g];
-    const serviceItems=items.filter(isInventoryTracked);
-    const retiredItems=items.filter(a=>!isInventoryTracked(a));
-    const attn=serviceItems.filter(a=>needsAttention(a)).length;
-    const oos=serviceItems.filter(isOutOfService).length;
-    const due=serviceItems.filter(a=>!cur(a)).length;
-    const gu=groupUrgency(serviceItems);
-    const urgencyPill=gu.rank===0?'<span class="group-banner-pill bad">Immediate: Out of Service</span>':gu.rank===1?'<span class="group-banner-pill bad">Immediate: Expired</span>':gu.rank===2?'<span class="group-banner-pill alert">Next Expiration: '+gu.days+'d</span>':gu.rank===3?'<span class="group-banner-pill due">Action: Quarterly Due</span>':'';
-    const bannerPills='<div class="group-banner-pills">'+urgencyPill+
+    const inactiveGroup=g==='Inactive AEDs';
+    const attn=inactiveGroup?0:items.filter(a=>needsAttention(a)).length;
+    const oos=inactiveGroup?0:items.filter(isOutOfService).length;
+    const due=inactiveGroup?0:items.filter(a=>!cur(a)).length;
+    const gu=inactiveGroup?{rank:99,days:Infinity,label:'Inactive'}:groupUrgency(items);
+    const urgencyPill=inactiveGroup?'':gu.rank===0?'<span class="group-banner-pill bad">Immediate: Out of Service</span>':gu.rank===1?'<span class="group-banner-pill bad">Immediate: Expired</span>':gu.rank===2?'<span class="group-banner-pill alert">Next Expiration: '+gu.days+'d</span>':gu.rank===3?'<span class="group-banner-pill due">Action: Quarterly Due</span>':'';
+    const bannerPills=inactiveGroup?'':(
+      '<div class="group-banner-pills">'+urgencyPill+
       (oos?'<span class="group-banner-pill bad">'+oos+' Out of Service</span>':'')+
       (attn?'<span class="group-banner-pill alert">'+attn+' Needs Review</span>':'')+
       (due?'<span class="group-banner-pill due">'+due+' Quarterly Due</span>':'')+
-      (retiredItems.length?'<span class="group-banner-pill">'+retiredItems.length+' Retired / Disposal</span>':'')+
-      (!oos&&!attn&&!due&&serviceItems.length?'<span class="group-banner-pill ok">All Clear</span>':'')+
-      '</div>';
+      (!oos&&!attn&&!due?'<span class="group-banner-pill ok">All Clear</span>':'')+
+      '</div>');
     html+='<div class="group-block'+(collapsed?' collapsed':'')+'" id="'+key+'">'+
       '<button type="button" class="group-banner" onclick="toggleGroup(\''+key+'\')">'+
         '<div><div class="group-name">'+esc(g)+'</div><div class="group-count">'+items.length+' AED'+(items.length===1?'':'s')+'</div>'+bannerPills+'</div>'+
@@ -885,8 +887,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v200';
+const APP_VERSION='v201';
 const APP_CHANGELOG=[
+  {version:'v201',date:'2026-09-29',category:'Inventory / Grouping',summary:'Returned retired/disposal AEDs to the separate inactive section.',details:['Car 100 is again removed from the active Police Patrol Cars group because it is retired/beyond repair and placed for disposal.','Active patrol-car AEDs remain grouped together and continue to use the existing need/urgency sorting logic.','The Inactive AEDs section remains separate and is listed after active inventory groups.']},
   {version:'v200',date:'2026-09-29',category:'Inventory / Grouping',summary:'Restored urgency ordering while keeping patrol cars together.',details:['Restored the existing need/urgency sorting logic inside inventory groups.','Police Patrol Cars remain together as one logical group, including retired/disposal Car 100.','Urgent, out-of-service, expiration and quarterly-due logic can still move higher-need AEDs toward the top without splitting patrol cars into a separate inactive group.']},
   {version:'v199',date:'2026-09-29',category:'Inventory / Grouping',summary:'Kept patrol-car AEDs together in logical car-number order.',details:['Police Patrol Cars now remain in Car 100, Car 101, Car 102 and onward numeric order instead of being reordered by urgency.','Retired or disposal-queue patrol-car AEDs remain inside the Police Patrol Cars group instead of being moved to a separate Inactive AEDs section.','Warnings and status indicators still appear on each AED row and in the group summary without breaking the logical vehicle sequence.','Retired/disposal units remain excluded from operational fleet health calculations.']},
   {version:'v198',date:'2026-09-29',category:'Deployments / Layout',summary:'Balanced the Deployments page header and action buttons.',details:['Aligned the Deployments title/description and action controls into a dedicated balanced header layout.','Scan Serial, Lifecycle Event and + Deployment now use equal-height, equal-width controls on larger screens.','On smaller phones the controls wrap symmetrically, with + Deployment spanning the full row for a cleaner mobile layout.','No deployment data or guidance content was removed.']},
