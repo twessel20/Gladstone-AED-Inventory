@@ -192,3 +192,21 @@
   font-size:11px!important;
   line-height:1.4!important;
 }
+
+/* v99: formal 2026 implementation readiness attestation. */
+#generatedReportSheet .annual-implementation-attestation{
+  border:1px solid #9fb9ca!important;
+  border-left:5px solid #123a5a!important;
+  background:#f8fbfd!important;
+  margin:0 0 18px!important;
+  padding:14px 16px!important;
+}
+#generatedReportSheet .annual-implementation-attestation h3{
+  color:#123a5a!important;
+  margin:0 0 7px!important;
+}
+#generatedReportSheet .annual-implementation-attestation p{
+  margin:0!important;
+  font-size:11px!important;
+  line-height:1.48!important;
+}
