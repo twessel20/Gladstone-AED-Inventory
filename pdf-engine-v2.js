@@ -411,7 +411,7 @@ async function shareBlob(blob,filename,title,summary){
     setTimeout(()=>URL.revokeObjectURL(u),300000);
     return;
   }
-  const shareData={files:[file]};
+  const shareData={files:[file]};if(title)shareData.title=String(title);
   if(navigator.share&&navigator.canShare&&navigator.canShare(shareData)){
     await navigator.share(shareData);
     return;
