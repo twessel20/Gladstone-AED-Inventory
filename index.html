@@ -575,13 +575,9 @@ function inv(){
   });
 
   const groupOrder={'X19D140932':1,'X20A241496':2,'X19D140968':3,'X11L529367':4};
-  Object.entries(buckets).forEach(([group,items])=>items.sort((a,b)=>{
-    if(group==='Police Patrol Cars'){
-      const carNum=x=>{const m=String(x.location||'').match(/\bCar\s*(\d+)/i);return m?Number(m[1]):Number.MAX_SAFE_INTEGER};
-      return carNum(a)-carNum(b)||a.location.localeCompare(b.location,undefined,{numeric:true})||(a.descriptor||'').localeCompare(b.descriptor||'');
-    }
+  Object.values(buckets).forEach(items=>items.sort((a,b)=>{
     const ua=aedUrgency(a),ub=aedUrgency(b);
-    return ua.rank-ub.rank||ua.days-ub.days||(groupOrder[a.serial]??999)-(groupOrder[b.serial]??999)||a.location.localeCompare(b.location)||(a.descriptor||'').localeCompare(b.descriptor||'');
+    return ua.rank-ub.rank||ua.days-ub.days||(groupOrder[a.serial]??999)-(groupOrder[b.serial]??999)||a.location.localeCompare(b.location,undefined,{numeric:true})||(a.descriptor||'').localeCompare(b.descriptor||'');
   }));
   const groups=Object.keys(buckets).sort((a,b)=>{
     const aUnassigned=a.trim().toLowerCase()==='unassigned';
@@ -889,8 +885,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v199';
+const APP_VERSION='v200';
 const APP_CHANGELOG=[
+  {version:'v200',date:'2026-09-29',category:'Inventory / Grouping',summary:'Restored urgency ordering while keeping patrol cars together.',details:['Restored the existing need/urgency sorting logic inside inventory groups.','Police Patrol Cars remain together as one logical group, including retired/disposal Car 100.','Urgent, out-of-service, expiration and quarterly-due logic can still move higher-need AEDs toward the top without splitting patrol cars into a separate inactive group.']},
   {version:'v199',date:'2026-09-29',category:'Inventory / Grouping',summary:'Kept patrol-car AEDs together in logical car-number order.',details:['Police Patrol Cars now remain in Car 100, Car 101, Car 102 and onward numeric order instead of being reordered by urgency.','Retired or disposal-queue patrol-car AEDs remain inside the Police Patrol Cars group instead of being moved to a separate Inactive AEDs section.','Warnings and status indicators still appear on each AED row and in the group summary without breaking the logical vehicle sequence.','Retired/disposal units remain excluded from operational fleet health calculations.']},
   {version:'v198',date:'2026-09-29',category:'Deployments / Layout',summary:'Balanced the Deployments page header and action buttons.',details:['Aligned the Deployments title/description and action controls into a dedicated balanced header layout.','Scan Serial, Lifecycle Event and + Deployment now use equal-height, equal-width controls on larger screens.','On smaller phones the controls wrap symmetrically, with + Deployment spanning the full row for a cleaner mobile layout.','No deployment data or guidance content was removed.']},
   {version:'v197',date:'2026-09-29',category:'Dashboard / Mobile Header',summary:'Improved spacing in the mobile app header without removing information.',details:['Increased vertical breathing room in the top header on phones.','Kept the Gladstone Fire / EMS label, AED Inventory & Quarterly Audit title, descriptive subtitle, logo and account control unchanged.','Adjusted logo size, title line height and spacing so the header no longer feels compressed while preserving the same data.']},
