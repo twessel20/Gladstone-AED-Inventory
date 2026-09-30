@@ -88,6 +88,30 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
   .compact .meta{overflow-wrap:anywhere}
   .compact .top>div:last-child{display:flex;align-items:flex-start;gap:4px;white-space:nowrap}
   .compact .pill{max-width:150px;white-space:normal;text-align:center;line-height:1.15}
+
+  #inv .filters{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+    margin:10px 0 14px;
+  }
+  #inv .filters .filter{
+    width:100%;
+    min-height:42px;
+    padding:9px 10px;
+    margin:0;
+    border-radius:10px;
+    line-height:1.15;
+    white-space:normal;
+    text-align:center;
+  }
+  #inv .filters .filter[data-f="all"]{
+    grid-column:1/-1;
+  }
+}
+@media(max-width:390px){
+  #inv .filters{grid-template-columns:1fr}
+  #inv .filters .filter[data-f="all"]{grid-column:auto}
 }
 
 .brand-patch{display:none}
@@ -887,8 +911,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v201';
+const APP_VERSION='v202';
 const APP_CHANGELOG=[
+  {version:'v202',date:'2026-09-29',category:'Inventory / Mobile UX',summary:'Cleaned up AED Inventory filters on mobile.',details:['Reworked the Inventory filter controls into a clean two-column grid on phones.','The All filter spans the full width for a clearer starting state.','Filter buttons now use consistent height, spacing and centered labels instead of uneven wrapping.','Very narrow screens fall back to a single-column filter list for readability.','All existing filter options and behavior are unchanged.']},
   {version:'v201',date:'2026-09-29',category:'Inventory / Grouping',summary:'Returned retired/disposal AEDs to the separate inactive section.',details:['Car 100 is again removed from the active Police Patrol Cars group because it is retired/beyond repair and placed for disposal.','Active patrol-car AEDs remain grouped together and continue to use the existing need/urgency sorting logic.','The Inactive AEDs section remains separate and is listed after active inventory groups.']},
   {version:'v200',date:'2026-09-29',category:'Inventory / Grouping',summary:'Restored urgency ordering while keeping patrol cars together.',details:['Restored the existing need/urgency sorting logic inside inventory groups.','Police Patrol Cars remain together as one logical group, including retired/disposal Car 100.','Urgent, out-of-service, expiration and quarterly-due logic can still move higher-need AEDs toward the top without splitting patrol cars into a separate inactive group.']},
   {version:'v199',date:'2026-09-29',category:'Inventory / Grouping',summary:'Kept patrol-car AEDs together in logical car-number order.',details:['Police Patrol Cars now remain in Car 100, Car 101, Car 102 and onward numeric order instead of being reordered by urgency.','Retired or disposal-queue patrol-car AEDs remain inside the Police Patrol Cars group instead of being moved to a separate Inactive AEDs section.','Warnings and status indicators still appear on each AED row and in the group summary without breaking the logical vehicle sequence.','Retired/disposal units remain excluded from operational fleet health calculations.']},
