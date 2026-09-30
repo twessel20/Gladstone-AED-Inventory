@@ -116,25 +116,29 @@ async function buildFromElement(source,filename='aed-report.pdf'){
     }else{
       const explicit=[...clone.children].filter(x=>x.classList?.contains('packet-page'));
       if(explicit.length){
-        const targetRatio=maxH/maxW;
         explicit.forEach(page=>{
           const pageWidth=Math.max(1,page.getBoundingClientRect().width||page.scrollWidth||width);
           page.style.boxSizing='border-box';
           page.style.width=pageWidth+'px';
           page.style.minHeight='0';
-          page.style.height=Math.floor(pageWidth*targetRatio)+'px';
-          page.style.maxHeight=Math.floor(pageWidth*targetRatio)+'px';
-          page.style.overflow='hidden';
+          page.style.height='auto';
+          page.style.maxHeight='none';
+          page.style.overflow='visible';
         });
         await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
         for(let i=0;i<explicit.length;i++){
           const page=explicit[i];
-          const canvas=await capture(page,{scale:2.5,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:page.clientWidth,height:page.clientHeight,imageTimeout:15000});
+          const captureHeight=Math.max(page.scrollHeight,page.offsetHeight,page.clientHeight,1);
+          const captureWidth=Math.max(page.scrollWidth,page.offsetWidth,page.clientWidth,1);
+          const canvas=await capture(page,{scale:2.5,useCORS:true,allowTaint:true,backgroundColor:'#ffffff',logging:false,scrollX:0,scrollY:0,windowWidth:width,width:captureWidth,height:captureHeight,imageTimeout:15000});
           if(!canvas.width||!canvas.height)throw new Error('A report page could not be captured.');
           const img=canvas.toDataURL('image/png');
           previewImages.push(img);
-          if(i)doc.addPage();
-          doc.addImage(img,'PNG',margin,margin,maxW,maxH,undefined,'FAST');
+          let w=maxW,h=w*(canvas.height/canvas.width);
+          if(h>maxH){h=maxH;w=h*(canvas.width/canvas.height)}
+          const x=(LETTER.w-w)/2,y=(LETTER.h-h)/2;
+          if(i)doc.addPage('letter','portrait');
+          doc.addImage(img,'PNG',x,y,w,h,undefined,'FAST');
           doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(104,123,138);
           doc.text('Page '+(i+1)+' of '+explicit.length,7.28,10.83);
           canvas.width=1;canvas.height=1;
