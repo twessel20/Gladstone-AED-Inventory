@@ -359,11 +359,50 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
   #checkDlg .da{position:sticky;bottom:0;z-index:3;background:#fff;padding:10px 0 calc(4px + env(safe-area-inset-bottom));margin-top:14px;border-top:1px solid var(--l)}
 }
 @media(max-width:600px) and (orientation:portrait){
-  dialog#checkDlg{width:100vw;max-width:none;max-height:100vh;height:100vh;margin:0;border-radius:0;padding:14px}
+  dialog#checkDlg{
+    position:fixed;
+    inset:0;
+    width:100%;
+    max-width:100%;
+    height:100%;
+    max-height:100%;
+    margin:0;
+    border-radius:0;
+    padding:14px;
+    overflow-y:auto;
+    overflow-x:hidden;
+  }
+  #checkDlg form{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    overflow-x:hidden;
+  }
+  #checkDlg form>*,
+  #checkDlg .grid,
+  #checkDlg .card,
+  #checkDlg label,
+  #checkDlg .actions,
+  #checkDlg .da{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+  }
+  #checkDlg .grid{grid-template-columns:minmax(0,1fr)}
+  #checkDlg input,
+  #checkDlg select,
+  #checkDlg textarea,
+  #checkDlg button{
+    max-width:100%;
+    min-width:0;
+  }
+  #checkDlg select{
+    text-overflow:ellipsis;
+  }
   #checkDlg h2{margin-top:2px}
   #checkDlg .da{display:grid;grid-template-columns:1fr;gap:8px}
   #checkDlg .da button{width:100%}
-  #checkDlg .signature-pad{height:240px}
+  #checkDlg .signature-pad{width:100%;max-width:100%;height:240px}
 }
 
 @media(max-width:950px) and (orientation:landscape){
@@ -1035,8 +1074,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v225';
+const APP_VERSION='v226';
 const APP_CHANGELOG=[
+  {version:'v226',date:'2026-09-29',category:'Quarterly Inspection / Mobile',summary:'Fixed Quarterly Check form width on portrait phones.',details:['Quarterly Inspection is hard-clamped to the phone viewport width in portrait.','Horizontal overflow is disabled so iOS no longer scales the form down to fit oversized content.','All form sections, fields, buttons, cards, and signature canvas are constrained to 100% of the available width.','The form remains single-column and vertically scrollable at normal zoom.']},
   {version:'v225',date:'2026-09-29',category:'AED Locations / Cloud Sync',summary:'Fixed stationary AED addresses being blank after secure cloud sync.',details:['Verified address defaults are now applied after cloud inventory loads, not only during initial local startup.','Blank stationary addresses are populated automatically and the corrected records are synced back to the shared inventory.','Verified addresses now behave as defaults only, so a manually edited address is preserved instead of being overwritten.','Mobile patrol-car AEDs remain without fixed addresses.']},
   {version:'v224',date:'2026-09-29',category:'AED Inventory / Grouping',summary:'Made AED group names editable directly from Inventory.',details:['Added an Edit Name control to each active group header.','Renaming a group updates every AED currently assigned to that group in one step.','If the new name matches an existing group, the app offers to merge the AEDs into that group.','Individual AED locations, descriptors, addresses, inspections, and history remain unchanged.']},
   {version:'v223',date:'2026-09-29',category:'AED Inventory / Grouping',summary:'Renamed the Public Works group to Public Works / Animal Shelter.',details:['Updated the group label throughout the app.','Existing Public Works and Animal Control AED records are migrated automatically to Public Works / Animal Shelter.','Individual AED names, descriptors, and addresses remain unchanged.']},
