@@ -392,17 +392,17 @@ function setupSignatureFullscreen(){
     octx.drawImage(source,minX,minY,cropW,cropH,dx,dy,drawW,drawH);
     return out.toDataURL('image/png');
   };
-  const commitSignature=()=>{if(!fullscreenSignatureTarget)return;const data=normalizedSignatureData(canvas);if(!data)return alert('Please add a signature before using it.');const hidden=$(fullscreenSignatureTarget.dataId);if(hidden)hidden.value=data;restoreSignatureCanvas(fullscreenSignatureTarget.canvasId,fullscreenSignatureTarget.dataId,data);dlg.close()};use.onclick=commitSignature;if(useTop)useTop.onclick=commitSignature;
+  const commitSignature=()=>{if(!fullscreenSignatureTarget)return;const target={...fullscreenSignatureTarget};const data=normalizedSignatureData(canvas);if(!data)return alert('Please add a signature before using it.');const hidden=$(target.dataId);if(hidden)hidden.value=data;dlg.close();requestAnimationFrame(()=>requestAnimationFrame(()=>restoreSignatureCanvas(target.canvasId,target.dataId,data)))};use.onclick=commitSignature;if(useTop)useTop.onclick=commitSignature;
   dlg.addEventListener('close',()=>{fullscreenSignatureTarget=null;fullscreenSignatureDirty=false});
   window.addEventListener('resize',()=>{if(dlg.open)setTimeout(sizeCanvas,60)});
-  window.addEventListener('orientationchange',()=>{if(dlg.open)setTimeout(sizeCanvas,180)});
+  window.addEventListener('orientationchange',()=>{if(dlg.open)setTimeout(sizeCanvas,180);setTimeout(()=>document.querySelectorAll('canvas.signature-pad').forEach(cv=>{const hiddenId=cv.dataset.signatureDataId;if(hiddenId){const v=$(hiddenId)?.value||'';sizeSignatureCanvasToDisplay(cv,v)}}),260)});
   window.openSignatureFullscreen=(canvasId,dataId,title='Signature')=>{
     fullscreenSignatureTarget={canvasId,dataId};fullscreenSignatureDirty=false;$('signatureFullscreenTitle').textContent=title;
     dlg.showModal();setTimeout(()=>{const r=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.max(800,Math.round(r.width*dpr));canvas.height=Math.max(300,Math.round(r.height*dpr));ctx.lineWidth=4*dpr;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#172838';ctx.clearRect(0,0,canvas.width,canvas.height);const v=$(dataId)?.value||'';if(v){const img=new Image();img.onload=()=>drawSignatureContain(ctx,img,canvas,Math.round(18*dpr));img.src=v}},60)
   };
 }
 function bindSignatureCanvas(canvasId,dataId,clearId){
-  const canvas=$(canvasId),data=$(dataId),clear=$(clearId);if(!canvas||!data)return;
+  const canvas=$(canvasId),data=$(dataId),clear=$(clearId);if(!canvas||!data)return;canvas.dataset.signatureDataId=dataId;
   const ctx=canvas.getContext('2d');ctx.lineWidth=2.2;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#172838';let drawing=false,moved=false;
   const point=e=>{const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*(canvas.width/r.width),y:(e.clientY-r.top)*(canvas.height/r.height)}};
   const start=e=>{drawing=true;moved=false;const p=point(e);ctx.beginPath();ctx.moveTo(p.x,p.y);canvas.setPointerCapture?.(e.pointerId);e.preventDefault()};
@@ -410,6 +410,7 @@ function bindSignatureCanvas(canvasId,dataId,clearId){
   const end=e=>{if(!drawing)return;drawing=false;if(moved)data.value=canvas.toDataURL('image/png');e.preventDefault()};
   canvas.addEventListener('pointerdown',start);canvas.addEventListener('pointermove',move);canvas.addEventListener('pointerup',end);canvas.addEventListener('pointercancel',end);
   if(clear)clear.addEventListener('click',()=>clearSignatureCanvas(canvasId,dataId));
+  requestAnimationFrame(()=>sizeSignatureCanvasToDisplay(canvas,data.value||''));
   setupSignatureFullscreen();
   if(clear&&clear.parentElement&&!clear.parentElement.querySelector('.signature-fullscreen-btn')){
     const full=document.createElement('button');full.type='button';full.className='signature-fullscreen-btn';full.textContent='Full Screen Signature';
@@ -417,8 +418,18 @@ function bindSignatureCanvas(canvasId,dataId,clearId){
     clear.parentElement.appendChild(full);
   }
 }
+function sizeSignatureCanvasToDisplay(canvas,preserveData=''){
+  if(!canvas)return;
+  const r=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);
+  if(r.width<20||r.height<20)return;
+  const targetW=Math.max(320,Math.round(r.width*dpr)),targetH=Math.max(140,Math.round(r.height*dpr));
+  if(canvas.width===targetW&&canvas.height===targetH)return;
+  canvas.width=targetW;canvas.height=targetH;
+  const ctx=canvas.getContext('2d');ctx.lineWidth=2.2*dpr;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#172838';
+  if(preserveData){const img=new Image();img.onload=()=>drawSignatureContain(ctx,img,canvas,Math.round(8*dpr));img.src=preserveData}
+}
 function clearSignatureCanvas(canvasId,dataId){const canvas=$(canvasId),data=$(dataId);if(canvas){const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height)}if(data)data.value=''}
-function restoreSignatureCanvas(canvasId,dataId,value){clearSignatureCanvas(canvasId,dataId);if(!value)return;const canvas=$(canvasId),data=$(dataId);if(!canvas||!data)return;data.value=value;const img=new Image();img.onload=()=>{const ctx=canvas.getContext('2d');drawSignatureContain(ctx,img,canvas,8)};img.src=value}
+function restoreSignatureCanvas(canvasId,dataId,value){const canvas=$(canvasId),data=$(dataId);if(!canvas||!data)return;data.value=value||'';requestAnimationFrame(()=>{sizeSignatureCanvasToDisplay(canvas,value||'');if(!value){const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height)}})}
 function hasPediatricPads(a){return !!a&&(String(a.serial||'')==='X17L979521'||a.pedConfig!=='N/A')}
 function collectCheckDraft(a){return{savedAt:new Date().toISOString(),date:$('cdate').value,inspector:$('insp').value.trim(),employeeNumber:$('inspEmp').value.trim(),ready:$('ready').value,physical:$('phys').value,adult:$('ast').value,ped:$('pst').value,battery:$('bst').value,adultExp:$('checkAdultExp').value,pedExp:!hasPediatricPads(a)?'':$('checkPedExp').value,batteryExp:$('checkBatteryExp').value,accessories:$('acc').value,auditResult:$('auditResult').value,status:$('auditStatus').value,statusDate:$('statusDate').value,statusNotes:$('statusNotes').value.trim(),notes:$('notes').value.trim(),signature:$('auditorSigData').value}}
 function applyCheckDraft(a,d){if(!d)return false;$('cdate').value=d.date||today();$('insp').value=d.inspector||'';$('inspEmp').value=d.employeeNumber||'';$('ready').value=d.ready||'Pass';$('phys').value=d.physical||'Pass';$('ast').value=d.adult||'Present / In Date';$('pst').value=!hasPediatricPads(a)?'N/A':(d.ped||'Present / In Date');$('bst').value=d.battery||'Present / In Date';$('checkAdultExp').value=d.adultExp||a.adult||'';$('checkPedExp').value=!hasPediatricPads(a)?'':(d.pedExp||a.ped||'');$('checkBatteryExp').value=d.batteryExp||(a.battery||'').slice(0,7);$('acc').value=d.accessories||'Complete';$('auditResult').value=d.auditResult||'No issues found - Working properly';$('auditStatus').value=d.status||a.status||'In Service';$('statusDate').value=d.statusDate||today();$('statusNotes').value=d.statusNotes||'';$('notes').value=d.notes||'';let issues=$('auditResult').value==='Issues found';$('notes').required=issues;$('issueHint').style.display=issues?'block':'none';setTimeout(()=>restoreSignatureCanvas('auditorSigCanvas','auditorSigData',d.signature||''),0);return true}
