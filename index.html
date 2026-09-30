@@ -764,18 +764,18 @@ function executiveSummaryHTML(year,quarter=null){
   oos.forEach(e=>{const r=e.reason||'Reason not documented';reasonCounts[r]=(reasonCounts[r]||0)+1});
   const reasonText=Object.entries(reasonCounts).sort((a,b)=>b[1]-a[1]).map(([r,n])=>n+' × '+esc(r)).join('; ')||'None documented during this period';
 
-  const fleetPct=healthFleet.length?Math.round((active.length/healthFleet.length)*100):0;
-  const criticalUnits=healthFleet.filter(isOutOfService).length;
-  const quarterMissing=quarter==null?0:healthFleet.filter(a=>isActive(a)&&!latestQuarterCheck(a,year,quarter)).length;
-  const quarterIssues=quarter==null?0:healthFleet.filter(a=>{const ch=latestQuarterCheck(a,year,quarter);return !!ch&&ch.auditResult==='Issues found'&&!isOutOfService(a)}).length;
-  const reviewItems=due+quarterMissing+quarterIssues;
-  const healthState=(criticalUnits||expired)?{label:'Critical',cls:'health-critical'}:reviewItems?{label:'Needs Review',cls:'health-review'}:{label:'Good',cls:'health-good'};
-  let statement='The Gladstone Fire / EMS AED program health evaluation includes '+healthFleet.length+' serviceable/fleet AED'+(healthFleet.length===1?'':'s')+', with '+active.length+' currently in service ('+fleetPct+'%). ';
+  const evalQuarter=quarter==null?(Number(year)===new Date().getFullYear()?q():4):Number(quarter);
+  const operationalFleet=healthFleet.filter(a=>isActive(a)&&!hasExpiredComponent(a)&&!!latestQuarterCheck(a,year,evalQuarter));
+  const operationalPct=healthFleet.length?Math.round((operationalFleet.length/healthFleet.length)*100):100;
+  const nonOperational=healthFleet.filter(a=>!operationalFleet.includes(a));
+  const healthState=operationalPct<90?{label:'Needs Review',cls:'health-review'}:{label:'Good',cls:'health-good'};
+  let statement='The Gladstone Fire / EMS AED program health evaluation includes '+healthFleet.length+' serviceable/fleet AED'+(healthFleet.length===1?'':'s')+'. '+operationalFleet.length+' meet the operational health criteria for Q'+evalQuarter+' '+year+' ('+operationalPct+'%). ';
+  if(nonOperational.length)statement+=nonOperational.length+' AED'+(nonOperational.length===1?' does':'s do')+' not currently meet the operational health criteria because of an out-of-service status, an expired required component, or a missing quarterly check. ';
   if(excludedHealth.length)statement+=excludedHealth.length+' retired or disposal-queue AED'+(excludedHealth.length===1?' is':'s are')+' excluded from the health evaluation and retained only for accountability/history. ';
   if(expired===0&&due===0){
-    statement+='No active-device component expirations are currently overdue or due within the next 180 days. ';
+    statement+='No evaluated-fleet component expirations are currently overdue or due within the next 180 days. ';
   }else{
-    statement+=(expired?expired+' active-device component expiration'+(expired===1?' is':'s are')+' overdue. ':'')+
+    statement+=(expired?expired+' evaluated-fleet component expiration'+(expired===1?' is':'s are')+' overdue. ':'')+
       (due?due+' component expiration'+(due===1?' is':'s are')+' due within the next 180 days. ':'');
   }
   statement+='During '+period+', '+dep.length+' AED deployment'+(dep.length===1?' was':'s were')+' documented';
@@ -799,7 +799,8 @@ function executiveSummaryHTML(year,quarter=null){
     '<div style="margin:0 0 12px"><span class="health '+healthState.cls+'"><b>'+healthState.label+'</b></span></div>'+
     '<p class="exec-statement">'+statement+'</p>'+
     '<div class="exec-metrics">'+
-      '<span class="exec-metric"><b>'+active.length+'</b>Active AEDs</span>'+
+      '<span class="exec-metric"><b>'+operationalPct+'%</b>Operational Fleet</span>'+
+      '<span class="exec-metric"><b>'+active.length+'</b>In-Service AEDs</span>'+
       '<span class="exec-metric"><b>'+inactive.length+'</b>Inactive AEDs</span>'+
       '<span class="exec-metric"><b>'+dep.length+'</b>Deployments</span>'+
       '<span class="exec-metric"><b>'+shocks+'</b>Shock Deliveries</span>'+
@@ -866,8 +867,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v193';
+const APP_VERSION='v194';
 const APP_CHANGELOG=[
+  {version:'v194',date:'2026-09-29',category:'Reports / Program Health',summary:'Changed program health to a 90% operational-fleet threshold.',details:['Retired and disposal-queue AEDs remain excluded from the program-health denominator.','An AED counts as operational only when it is in service, has no expired required component and has the required quarterly inspection for the evaluated quarter.','If fewer than 90% of the eligible fleet meets all operational criteria, the overall program health displays Needs Review in yellow.','At 90% or greater operational, the overall program health displays Good in green.','Individual out-of-service or expired AEDs can still display red at the unit level; they no longer automatically force the entire program health badge to red.','The Executive Summary now shows the Operational Fleet percentage directly.']},
   {version:'v193',date:'2026-09-29',category:'Signatures / Mobile UX',summary:'Kept signature capture inline on portrait phones.',details:['Portrait mobile no longer opens the full-screen signature dialog from Use Signature or Full Screen Signature controls.','The full-screen signature launch controls are hidden in portrait mobile because the inline signature pad is already sized for direct signing.','Landscape mobile retains the full-screen signing workflow where the wider canvas is useful.','Tablet and desktop retain the larger signature-view option.']},
   {version:'v192',date:'2026-09-29',category:'Reports / Program Health',summary:'Excluded retired and disposal-queue AEDs from program health evaluation.',details:['AEDs in terminal lifecycle states are excluded from Good / Needs Review / Critical health scoring.','Exclusion applies to Damage Beyond Repair, End of Life / Retired, Destroyed and Final Disposal lifecycle paths, including units that still temporarily show an Out of Service status while awaiting disposal.','Excluded AEDs remain fully retained in inventory history, lifecycle records and accountability reporting.','Critical health now reflects out-of-service AEDs that are still part of the serviceable fleet, while component expiration and quarterly review calculations use the same health-eligible fleet.']},
   {version:'v191',date:'2026-09-29',category:'Reports / Program Health',summary:'Standardized AED program health terminology and color logic.',details:['Green health status is labeled Good.','Yellow health status is now labeled Needs Review.','Needs Review covers noncritical follow-up such as due-soon components, missing quarterly checks, or inspection issues that do not place the AED out of service.','Red is reserved for Critical conditions such as an out-of-service AED or an expired required component.','Updated the Inventory filter label from Needs Attention to Needs Review for consistent terminology.']},
