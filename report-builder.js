@@ -43,22 +43,37 @@ function healthData(units,year,quarter){
         const d=daysTo(comp.date);
         if(d===null){missing++;unitPass=false;issues.push(label+': '+comp.name+' expiration not recorded')}
         else if(d<0){expired++;unitPass=false;const msg=label+': '+comp.name+' expired '+dateFmt(comp.date);issues.push(msg);failures.push(msg)}
-        else if(d<=30){due30++;due180++;unitPass=false;issues.push(label+': '+comp.name+' expires in '+d+' day'+(d===1?'':'s')+' ('+dateFmt(comp.date)+')')}
-        else if(d<=180){due180++;unitPass=false;issues.push(label+': '+comp.name+' expires within 180 days ('+dateFmt(comp.date)+')')}
+        else if(d<=30){due30++;due180++;issues.push(label+': '+comp.name+' expires in '+d+' day'+(d===1?'':'s')+' ('+dateFmt(comp.date)+')')}
+        else if(d<=180){due180++}
       });
-      if(!periodChecks(a,year,quarter).length){unitPass=false;issues.push(label+': quarterly inspection not complete')}
-      else checksComplete++;
+      const quarterChecks=periodChecks(a,year,quarter);
+      if(!quarterChecks.length){
+        unitPass=false;issues.push(label+': quarterly inspection not complete')
+      }else{
+        checksComplete++;
+        const latest=quarterChecks[0];
+        if(String(latest.auditResult||'').toLowerCase()==='issues found'){
+          unitPass=false;issues.push(label+': quarterly inspection documented issues')
+        }
+        if(String(latest.status||state)!=='In Service'){
+          unitPass=false;
+          const msg=label+': inspection status '+String(latest.status||state);
+          issues.push(msg);failures.push(msg)
+        }
+      }
       if(unitPass)passing++;
     }
     (a.deps||[]).filter(d=>periodDate(d.date,year,quarter)).forEach(d=>{deployments++;if(d.shock)shocks++})
   });
   const healthPct=eligible?Math.round((passing/eligible)*100):100;
-  const health=healthPct===100?'GOOD':healthPct>=90?'NEEDS ATTENTION':'CRITICAL';
-  const healthText=healthPct===100
-    ?'All evaluated AEDs meet current readiness criteria: in service, required components in date, and quarterly inspection complete.'
+  const health=healthPct>=95?'GOOD':healthPct>=90?'NEEDS ATTENTION':'CRITICAL';
+  const healthText=healthPct>=95
+    ?(healthPct===100
+      ?'All evaluated AEDs meet current readiness criteria with no identified readiness deficiencies.'
+      :'Overall readiness remains in the green range at 95% or greater.')
     :healthPct>=90
-      ?'Program readiness is below 95% and requires attention. One or more evaluated AEDs do not currently meet all readiness criteria.'
-      :'Program readiness is below 90%. Multiple or significant readiness deficiencies require corrective action.';
+      ?'Overall readiness is below 95% and requires attention.'
+      :'Overall readiness is below 90% and requires corrective action.';
   return {oos,retired,expired,due30,due180,missing,checksComplete,deployments,shocks,issues:[...new Set(issues)],failures:[...new Set(failures)],health,healthPct,eligible,passing,healthText}
 }
 function pageHeaderHTML(title,scope,year,quarter,pageId){
