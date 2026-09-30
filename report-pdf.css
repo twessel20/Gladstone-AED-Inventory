@@ -85,3 +85,18 @@
   #generatedReportSheet .packet-page{break-after:page!important;page-break-after:always!important}
   #generatedReportSheet .packet-aed-page{break-inside:avoid!important;page-break-inside:avoid!important}
 }
+
+/* Unified report packet integrity: never split an AED dataset/card across pages. */
+#generatedReportSheet .packet-aed-entry,
+#generatedReportSheet .packet-aed-entry>section.report-box,
+#generatedReportSheet .packet-group-page-entries>.packet-aed-entry{
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+}
+#generatedReportSheet .packet-aed-entry>section.report-box{
+  margin-bottom:12px!important;
+}
+#generatedReportSheet.unified-report-format .summary-table{
+  border-radius:8px;
+  overflow:hidden;
+}
