@@ -105,10 +105,13 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
   }
   body.dashboard-view>main{
     overflow:hidden;
-    padding:8px 12px 10px;
+    padding:8px 12px calc(8px + env(safe-area-inset-bottom));
+    display:flex;
+    flex-direction:column;
   }
   body.dashboard-view #dash{
-    height:100%;
+    flex:1 1 auto;
+    height:auto;
     min-height:0;
     display:grid;
     grid-template-rows:auto auto auto minmax(0,1fr);
@@ -190,6 +193,7 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
   body.dashboard-view #shockOosCard .row{padding:5px 0}
   body.dashboard-view #dash .two{
     min-height:0;
+    height:100%;
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:8px;
@@ -198,6 +202,7 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
   body.dashboard-view #dash .two>.card{
     min-width:0;
     min-height:0;
+    height:100%;
     display:flex;
     flex-direction:column;
     border:1px solid #e7edf1;
@@ -318,7 +323,8 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
     max-width:1050px;
   }
   body.dashboard-view #dash{
-    height:100%;
+    flex:1 1 auto;
+    height:auto;
     min-height:0;
     overflow:hidden;
     border:0;
@@ -1230,8 +1236,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v210';
+const APP_VERSION='v211';
 const APP_CHANGELOG=[
+  {version:'v211',date:'2026-09-29',category:'Dashboard / Portrait Fill',summary:'Made the Dashboard consume the full remaining portrait phone display.',details:['Removed the unused white gap at the bottom of the Dashboard viewport.','Dashboard now flexes to the full height available below the shared header and navigation.','Expiration Watch and Quarterly Status expand vertically to absorb remaining space while preserving all existing data and the one-screen no-page-scroll layout.','Safe-area padding is retained at the bottom for iPhone home-indicator clearance.']},
   {version:'v210',date:'2026-09-29',category:'Navigation / Mobile Shell',summary:'Eliminated the visual viewport jump between Dashboard and the other primary tabs.',details:['All phone tabs now share the same fixed-height application shell, header and navigation geometry.','Inventory, Quarterly, Deployments, Reports, Audit Log, Repository and Updates now scroll inside the same content viewport instead of changing the overall page flow.','Dashboard uses that identical content viewport but keeps its no-page-scroll one-screen presentation.','Removed Dashboard-only header, logo, account control and navigation sizing overrides so app chrome no longer changes when switching tabs.','Preserved all Dashboard metrics, alerts, expiration data, quarterly data and quick actions.']},
   {version:'v209',date:'2026-09-29',category:'Dashboard / Visual Consistency',summary:'Matched the one-screen Dashboard shell to the Inventory experience.',details:['Dashboard now uses the same mobile header sizing and typography as Inventory and the other primary tabs.','Restored the standard navigation height, padding and tab sizing when Dashboard is active.','Removed the dashboard-only white page wrapper so the normal light-gray application background remains visible.','Restored standard white card surfaces, borders, rounded corners and subtle shadows for Quick Actions, status metrics, Out-of-Service alerts, Expiration Watch and Quarterly Status.','Preserved all dashboard data, five status metrics, quick actions, expiration data and quarterly data while retaining the no-page-scroll portrait dashboard.']},
   {version:'v208',date:'2026-09-29',category:'Dashboard / Portrait Mobile',summary:'Restored the one-screen portrait dashboard with better-balanced compression.',details:['Portrait Home is again locked to the visible phone viewport with no page scrolling.','Returned the five status cards to a single row and kept Expiration Watch and Quarterly Status side-by-side.','Reduced wasted spacing while slightly increasing usable card area and button size versus the earlier compressed layout.','Kept lower dashboard panels internally scrollable only when their content exceeds the available card space, so the overall dashboard itself never scrolls.']},
