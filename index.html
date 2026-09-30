@@ -25,11 +25,16 @@ header{padding:calc(22px + env(safe-area-inset-top)) 18px 22px;color:#fff;backgr
 .header-account-menu button{width:100%;text-align:left;border:0;background:transparent;color:var(--ink);padding:9px 10px;border-radius:7px}
 .header-account-menu button:hover{background:#f1f5f8}
 @media(max-width:700px){
-  .header-account{position:absolute;top:calc(8px + env(safe-area-inset-top));right:10px;padding:0}
-  .header-account-btn{max-width:165px;padding:5px 7px;font-size:.72rem;background:#0f2f4933}
-  .header-account-name{max-width:135px}
-  .app-header-inner{position:relative;padding-right:0}
-  .app-header-copy{padding-top:22px}
+  header{padding:calc(24px + env(safe-area-inset-top)) 16px 24px;min-height:136px}
+  .header-account{position:absolute;top:calc(10px + env(safe-area-inset-top));right:10px;padding:0}
+  .header-account-btn{max-width:170px;padding:6px 8px;font-size:.73rem;background:#0f2f4933}
+  .header-account-name{max-width:138px}
+  .app-header-inner{position:relative;padding-right:0;gap:14px;align-items:flex-end}
+  .app-header-logo{width:74px;height:74px}
+  .app-header-copy{padding-top:30px;padding-bottom:2px}
+  .app-header-copy h1{font-size:1.48rem;line-height:1.16;margin:3px 0 7px}
+  .app-header-copy p{font-size:.88rem;line-height:1.35;max-width:29rem}
+  .k{font-size:.72rem;line-height:1.25}
 }
 
 nav{display:flex;overflow:auto;gap:6px;position:sticky;top:0;z-index:9;background:#fff;border-bottom:1px solid var(--l);padding:8px}button{font:inherit;font-weight:750;border:1px solid var(--l);background:#fff;border-radius:9px;padding:10px 12px}.tab{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 14px;border:1px solid var(--l);border-radius:9px;background:#fff;color:var(--n);white-space:nowrap;line-height:1;text-decoration:none;font:inherit;font-weight:750}.tab:hover{background:#f5f9fb;border-color:#bfd2df}.tab.on{background:#e9f2f7;color:var(--n);border-color:#a9c4d6;box-shadow:inset 0 0 0 1px #c6d9e5}.primary{background:var(--n);color:#fff;border-color:var(--n)}
@@ -867,8 +872,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v196';
+const APP_VERSION='v197';
 const APP_CHANGELOG=[
+  {version:'v197',date:'2026-09-29',category:'Dashboard / Mobile Header',summary:'Improved spacing in the mobile app header without removing information.',details:['Increased vertical breathing room in the top header on phones.','Kept the Gladstone Fire / EMS label, AED Inventory & Quarterly Audit title, descriptive subtitle, logo and account control unchanged.','Adjusted logo size, title line height and spacing so the header no longer feels compressed while preserving the same data.']},
   {version:'v196',date:'2026-09-29',category:'Deployments / User Guidance',summary:'Simplified deployment guidance into a quick-reference bullet format.',details:['Replaced the deployment definition paragraph with a concise heading, short definition and bullet list.','Users can quickly identify deployment triggers: AED powered on, pads applied, rhythm analysis attempted, shock advised/delivered, or other active patient-care use.','Kept the instruction to record the event even when no shock was delivered.']},
   {version:'v195',date:'2026-09-29',category:'Deployments / User Guidance',summary:'Added a clear definition of an AED deployment in the Deployments section.',details:['Added an in-app explanation directly above the deployment records so users understand when the Deployment workflow should be used.','Deployment is defined as an AED entering active patient-care use for a suspected cardiac arrest or similar emergency, including being powered on, pads applied/used, rhythm analysis attempted, or a shock advised/delivered.','A deployment should still be documented when no shock is delivered if the AED entered active patient-care use.','The Home Screen was intentionally left unchanged.']},
   {version:'v194',date:'2026-09-29',category:'Reports / Program Health',summary:'Changed program health to a 90% operational-fleet threshold.',details:['Retired and disposal-queue AEDs remain excluded from the program-health denominator.','An AED counts as operational only when it is in service, has no expired required component and has the required quarterly inspection for the evaluated quarter.','If fewer than 90% of the eligible fleet meets all operational criteria, the overall program health displays Needs Review in yellow.','At 90% or greater operational, the overall program health displays Good in green.','Individual out-of-service or expired AEDs can still display red at the unit level; they no longer automatically force the entire program health badge to red.','The Executive Summary now shows the Operational Fleet percentage directly.']},
