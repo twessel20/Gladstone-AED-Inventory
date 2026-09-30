@@ -390,6 +390,17 @@ async function shareBlob(blob,filename,title,summary){
   if(!/\.pdf$/i.test(name))name+='.pdf';
   const cleanBlob=new Blob([buffer],{type:'application/pdf'});
   const file=new File([cleanBlob],name,{type:'application/pdf',lastModified:Date.now()});
+  const isiOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  if(isiOS){
+    const u=URL.createObjectURL(cleanBlob);
+    const w=window.open(u,'_blank');
+    if(!w){
+      const a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener';a.textContent='Open PDF';
+      document.body.appendChild(a);a.click();a.remove();
+    }
+    setTimeout(()=>URL.revokeObjectURL(u),300000);
+    return;
+  }
   const shareData={files:[file]};
   if(navigator.share&&navigator.canShare&&navigator.canShare(shareData)){
     await navigator.share(shareData);
