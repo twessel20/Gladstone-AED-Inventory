@@ -563,6 +563,7 @@ const seed=[
 ];
 let db=JSON.parse(localStorage.getItem(KEY)||'null')||{aeds:seed.map((x,i)=>({id:'aed-'+(i+1),serial:x[0],location:x[1],descriptor:(x[1]==='Atkins-Johnson Farm'?'Behind Desk':x[0]==='X11L529144'?'Upper Level':x[0]==='X11L528791'?'Time Clock Area · Lower Level':x[0]==='X19D140932'?'Lobby':x[0]==='X20A241496'?'2nd Floor':''),group:(x[1]==='Atkins-Johnson Farm'?'Community Center / Parks & Recreation':(['X11L528611','X11L529465','X11L528795','X11L529221','X11L529205','X11L528608','X11L528858','X11L528613','X11L528619','X16J868825','X11L528627'].includes(x[0])?'Police Patrol Cars':(['X11L529144','X11L528791','X11L528628','X11L529451','X19D142339'].includes(x[0])?'Police Department / City Hall':(['X11L528801','X11L528610'].includes(x[0])?'Public Works / Animal Control':(['X19D140932','X20A241496','X19D140968','X11L529367','X11L528800','X17L979521'].includes(x[0])?'Community Center / Parks & Recreation':x[1]))))),adult:x[2],ped:x[3],battery:x[4],status:'In Service',comments:'',checks:[],deps:[]})),audit:[]};const VERIFIED_AED_ADDRESSES={
 'Community Center':'6901 N Holmes St, Gladstone, MO 64118',
+'Leisure Pool':'6901 N Holmes St, Gladstone, MO 64118',
 'Outdoor Pool':'7011 N Holmes St, Gladstone, MO 64118',
 'Linden Square':'602 NE 70th St, Gladstone, MO 64118',
 'City Manager Office':'7010 N Holmes St, Gladstone, MO 64118',
@@ -588,6 +589,12 @@ if(a.serial==='X19D140932'&&!a.descriptor){a.location='Community Center';a.descr
 if(a.serial==='X20A241496'&&!a.descriptor){a.location='Community Center';a.descriptor='2nd Floor';migrated=true}
 if(a.location==='Atkins-Johnson Farm'&&a.descriptor!=='Behind Desk'){a.descriptor='Behind Desk';migrated=true}
 if(a.location==='Atkins-Johnson Farm'&&a.group!=='Community Center / Parks & Recreation'){a.group='Community Center / Parks & Recreation';migrated=true}
+if(a.serial==='X19D141892'){
+  if(a.location!=='Leisure Pool'){a.location='Leisure Pool';migrated=true}
+  if(a.descriptor!=='Community Center'){a.descriptor='Community Center';migrated=true}
+  if(a.group!=='Community Center / Parks & Recreation'){a.group='Community Center / Parks & Recreation';migrated=true}
+  if(a.address!=='6901 N Holmes St, Gladstone, MO 64118'){a.address='6901 N Holmes St, Gladstone, MO 64118';migrated=true}
+}
 if(!a.descriptor)a.descriptor='';
 const verifiedAddress=VERIFIED_AED_ADDRESSES[a.location]||'';
 if(verifiedAddress&&a.address!==verifiedAddress){a.address=verifiedAddress;migrated=true}
@@ -1003,8 +1010,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v219';
+const APP_VERSION='v220';
 const APP_CHANGELOG=[
+  {version:'v220',date:'2026-09-29',category:'AED Inventory / Location',summary:'Identified the previously unassigned AED as the Community Center Leisure Pool unit.',details:['Serial X19D141892 is now labeled Leisure Pool.','Assigned it to Community Center / Parks & Recreation.','Added Community Center as the location descriptor.','Applied the Community Center address so View Map opens the correct facility.']},
   {version:'v219',date:'2026-09-29',category:'AED Locations / Maps',summary:'Added verified stationary AED addresses and one-tap map access.',details:['Added an editable Address field to AED records.','Auto-filled verified addresses for Community Center, Outdoor Pool, Linden Square, City Hall/Police locations, Public Works, Gladstone Animal Shelter, Happy Rock East, Water Plant, Atkins-Johnson Farm and AJ Barn.','Police patrol cars remain addressless because their locations are dynamic; Unassigned remains blank.','Inventory search now includes address text.','Stationary AEDs with an address show a View Map button that opens the address in Apple Maps on iPhone.']},
   {version:'v218',date:'2026-09-29',category:'Dashboard / Quarterly Status',summary:'Added completion-based color coding to the Quarterly Checked dashboard metric.',details:['Quarterly Checked is red when fewer than 50% of tracked AEDs are complete.','It turns yellow from 50% through 99% complete.','It turns green only when all tracked AEDs are checked.','The existing completed/total count and tap behavior are unchanged.']},
   {version:'v217',date:'2026-09-29',category:'Dashboard / Visual Balance',summary:'Balanced Dashboard actions and data displays without changing the restored scrollable layout.',details:['Quick Actions now use a symmetrical 2-by-2 grid with equal-width, equal-height controls.','Dashboard metric cards use consistent heights and spacing.','Expiration Watch and Quarterly Status use matching column widths and equal-height card treatment where space allows.','On narrow phones, lower data panels stack cleanly while preserving all existing data and scrolling behavior.']},
