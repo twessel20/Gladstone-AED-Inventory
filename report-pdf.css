@@ -223,3 +223,62 @@
 #generatedReportSheet .packet-cover-page::after{
   display:none!important;
 }
+
+/* v103: annual PDF pages stay full-width and compact vertically instead of shrinking. */
+#generatedReportSheet.pdf-letter-capture.annual-report-format .packet-annual-aed-page{
+  width:100%!important;
+  max-width:none!important;
+  padding:18px 22px!important;
+}
+#generatedReportSheet.pdf-letter-capture.annual-report-format .packet-annual-aed-page .report-header{
+  margin-bottom:10px!important;
+  padding-bottom:8px!important;
+}
+#generatedReportSheet.pdf-letter-capture.annual-report-format .packet-annual-aed-page .packet-group-banner{
+  margin-bottom:8px!important;
+  padding:6px 10px!important;
+}
+#generatedReportSheet.pdf-letter-capture.annual-report-format .annual-aed-summary{
+  gap:5px!important;
+  width:100%!important;
+  max-width:none!important;
+}
+#generatedReportSheet.pdf-letter-capture.annual-report-format .annual-aed-summary>.report-box,
+#generatedReportSheet.pdf-letter-capture.annual-report-format .annual-aed-summary .report-grid>.report-box{
+  padding:7px 9px!important;
+  margin-bottom:0!important;
+}
+#generatedReportSheet.pdf-letter-capture.annual-report-format .annual-aed-summary h2{
+  font-size:16px!important;
+  line-height:1.15!important;
+}
+#generatedReportSheet.pdf-letter-capture.annual-report-format .annual-aed-summary h3{
+  margin:4px 0 3px!important;
+  font-size:11.5px!important;
+}
+#generatedReportSheet.pdf-letter-capture.annual-report-format .annual-aed-summary p{
+  margin:2px 0!important;
+  line-height:1.25!important;
+}
+#generatedReportSheet.pdf-letter-capture.annual-report-format .annual-aed-summary .kv{
+  padding:2px 0!important;
+  font-size:10.5px!important;
+}
+#generatedReportSheet.pdf-letter-capture.annual-report-format .annual-aed-summary .report-grid{
+  gap:7px!important;
+}
+#generatedReportSheet.pdf-letter-capture.annual-report-format .annual-aed-summary table,
+#generatedReportSheet.pdf-letter-capture.annual-report-format .annual-aed-summary .summary-table{
+  margin:3px 0 5px!important;
+  font-size:9px!important;
+}
+#generatedReportSheet.pdf-letter-capture.annual-report-format .annual-aed-summary th,
+#generatedReportSheet.pdf-letter-capture.annual-report-format .annual-aed-summary td{
+  padding:3px 4px!important;
+  line-height:1.2!important;
+}
+#generatedReportSheet.pdf-letter-capture.annual-report-format .packet-annual-aed-page .packet-footer,
+#generatedReportSheet.pdf-letter-capture.annual-report-format .packet-annual-aed-page .report-foot{
+  margin-top:6px!important;
+  padding-top:5px!important;
+}
