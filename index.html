@@ -86,149 +86,6 @@ main{max-width:1050px;margin:auto;padding:16px 12px 50px}.view{display:none}.vie
 .group-block.collapsed .group-items{display:none}
 input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd7df;border-radius:9px;background:#fff}.search{margin:0 0 10px}.bar{margin-bottom:12px}.bar h2{margin:0}.bar p{margin:3px 0 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}label{display:grid;gap:5px;font-weight:650;font-size:.9rem}textarea{min-height:80px}dialog{width:min(94vw,680px);border:0;border-radius:16px;padding:18px;box-shadow:0 24px 70px #0005}dialog::backdrop{background:#10202d77}.da{display:flex;justify-content:flex-end;gap:7px;margin-top:14px}.check{display:flex;gap:8px;align-items:flex-start;margin-top:10px}.check input{width:auto}.install{background:#eef5fa}.update-banner{display:none;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;background:#fff;border:1px solid var(--l);border-radius:14px;padding:12px 14px;box-shadow:0 12px 36px #10202d33}.update-banner.show{display:flex;justify-content:space-between;align-items:center;gap:12px}.update-banner .text{min-width:0}.update-banner b{display:block;color:var(--n)}
 @media(max-width:700px){
-  body.dashboard-view{
-    height:100dvh;
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-  }
-  body.dashboard-view>header,
-  body.dashboard-view>nav{flex:0 0 auto}
-  body.dashboard-view>main{
-    flex:1 1 auto;
-    min-height:0;
-    width:100%;
-    overflow:hidden;
-    padding:8px 10px 10px;
-  }
-  body.dashboard-view #dash{
-    height:100%;
-    min-height:0;
-    display:grid;
-    grid-template-rows:auto auto auto minmax(0,1fr);
-    gap:8px;
-    background:#fff;
-    border:1px solid var(--l);
-    border-radius:14px;
-    padding:10px;
-    box-shadow:0 5px 16px #1632470b;
-    overflow:hidden;
-  }
-  body.dashboard-view #dash>.card,
-  body.dashboard-view #dash .two>.card,
-  body.dashboard-view #dash .stat{box-shadow:none}
-  body.dashboard-view #dash>.card:first-child{
-    border:0;
-    border-bottom:1px solid #e7edf1;
-    border-radius:0;
-    background:transparent;
-    padding:0 0 8px;
-    margin:0;
-  }
-  body.dashboard-view #dash>.card:first-child .bar{
-    display:block;
-    margin:0;
-  }
-  body.dashboard-view #dash>.card:first-child h2{
-    font-size:1rem;
-    line-height:1.1;
-  }
-  body.dashboard-view #dash>.card:first-child .muted{
-    font-size:.76rem;
-    line-height:1.2;
-    margin-top:2px!important;
-  }
-  body.dashboard-view #dash>.card:first-child .actions{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:6px;
-    margin-top:7px!important;
-  }
-  body.dashboard-view #dash>.card:first-child .actions button{
-    width:100%;
-    min-height:40px;
-    padding:8px 6px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    white-space:normal;
-    line-height:1.1;
-    font-size:.8rem;
-  }
-  body.dashboard-view #dash .stats{
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:6px;
-    margin:0;
-  }
-  body.dashboard-view #dash .stat{
-    min-height:54px;
-    padding:7px 6px;
-    margin:0;
-    border-radius:10px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-  }
-  body.dashboard-view #dash .stat .big{font-size:1.2rem;line-height:1}
-  body.dashboard-view #dash .stat .small{font-size:.66rem;line-height:1.1;margin-top:3px}
-  body.dashboard-view #shockOosCard{
-    margin:0;
-    padding:8px;
-    border-radius:10px;
-    max-height:92px;
-    overflow:auto;
-  }
-  body.dashboard-view #shockOosCard h2{font-size:.9rem!important}
-  body.dashboard-view #shockOosCard .muted{font-size:.72rem}
-  body.dashboard-view #shockOosCard .row{padding:5px 0}
-  body.dashboard-view #dash .two{
-    min-height:0;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-    margin:0;
-  }
-  body.dashboard-view #dash .two>.card{
-    min-width:0;
-    min-height:0;
-    display:flex;
-    flex-direction:column;
-    border:1px solid #e7edf1;
-    border-radius:11px;
-    padding:8px;
-    margin:0;
-    background:#fbfdfe;
-    overflow:hidden;
-  }
-  body.dashboard-view #dash .two>.card h2{
-    flex:0 0 auto;
-    margin:0 0 5px;
-    font-size:.86rem;
-    line-height:1.1;
-  }
-  body.dashboard-view #watch,
-  body.dashboard-view #qstatus{
-    min-height:0;
-    overflow:auto;
-    overscroll-behavior:contain;
-  }
-  body.dashboard-view #dash .two>.card .row,
-  body.dashboard-view #dash .two>.card .collapse-head{
-    padding:5px 0;
-    gap:5px;
-  }
-  body.dashboard-view #dash .two>.card .meta,
-  body.dashboard-view #dash .two>.card .small{
-    font-size:.7rem;
-    line-height:1.15;
-  }
-  body.dashboard-view #dash .two>.card b{font-size:.76rem}
-  body.dashboard-view #dash .pill{
-    font-size:.66rem;
-    padding:4px 6px;
-  }
-
   .stats{grid-template-columns:1fr 1fr}
   .two,.grid{grid-template-columns:1fr}
   .compact .top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start}
@@ -301,111 +158,6 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
     grid-column:1/-1;
   }
 }
-@media(max-width:700px) and (orientation:portrait){
-  body.dashboard-view>header{
-    min-height:96px;
-    padding:calc(12px + env(safe-area-inset-top)) 12px 12px;
-  }
-  body.dashboard-view .app-header-inner{
-    gap:10px;
-    align-items:center;
-  }
-  body.dashboard-view .app-header-logo{
-    width:58px;
-    height:58px;
-    border-radius:9px;
-  }
-  body.dashboard-view .app-header-copy{
-    padding-top:16px;
-    padding-bottom:0;
-  }
-  body.dashboard-view .app-header-copy h1{
-    font-size:1.18rem;
-    line-height:1.08;
-    margin:2px 0 4px;
-  }
-  body.dashboard-view .app-header-copy p{
-    font-size:.72rem;
-    line-height:1.15;
-  }
-  body.dashboard-view .k{
-    font-size:.63rem;
-    line-height:1.1;
-  }
-  body.dashboard-view .header-account{
-    top:calc(6px + env(safe-area-inset-top));
-    right:7px;
-  }
-  body.dashboard-view .header-account-btn{
-    max-width:150px;
-    min-height:28px;
-    padding:4px 6px;
-    font-size:.68rem;
-  }
-  body.dashboard-view .header-account-name{max-width:120px}
-
-  body.dashboard-view>nav{
-    min-height:44px;
-    padding:4px 5px;
-    gap:4px;
-  }
-  body.dashboard-view>nav .tab,
-  body.dashboard-view>nav>button{
-    min-height:36px;
-    padding:7px 10px;
-    border-radius:8px;
-    font-size:.75rem;
-  }
-
-  body.dashboard-view>main{
-    padding:0;
-    margin:0;
-    max-width:none;
-  }
-  body.dashboard-view #dash{
-    border-left:0;
-    border-right:0;
-    border-bottom:0;
-    border-radius:0;
-    box-shadow:none;
-    padding:10px 10px calc(8px + env(safe-area-inset-bottom));
-    gap:8px;
-  }
-  body.dashboard-view #dash>.card:first-child{
-    padding-bottom:9px;
-  }
-  body.dashboard-view #dash>.card:first-child .actions button{
-    min-height:44px;
-    font-size:.82rem;
-  }
-  body.dashboard-view #dash .stats{
-    grid-template-columns:repeat(5,minmax(0,1fr));
-    gap:5px;
-  }
-  body.dashboard-view #dash .stat{
-    min-height:58px;
-    padding:7px 4px;
-    align-items:center;
-    text-align:center;
-  }
-  body.dashboard-view #dash .stat .big{font-size:1.18rem}
-  body.dashboard-view #dash .stat .small{
-    font-size:.59rem;
-    line-height:1.05;
-  }
-  body.dashboard-view #dash .two{
-    gap:7px;
-  }
-  body.dashboard-view #dash .two>.card{
-    padding:9px;
-    border-radius:10px;
-  }
-  body.dashboard-view #dash .two>.card h2{
-    font-size:.9rem;
-    margin-bottom:6px;
-  }
-}
-
 @media(max-width:390px){
   #inv .inventory-head-actions{gap:4px;padding:6px}
   #inv .inventory-head-actions button{font-size:.7rem;padding:6px 3px;min-height:46px}
@@ -648,7 +400,7 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
 }
 </style>
 </head>
-<body class="dashboard-view"><div id="authGate" class="auth-gate"><form id="loginForm" class="auth-card"><img src="gfd-patch.jpg" alt="Gladstone Fire EMS"><h1>AED Inventory Login</h1><p>Gladstone Fire / EMS</p><label>Username<input id="loginUsername" type="text" autocomplete="username" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" required></label><button id="loginButton" type="submit" class="primary">Sign In</button><div id="loginError" class="auth-error"></div></form></div>
+<body><div id="authGate" class="auth-gate"><form id="loginForm" class="auth-card"><img src="gfd-patch.jpg" alt="Gladstone Fire EMS"><h1>AED Inventory Login</h1><p>Gladstone Fire / EMS</p><label>Username<input id="loginUsername" type="text" autocomplete="username" required></label><label>Password<input id="loginPassword" type="password" autocomplete="current-password" required></label><button id="loginButton" type="submit" class="primary">Sign In</button><div id="loginError" class="auth-error"></div></form></div>
 <header><div class="app-header-inner"><img class="app-header-logo" src="gfd-patch.jpg" alt="Gladstone Fire EMS patch"><div class="app-header-copy"><div class="k">GLADSTONE FIRE / EMS</div><h1>AED Inventory & Quarterly Audit</h1><p>Inventory, Expirations, Inspections, Deployments and Traceable Records.</p></div><div class="header-account"><button type="button" id="accountMenuBtn" class="header-account-btn" aria-haspopup="true" aria-expanded="false"><span id="authUserLabel" class="header-account-name"></span><span class="header-account-chev">▾</span></button><div id="accountMenu" class="header-account-menu"><button type="button" id="logoutBtn">Log Out</button></div></div></div></header>
 <nav><button class="tab on" data-v="dash">Dashboard</button><button class="tab" data-v="inv">Inventory</button><button class="tab" data-v="checks">Quarterly</button><button class="tab" data-v="deps">Deployments</button><button class="tab" data-v="reports">Reports</button><button class="tab" data-v="audit">Audit Log</button><a id="repositoryNav" class="tab" href="./lifecycle.html">AED Repository</a><button class="tab" data-v="updates">Updates</button><button id="syncBtn">Cloud Sync</button><button id="install">Add to iPhone</button></nav>
 <main>
@@ -1210,8 +962,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v215';
+const APP_VERSION='v216';
 const APP_CHANGELOG=[
+  {version:'v216',date:'2026-09-29',category:'Dashboard / Rollback',summary:'Restored the earlier scrollable mobile Dashboard behavior from v203.',details:['Removed the later one-screen dashboard body and viewport locking rules.','Dashboard again follows normal mobile document flow and can scroll vertically.','Removed dashboard-specific portrait header/navigation compression while preserving the existing Dashboard data and the later Inventory toolbar improvements.']},
   {version:'v215',date:'2026-09-29',category:'Dashboard / Rollback',summary:'Restored the original mobile Dashboard and app-shell behavior from before the recent portrait-layout changes.',details:['Restored the exact Dashboard/mobile shell implementation that was active at v206 before the latest Dashboard redesign attempts.','Removed the later full-viewport, fixed-shell, visualViewport and safe-area experiments introduced in v207-v214.','Preserved the original Dashboard data displays and interaction model.']},
   {version:'v206',date:'2026-09-29',category:'Dashboard / Portrait Mobile',summary:'Expanded the Home dashboard to use the full portrait mobile viewport.',details:['When Home is open in portrait mobile, the app header and navigation become more compact so more of the screen is dedicated to the dashboard.','The dashboard now runs edge-to-edge across the available content area instead of sitting inside an inset rounded card.','All five status metrics stay on one compact row in portrait mobile while preserving their existing tap behavior and data.','Quick Actions retain large touch targets while the lower Expiration Watch and Quarterly Status panels expand to fill the remaining height.','The portrait-dashboard treatment applies only to Home; other app views keep their normal header and page spacing.']},
   {version:'v205',date:'2026-09-29',category:'Inventory / Mobile UX',summary:'Reworked the mobile Inventory action area into a single intentional toolbar.',details:['Scan Serial, Manage Groups, Lifecycle Event and + Add AED now stay together in one balanced four-control row on mobile instead of wrapping into a stacked layout.','All four actions use consistent height, spacing and alignment inside a subtle toolbar container.','The Inventory title and helper text remain cleanly separated above the action rail.','Very narrow phones keep the same one-row action layout with tighter typography rather than stacking controls vertically.']},
@@ -1506,7 +1259,7 @@ function syncAuditExportControls(){
   $('auditEndWrap').style.display=scope==='range'?'grid':'none';
 }
 function audit(){$('auditlist').innerHTML=db.audit.map(e=>{let a=db.aeds.find(x=>x.id==e.id);return '<div class="item"><b>'+e.type+(a?' — '+a.location:'')+'</b><div class="meta">'+new Date(e.time).toLocaleString()+' · '+e.who+'</div><p>'+e.detail+'</p></div>'}).join('')||'<div class="card muted">No audit entries.</div>'}
-function goView(view){const current=document.querySelector('.view.on')?.id||'';if(current&&current!==view){expandedGroupKeys.clear();openInventoryRows.clear()}document.body.classList.toggle('dashboard-view',view==='dash');document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.v===view));document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id===view));render()}
+function goView(view){const current=document.querySelector('.view.on')?.id||'';if(current&&current!==view){expandedGroupKeys.clear();openInventoryRows.clear()}document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.v===view));document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id===view));render()}
 function setInventoryFilter(filter){invFilter=filter;$('search').value='';document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('on',x.dataset.f===filter));inv()}
 window.openInventoryTarget=(id,filter='all')=>{goView('inv');setInventoryFilter(filter);setTimeout(()=>{revealInventoryRow(id);let row=$('row-'+id);if(row)row.scrollIntoView({behavior:'smooth',block:'center'})},80)};
 window.dashboardStatAction=kind=>{let tracked=db.aeds.filter(isInventoryTracked);if(kind==='checked'){goView('checks');return}let list=kind==='oos'?tracked.filter(isOutOfService):kind==='expired'?tracked.filter(hasExpiredComponent):kind==='expiring'?tracked.filter(hasDue180Component):tracked;if(list.length===1&&kind!=='all'){openInventoryTarget(list[0].id,kind);return}goView('inv');setInventoryFilter(kind==='all'?'all':kind)};
@@ -1749,6 +1502,6 @@ if('serviceWorker' in navigator){
   });
 }
 bindSignatureCanvas('auditorSigCanvas','auditorSigData','auditorSigClear');bindSignatureCanvas('overallSigCanvas','overallSigData','overallSigClear');$('overallSigUse').onclick=()=>window.openSignatureFullscreen('overallSigCanvas','overallSigData','Overall Report Signature');if(window.navigator.standalone===true)$('install').style.display='none';render();(async()=>{if(!authToken()){showLogin();return}showLogin();try{const ok=await pullCloudState(true);if(ok)hideLogin()}catch(e){showLogin('Unable to validate your session. Check your connection and sign in again.')}})();setInterval(()=>{if(document.visibilityState==='visible'&&navigator.onLine&&!syncBusy&&!syncPushTimer&&authToken()){if(localStorage.getItem(SYNC_DIRTY)==='1'&&cloudUpdatedAt)pushCloudState();else pullCloudState(true)}},15000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&navigator.onLine&&!syncBusy&&!syncPushTimer&&authToken()){if(localStorage.getItem(SYNC_DIRTY)==='1'&&cloudUpdatedAt)pushCloudState();else pullCloudState(true)}})
-if($('loginUsername'))$('loginUsername').value=(authUser()?.username||'travisw@gladstone.mo.us');const appParams=new URLSearchParams(location.search),requestedView=appParams.get('view');if(requestedView&&['dash','inv','checks','deps','reports','audit','updates'].includes(requestedView))goView(requestedView);else document.body.classList.add('dashboard-view');const linkedId=appParams.get('aed');if(linkedId&&db.aeds.some(a=>a.id===linkedId)){document.body.classList.remove('dashboard-view');document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));document.querySelector('[data-v="inv"]').classList.add('on');document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));$('inv').classList.add('on');invFilter='all';document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('on',x.dataset.f==='all'));$('search').value='';inv();setTimeout(()=>{revealInventoryRow(linkedId);let row=$('row-'+linkedId);if(row)row.scrollIntoView({behavior:'smooth',block:'center'})},100)}
+if($('loginUsername'))$('loginUsername').value=(authUser()?.username||'travisw@gladstone.mo.us');const appParams=new URLSearchParams(location.search),requestedView=appParams.get('view');if(requestedView&&['dash','inv','checks','deps','reports','audit','updates'].includes(requestedView))goView(requestedView);const linkedId=appParams.get('aed');if(linkedId&&db.aeds.some(a=>a.id===linkedId)){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));document.querySelector('[data-v="inv"]').classList.add('on');document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));$('inv').classList.add('on');invFilter='all';document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('on',x.dataset.f==='all'));$('search').value='';inv();setTimeout(()=>{revealInventoryRow(linkedId);let row=$('row-'+linkedId);if(row)row.scrollIntoView({behavior:'smooth',block:'center'})},100)}
 </script><script src="pdf-engine-v2.js?v=190"></script>
 <script src="report-builder.js?v=163"></script></body></html>
