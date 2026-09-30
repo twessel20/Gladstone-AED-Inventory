@@ -1758,17 +1758,38 @@ function normSerial(v){return String(v||'').trim().replace(/[^A-Za-z0-9]/g,'').t
 function serialFromScan(raw){
   const text=String(raw||'').trim();
   if(!text)return '';
+
+  // ZOLL AED Plus labels are commonly GS1-128 / Code 128. The serial is
+  // Application Identifier (21), while (01) is the GTIN. Support both the
+  // human-readable form "(01) ... (21) SERIAL" and scanner-decoded GS1 data.
   const paren=text.match(/\(21\)\s*([A-Za-z0-9._-]+)/i);
   if(paren)return paren[1].toUpperCase();
-  const noPrefix=text.replace(/^\]C1/i,'').replace(/\x1D/g,'');
+
+  // Strip common Code 128 / GS1 symbology identifiers and group separators.
+  const noPrefix=text
+    .replace(/^\](?:C1|C0)/i,'')
+    .replace(/[\x1D\x1E\x1F]/g,'')
+    .trim();
   const compact=normSerial(noPrefix);
-  const gs1=compact.match(/^01\d{14}21([A-Z0-9]+)$/);
-  if(gs1)return gs1[1];
+
+  // GS1 AI 01 = 14-digit GTIN, followed by AI 21 = variable-length serial.
+  // Examples from field AED labels:
+  // 010084794600223721X19D142339 -> X19D142339
+  // 010084794600215221X16J868825 -> X16J868825
+  const gs1=compact.match(/^01\d{14}21([A-Z0-9._-]+)$/i);
+  if(gs1)return gs1[1].toUpperCase();
+
+  // If the scanner returns the complete GS1 string with extra leading data,
+  // still prefer a known inventory serial embedded in the scan.
   const known=(db?.aeds||[]).map(a=>String(a.serial||'')).filter(Boolean).sort((a,b)=>b.length-a.length);
   const match=known.find(s=>compact.includes(normSerial(s)));
-  if(match)return match;
+  if(match)return match.toUpperCase();
+
+  // Plain Code 128 serial labels (for example X11L528791) pass straight through.
   const sn=text.match(/(?:S\/N|SN|SERIAL(?:\s*(?:NO|NUMBER))?)\s*[:#-]?\s*([A-Za-z0-9._-]{6,})/i);
   if(sn)return sn[1].toUpperCase();
+  if(/^[A-Za-z0-9._-]{6,}$/.test(noPrefix))return noPrefix.toUpperCase();
+
   return text;
 }
 function scanBox(vw,vh){return{width:Math.min(Math.max(300,Math.floor(vw*.92)),560),height:Math.min(170,Math.max(110,Math.floor(vh*.28)))}}
