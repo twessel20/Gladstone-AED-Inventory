@@ -301,6 +301,111 @@ input,select,textarea{width:100%;font:inherit;padding:10px;border:1px solid #cbd
     grid-column:1/-1;
   }
 }
+@media(max-width:700px) and (orientation:portrait){
+  body.dashboard-view>header{
+    min-height:96px;
+    padding:calc(12px + env(safe-area-inset-top)) 12px 12px;
+  }
+  body.dashboard-view .app-header-inner{
+    gap:10px;
+    align-items:center;
+  }
+  body.dashboard-view .app-header-logo{
+    width:58px;
+    height:58px;
+    border-radius:9px;
+  }
+  body.dashboard-view .app-header-copy{
+    padding-top:16px;
+    padding-bottom:0;
+  }
+  body.dashboard-view .app-header-copy h1{
+    font-size:1.18rem;
+    line-height:1.08;
+    margin:2px 0 4px;
+  }
+  body.dashboard-view .app-header-copy p{
+    font-size:.72rem;
+    line-height:1.15;
+  }
+  body.dashboard-view .k{
+    font-size:.63rem;
+    line-height:1.1;
+  }
+  body.dashboard-view .header-account{
+    top:calc(6px + env(safe-area-inset-top));
+    right:7px;
+  }
+  body.dashboard-view .header-account-btn{
+    max-width:150px;
+    min-height:28px;
+    padding:4px 6px;
+    font-size:.68rem;
+  }
+  body.dashboard-view .header-account-name{max-width:120px}
+
+  body.dashboard-view>nav{
+    min-height:44px;
+    padding:4px 5px;
+    gap:4px;
+  }
+  body.dashboard-view>nav .tab,
+  body.dashboard-view>nav>button{
+    min-height:36px;
+    padding:7px 10px;
+    border-radius:8px;
+    font-size:.75rem;
+  }
+
+  body.dashboard-view>main{
+    padding:0;
+    margin:0;
+    max-width:none;
+  }
+  body.dashboard-view #dash{
+    border-left:0;
+    border-right:0;
+    border-bottom:0;
+    border-radius:0;
+    box-shadow:none;
+    padding:10px 10px calc(8px + env(safe-area-inset-bottom));
+    gap:8px;
+  }
+  body.dashboard-view #dash>.card:first-child{
+    padding-bottom:9px;
+  }
+  body.dashboard-view #dash>.card:first-child .actions button{
+    min-height:44px;
+    font-size:.82rem;
+  }
+  body.dashboard-view #dash .stats{
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:5px;
+  }
+  body.dashboard-view #dash .stat{
+    min-height:58px;
+    padding:7px 4px;
+    align-items:center;
+    text-align:center;
+  }
+  body.dashboard-view #dash .stat .big{font-size:1.18rem}
+  body.dashboard-view #dash .stat .small{
+    font-size:.59rem;
+    line-height:1.05;
+  }
+  body.dashboard-view #dash .two{
+    gap:7px;
+  }
+  body.dashboard-view #dash .two>.card{
+    padding:9px;
+    border-radius:10px;
+  }
+  body.dashboard-view #dash .two>.card h2{
+    font-size:.9rem;
+    margin-bottom:6px;
+  }
+}
+
 @media(max-width:390px){
   #inv .inventory-head-actions{gap:4px;padding:6px}
   #inv .inventory-head-actions button{font-size:.7rem;padding:6px 3px;min-height:46px}
@@ -1105,8 +1210,9 @@ function auditExportEntries(){
   const r=auditExportRange();
   return (db.audit||[]).filter(e=>{if(r.scope==='all')return true;const d=String(e.time||'').slice(0,10);return (!r.start||d>=r.start)&&(!r.end||d<=r.end)});
 }
-const APP_VERSION='v205';
+const APP_VERSION='v206';
 const APP_CHANGELOG=[
+  {version:'v206',date:'2026-09-29',category:'Dashboard / Portrait Mobile',summary:'Expanded the Home dashboard to use the full portrait mobile viewport.',details:['When Home is open in portrait mobile, the app header and navigation become more compact so more of the screen is dedicated to the dashboard.','The dashboard now runs edge-to-edge across the available content area instead of sitting inside an inset rounded card.','All five status metrics stay on one compact row in portrait mobile while preserving their existing tap behavior and data.','Quick Actions retain large touch targets while the lower Expiration Watch and Quarterly Status panels expand to fill the remaining height.','The portrait-dashboard treatment applies only to Home; other app views keep their normal header and page spacing.']},
   {version:'v205',date:'2026-09-29',category:'Inventory / Mobile UX',summary:'Reworked the mobile Inventory action area into a single intentional toolbar.',details:['Scan Serial, Manage Groups, Lifecycle Event and + Add AED now stay together in one balanced four-control row on mobile instead of wrapping into a stacked layout.','All four actions use consistent height, spacing and alignment inside a subtle toolbar container.','The Inventory title and helper text remain cleanly separated above the action rail.','Very narrow phones keep the same one-row action layout with tighter typography rather than stacking controls vertically.']},
   {version:'v204',date:'2026-09-29',category:'Dashboard / Mobile UX',summary:'Made the mobile Home dashboard fit within one phone viewport.',details:['The mobile Home dashboard now fills exactly the space remaining below the app header and navigation, eliminating page-level scrolling on the dashboard.','Quick Actions use a compact balanced 2-by-2 grid with consistent touch targets.','The five dashboard metrics use a compact responsive grid while preserving all existing data.','Expiration Watch and Quarterly Status remain visible side-by-side in the lower dashboard area.','Long Expiration or Quarterly lists scroll inside their own panel instead of making the entire Home dashboard scroll.','Other app sections retain normal page scrolling.']},
   {version:'v203',date:'2026-09-29',category:'App Updates / UX',summary:'Added live in-app banners for app version updates.',details:['While the app is open, a small non-blocking banner now appears when a new app version is detected.','The banner progresses through update found/downloading and installing states without interrupting the user.','After the service worker activates and the app refreshes, a confirmation banner shows the installed app version.','Existing automatic update checks remain in place, including periodic checks and checks when the app returns to the foreground.']},
