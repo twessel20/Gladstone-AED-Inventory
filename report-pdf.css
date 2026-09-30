@@ -136,3 +136,41 @@
   width:245px!important;
   max-height:245px!important;
 }
+
+/* v97: annual AED pages are one-page year-end dossiers. */
+#generatedReportSheet.annual-report-format .packet-aed-entry,
+#generatedReportSheet.annual-report-format .annual-aed-summary{
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+}
+#generatedReportSheet.annual-report-format .annual-aed-summary{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:8px!important;
+}
+#generatedReportSheet.annual-report-format .annual-aed-head{
+  display:flex!important;
+  justify-content:space-between!important;
+  align-items:flex-start!important;
+  gap:14px!important;
+  break-inside:avoid!important;
+}
+#generatedReportSheet.annual-report-format .annual-aed-overview{
+  margin-top:2px!important;
+}
+#generatedReportSheet.annual-report-format .annual-health-note{
+  background:#f8fbfd!important;
+}
+#generatedReportSheet.annual-report-format .annual-quarter-table{
+  font-size:9.5px!important;
+}
+#generatedReportSheet.annual-report-format .annual-quarter-table th:first-child,
+#generatedReportSheet.annual-report-format .annual-quarter-table td:first-child{width:9%!important}
+#generatedReportSheet.annual-report-format .annual-quarter-table th:nth-child(2),
+#generatedReportSheet.annual-report-format .annual-quarter-table td:nth-child(2){width:14%!important}
+#generatedReportSheet.annual-report-format .annual-quarter-table th:nth-child(3),
+#generatedReportSheet.annual-report-format .annual-quarter-table td:nth-child(3){width:22%!important}
+#generatedReportSheet.annual-report-format .annual-quarter-table th:nth-child(4),
+#generatedReportSheet.annual-report-format .annual-quarter-table td:nth-child(4){width:20%!important}
+#generatedReportSheet.annual-report-format .annual-quarter-table th:nth-child(5),
+#generatedReportSheet.annual-report-format .annual-quarter-table td:nth-child(5){width:35%!important}
