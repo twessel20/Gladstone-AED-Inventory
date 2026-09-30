@@ -4,7 +4,8 @@
 const LETTER={w:8.5,h:11};
 const PRINT_MARGIN=.25;
 const PRINT_CAPTURE_SCALE=2.75;
-const PAGE_NUMBER_Y=10.70;
+const FOOTER_SAFE_IN=.18;
+const PAGE_NUMBER_Y=10.58;
 const PREVIEW_ID='pdfPreviewDlg';
 const renderCache=new WeakMap();
 const previewPages=new WeakMap();
@@ -100,7 +101,7 @@ async function buildFromElement(source,filename='aed-report.pdf'){
 
     const doc=new JsPDF({unit:'in',format:'letter',orientation:'portrait',compress:true});
     const previewImages=[];
-    const margin=PRINT_MARGIN,maxW=LETTER.w-margin*2,maxH=LETTER.h-margin*2;
+    const margin=PRINT_MARGIN,maxW=LETTER.w-margin*2,maxH=LETTER.h-margin*2-FOOTER_SAFE_IN;
     // Build logical group packet pages before PDF capture.
     // Each AED entry is atomic: never split an AED record across pages.
     // New groups always begin on a fresh page; headers/footers repeat on every group page.
