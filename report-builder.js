@@ -251,7 +251,100 @@ function buildQuarterlyPacketMarkup(year,quarter,sig){
   const cert='<section class="packet-page packet-cert-page">'+pageHeaderHTML(title,scope,year,quarter,'CERTIFICATION & ATTESTATION · Q'+quarter+' '+year)+'<div class="packet-cert-body">'+(typeof certificationAttestationHTML==='function'?certificationAttestationHTML():'')+(typeof overallSignatureHTML==='function'?overallSignatureHTML(sig):'')+'<p class="packet-cert-note">This certification page marks the end of the certified quarterly report packet.</p></div>'+packetFooterHTML(generated)+'</section>';
   return '<div class="report-sheet packet-report unified-report-format" id="generatedReportSheet">'+cover+exec+details+cert+'</div>';
 }
-window.GFDAEDReportBuilder=Object.assign(window.GFDAEDReportBuilder||{},{buildQuarterlyPacketMarkup});
+
+function annualDateRange(year){return 'January 1, '+year+' – December 31, '+year}
+function annualHealthData(units,year){
+  let oos=0,retired=0,expired=0,due30=0,due180=0,missing=0,deployments=0,shocks=0,issues=[],failures=[],eligible=0,passing=0,totalQuarterChecks=0;
+  units.forEach(a=>{
+    const label=a.location+(a.descriptor?' — '+a.descriptor:'');
+    const state=String(a.status||'In Service');
+    const knownInactive=/removed\s*\/\s*retired|retired|destroyed|beyond repair|end[- ]?of[- ]?life/i.test(state);
+    let unitPass=true;
+    if(knownInactive){retired++}
+    else{
+      eligible++;
+      if(state!=='In Service'){oos++;unitPass=false;const msg=label+': '+state;issues.push(msg);failures.push(msg)}
+      components(a).forEach(comp=>{
+        const d=daysTo(comp.date);
+        if(d===null){missing++;unitPass=false;issues.push(label+': '+comp.name+' expiration not recorded')}
+        else if(d<0){expired++;unitPass=false;const msg=label+': '+comp.name+' expired '+dateFmt(comp.date);issues.push(msg);failures.push(msg)}
+        else if(d<=30){due30++;due180++;issues.push(label+': '+comp.name+' expires in '+d+' day'+(d===1?'':'s')+' ('+dateFmt(comp.date)+')')}
+        else if(d<=180){due180++}
+      });
+      let completeQuarters=0,quarterIssue=false;
+      for(let qtr=1;qtr<=4;qtr++){
+        const checks=periodChecks(a,year,qtr);
+        if(checks.length){
+          totalQuarterChecks++;completeQuarters++;
+          const latest=checks[0];
+          if(String(latest.auditResult||'').toLowerCase()==='issues found')quarterIssue=true;
+          if(String(latest.status||state)!=='In Service'){quarterIssue=true}
+        }
+      }
+      if(completeQuarters<4){unitPass=false;issues.push(label+': '+completeQuarters+'/4 quarterly inspections completed')}
+      if(quarterIssue){unitPass=false;issues.push(label+': one or more quarterly inspections documented issues')}
+      if(unitPass)passing++;
+    }
+    (a.deps||[]).filter(d=>String(d.date||'').startsWith(String(year)+'-')).forEach(d=>{deployments++;if(d.shock)shocks++});
+  });
+  const healthPct=eligible?Math.round((passing/eligible)*100):100;
+  const health=healthPct>=95?'GOOD':healthPct>=90?'NEEDS ATTENTION':'CRITICAL';
+  const healthText=healthPct>=95
+    ?(healthPct===100?'All evaluated AEDs meet annual readiness criteria with no identified readiness deficiencies.':'Overall annual readiness remains in the green range at 95% or greater.')
+    :healthPct>=90?'Overall annual readiness is below 95% and requires attention.':'Overall annual readiness is below 90% and requires corrective action.';
+  return {oos,retired,expired,due30,due180,missing,deployments,shocks,issues:[...new Set(issues)],failures:[...new Set(failures)],eligible,passing,healthPct,health,healthText,totalQuarterChecks}
+}
+function annualCoverPage(title,subtitle,scope,year,count,generated){
+  return '<section class="packet-page packet-cover-page">'+
+    '<div class="packet-cover-hero"><img class="packet-cover-logo" src="gfd-patch.jpg" alt="Gladstone Fire EMS"><div class="packet-kicker">GLADSTONE FIRE / EMS</div><h1>'+safe(title)+'</h1><p class="packet-cover-subtitle">'+safe(subtitle)+'</p><p class="packet-cover-range">'+safe(annualDateRange(year))+'</p></div>'+
+    '<div class="packet-cover-body"><p class="packet-cover-description">Annual program report summarizing AED readiness, quarterly inspection completion, component expirations, deployments, status changes and documented return-to-service activity across the full calendar year.</p>'+
+    '<div class="report-grid packet-cover-grid"><div class="report-box"><h3>Report Information</h3><div class="kv"><b>Scope</b><div>'+safe(scope)+'</div></div><div class="kv"><b>Reporting Period</b><div>'+year+'</div></div><div class="kv"><b>Date Range</b><div>'+safe(annualDateRange(year))+'</div></div><div class="kv"><b>AEDs Included</b><div>'+count+'</div></div></div>'+
+    '<div class="report-box"><h3>Packet Structure</h3><div class="kv"><b>Page 2</b><div>Executive Summary & Annual Health</div></div><div class="kv"><b>Following Pages</b><div>Quarterly performance and AED detail</div></div><div class="kv"><b>Final Report Page</b><div>Certification & Attestation</div></div></div></div></div>'+
+    packetFooterHTML(generated)+'</section>'
+}
+function annualExecutiveSummaryPage(units,year,title,scope,generated){
+  const h=annualHealthData(units,year),healthClass=h.health==='CRITICAL'?'health-critical':h.health==='NEEDS ATTENTION'?'health-attention':'health-good';
+  const quarterRows=[1,2,3,4].map(qtr=>{
+    const completed=units.filter(a=>periodChecks(a,year,qtr).length).length;
+    const issues=units.filter(a=>{const x=periodChecks(a,year,qtr)[0];return x&&String(x.auditResult||'').toLowerCase()==='issues found'}).length;
+    return '<div class="kv"><b>Q'+qtr+'</b><div>'+completed+' / '+units.length+' complete'+(issues?' · '+issues+' with issues':'')+'</div></div>'
+  }).join('');
+  const failureBlock=h.failures.length?'<div class="report-box critical-findings"><h3>Critical Findings</h3><ul>'+h.failures.slice(0,8).map(x=>'<li>'+safe(x)+'</li>').join('')+(h.failures.length>8?'<li>+'+(h.failures.length-8)+' additional critical item(s).</li>':'')+'</ul></div>':'';
+  const attentionBlock=h.issues.length?'<div class="report-box"><h3>Annual Attention Items</h3><ul>'+h.issues.slice(0,10).map(x=>'<li>'+safe(x)+'</li>').join('')+(h.issues.length>10?'<li>+'+(h.issues.length-10)+' additional item(s) detailed in this report.</li>':'')+'</ul></div>':'<div class="report-box"><h3>Annual Attention Items</h3><p>None identified from the recorded inventory data.</p></div>';
+  return '<section class="packet-page packet-executive-page">'+
+    '<div class="report-header packet-header"><img src="gfd-patch.jpg" alt="Gladstone Fire EMS"><div class="report-title"><div class="packet-header-kicker">GLADSTONE FIRE / EMS · AED REPORT</div><h1>'+safe(title)+'</h1><p><b>Scope:</b> '+safe(scope)+' · <b>Period:</b> '+year+' · '+safe(annualDateRange(year))+'</p><p class="packet-page-id">Executive Summary & Annual Health</p></div></div>'+
+    '<div class="exec-summary packet-exec"><h2>Executive Summary</h2><p><b>Scope:</b> '+safe(scope)+' · '+year+' · '+units.length+' AED'+(units.length===1?'':'s')+'</p>'+
+    '<div class="report-grid"><div class="report-box"><h3>Overall Health</h3><div class="health '+healthClass+' packet-health">'+safe(h.health)+' · '+h.healthPct+'%</div><p>'+safe(h.healthText)+'</p></div>'+
+    '<div class="report-box"><h3>Quarterly Completion</h3>'+quarterRows+'</div></div>'+
+    '<div class="report-grid"><div class="report-box"><h3>Readiness</h3><div class="kv"><b>Out of service</b><div>'+h.oos+'</div></div><div class="kv"><b>Retired / end-of-life</b><div>'+h.retired+'</div></div><div class="kv"><b>Expired components</b><div>'+h.expired+'</div></div><div class="kv"><b>Expiration ≤30 days</b><div>'+h.due30+'</div></div><div class="kv"><b>Expiration 31–180 days</b><div>'+Math.max(0,h.due180-h.due30)+'</div></div><div class="kv"><b>Missing expiration dates</b><div>'+h.missing+'</div></div></div>'+
+    '<div class="report-box"><h3>Annual Activity</h3><div class="kv"><b>Quarterly inspections</b><div>'+h.totalQuarterChecks+'</div></div><div class="kv"><b>Deployments</b><div>'+h.deployments+'</div></div><div class="kv"><b>Shock-delivery events</b><div>'+h.shocks+'</div></div></div></div>'+
+    failureBlock+attentionBlock+
+    '<p class="muted" style="margin-top:10px">Annual health uses the same report grading thresholds as quarterly reports: 95–100% Good, 90–94% Needs Attention, below 90% Critical.</p></div>'+
+    packetFooterHTML(generated)+'</section>'
+}
+function annualReportSection(a,year){
+  const quarterCards=[1,2,3,4].map(qtr=>{
+    const checks=periodChecks(a,year,qtr),latest=checks[0];
+    return '<div class="report-box"><h3>Q'+qtr+'</h3><div class="kv"><b>Inspection</b><div>'+(latest?dateFmt(latest.date):'Not completed')+'</div></div><div class="kv"><b>Inspector</b><div>'+(latest?safe(latest.inspector||'N/A'):'—')+'</div></div><div class="kv"><b>Result</b><div>'+(latest?safe(latest.auditResult||latest.status||'Completed'):'—')+'</div></div>'+(latest&&latest.notes?'<p><b>Comments:</b> '+safe(latest.notes)+'</p>':'')+'</div>'
+  }).join('');
+  const deps=(a.deps||[]).filter(d=>String(d.date||'').startsWith(String(year)+'-')).sort((x,y)=>String(y.date||'').localeCompare(String(x.date||'')));
+  const depRows=deps.length?deps.map(d=>'<tr><td>'+dateFmt(d.date)+'</td><td>'+safe(d.report||d.agencyReport||'N/A')+'</td><td>'+(d.shock?'Shock delivered':'No shock')+(d.rts?' · Returned to service':'')+'</td></tr>').join(''):'<tr><td colspan="3">No deployments recorded.</td></tr>';
+  return '<section class="report-box" style="margin:0 0 18px;break-inside:avoid"><h2 style="margin:0;color:#123a5a">'+safe(a.location)+(a.descriptor?' — '+safe(a.descriptor):'')+'</h2><p class="muted" style="margin:4px 0 12px">Serial: '+safe(a.serial)+' · Group: '+safe(canonicalGroup(a))+' · Current Status: '+status(a)+'</p>'+
+    '<div class="report-grid">'+quarterCards+'</div>'+
+    '<div class="report-grid"><div class="report-box"><h3>Current Components</h3><div class="kv"><b>Adult Pads</b><div>'+dateFmt(a.adult)+'</div></div>'+(reportHasPediatricPads(a)?'<div class="kv"><b>Pediatric Pads</b><div>'+dateFmt(a.ped)+'</div></div>':'')+'<div class="kv"><b>Battery</b><div>'+dateFmt(a.battery)+'</div></div></div>'+
+    '<div class="report-box"><h3>Annual Deployment Activity</h3><table class="summary-table"><thead><tr><th>Date</th><th>Report #</th><th>Event</th></tr></thead><tbody>'+depRows+'</tbody></table></div></div></section>'
+}
+function buildAnnualPacketMarkup(year,sig){
+  const units=tracked().slice().sort((a,b)=>canonicalGroup(a).localeCompare(canonicalGroup(b))||String(a.location||'').localeCompare(String(b.location||''))||String(a.descriptor||'').localeCompare(String(b.descriptor||''))||String(a.serial||'').localeCompare(String(b.serial||'')));
+  const title='AED Annual Program Report',scope='All Tracked AEDs',subtitle='Gladstone Fire / EMS · Annual Summary · '+year,generated='Generated '+new Date().toLocaleString()+'.';
+  const cover=annualCoverPage(title,subtitle,scope,year,units.length,generated);
+  const exec=annualExecutiveSummaryPage(units,year,title,scope,generated);
+  const grouped=[];units.forEach(a=>{const group=canonicalGroup(a);let bucket=grouped.find(x=>x.group===group);if(!bucket){bucket={group,items:[]};grouped.push(bucket)}bucket.items.push(a)});
+  const details=grouped.map(bucket=>'<section class="packet-group-source" data-group="'+safe(bucket.group)+'"><div class="packet-group-page-header"><div class="report-header packet-header"><img src="gfd-patch.jpg" alt="Gladstone Fire EMS"><div class="report-title"><div class="packet-header-kicker">GLADSTONE FIRE / EMS · AED REPORT</div><h1>'+safe(title)+'</h1><p><b>Scope:</b> '+safe(scope)+' · <b>Period:</b> '+year+' · '+safe(annualDateRange(year))+'</p><p class="packet-page-id">AED DETAIL · Group: '+safe(bucket.group)+'</p></div></div></div><div class="packet-group-banner"><span>GROUP</span><b>'+safe(bucket.group)+'</b></div><div class="packet-group-entries">'+bucket.items.map(a=>'<div class="packet-aed-entry" data-aed-id="'+safe(a.id)+'">'+annualReportSection(a,year)+'</div>').join('')+'</div><div class="packet-group-page-footer">'+packetFooterHTML(generated)+'</div></section>').join('');
+  const cert='<section class="packet-page packet-cert-page"><div class="report-header packet-header"><img src="gfd-patch.jpg" alt="Gladstone Fire EMS"><div class="report-title"><div class="packet-header-kicker">GLADSTONE FIRE / EMS · AED REPORT</div><h1>'+safe(title)+'</h1><p><b>Scope:</b> '+safe(scope)+' · <b>Period:</b> '+year+' · '+safe(annualDateRange(year))+'</p><p class="packet-page-id">CERTIFICATION & ATTESTATION · '+year+'</p></div></div><div class="packet-cert-body">'+(typeof certificationAttestationHTML==='function'?certificationAttestationHTML():'')+(typeof overallSignatureHTML==='function'?overallSignatureHTML(sig):'')+'<p class="packet-cert-note">This certification page marks the end of the certified annual report packet.</p></div>'+packetFooterHTML(generated)+'</section>';
+  return '<div class="report-sheet packet-report unified-report-format annual-report-format" id="generatedReportSheet">'+cover+exec+details+cert+'</div>';
+}
+window.GFDAEDReportBuilder=Object.assign(window.GFDAEDReportBuilder||{},{buildQuarterlyPacketMarkup,buildAnnualPacketMarkup});
 
 function build(){
   const units=choose().slice().sort((a,b)=>canonicalGroup(a).localeCompare(canonicalGroup(b))||String(a.location||'').localeCompare(String(b.location||''))||String(a.descriptor||'').localeCompare(String(b.descriptor||''))||String(a.serial||'').localeCompare(String(b.serial||'')));if(!units.length){alert('Select at least one AED.');return}
