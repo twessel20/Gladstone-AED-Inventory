@@ -323,16 +323,41 @@ function annualExecutiveSummaryPage(units,year,title,scope,generated){
     packetFooterHTML(generated)+'</section>'
 }
 function annualReportSection(a,year){
-  const quarterCards=[1,2,3,4].map(qtr=>{
-    const checks=periodChecks(a,year,qtr),latest=checks[0];
-    return '<div class="report-box"><h3>Q'+qtr+'</h3><div class="kv"><b>Inspection</b><div>'+(latest?dateFmt(latest.date):'Not completed')+'</div></div><div class="kv"><b>Inspector</b><div>'+(latest?safe(latest.inspector||'N/A'):'—')+'</div></div><div class="kv"><b>Result</b><div>'+(latest?safe(latest.auditResult||latest.status||'Completed'):'—')+'</div></div>'+(latest&&latest.notes?'<p><b>Comments:</b> '+safe(latest.notes)+'</p>':'')+'</div>'
-  }).join('');
+  const quarters=[1,2,3,4].map(qtr=>{
+    const checks=periodChecks(a,year,qtr),latest=checks[0]||null;
+    return {q:qtr,check:latest,all:checks};
+  });
+  const completed=quarters.filter(x=>x.check).length;
+  const issueChecks=quarters.filter(x=>x.check&&String(x.check.auditResult||'').toLowerCase()==='issues found').length;
+  const oosChecks=quarters.filter(x=>x.check&&String(x.check.status||a.status||'In Service')!=='In Service').length;
   const deps=(a.deps||[]).filter(d=>String(d.date||'').startsWith(String(year)+'-')).sort((x,y)=>String(y.date||'').localeCompare(String(x.date||'')));
-  const depRows=deps.length?deps.map(d=>'<tr><td>'+dateFmt(d.date)+'</td><td>'+safe(d.report||d.agencyReport||'N/A')+'</td><td>'+(d.shock?'Shock delivered':'No shock')+(d.rts?' · Returned to service':'')+'</td></tr>').join(''):'<tr><td colspan="3">No deployments recorded.</td></tr>';
-  return '<section class="report-box" style="margin:0 0 18px;break-inside:avoid"><h2 style="margin:0;color:#123a5a">'+safe(a.location)+(a.descriptor?' — '+safe(a.descriptor):'')+'</h2><p class="muted" style="margin:4px 0 12px">Serial: '+safe(a.serial)+' · Group: '+safe(canonicalGroup(a))+' · Current Status: '+status(a)+'</p>'+
-    '<div class="report-grid">'+quarterCards+'</div>'+
+  const shocks=deps.filter(d=>d.shock).length;
+  const rts=deps.filter(d=>d.rts).length;
+  const audit=(db.audit||[]).filter(e=>e.id===a.id&&String(e.time||'').startsWith(String(year)+'-')&&/Status Change|Return|Deployment/i.test(e.type||'')).sort((x,y)=>String(y.time||'').localeCompare(String(x.time||'')));
+  const annualReady=String(a.status||'In Service')==='In Service'&&!hasExpiredComponent(a)&&completed===4&&issueChecks===0&&oosChecks===0;
+  const annualHealth=annualReady?'GOOD':(completed>=3&&String(a.status||'In Service')==='In Service'&&!hasExpiredComponent(a)?'NEEDS ATTENTION':'CRITICAL');
+  const annualClass=annualHealth==='CRITICAL'?'health-critical':annualHealth==='NEEDS ATTENTION'?'health-attention':'health-good';
+  const quarterRows=quarters.map(x=>{
+    const ch=x.check;
+    return '<tr><td><b>Q'+x.q+'</b></td><td>'+(ch?dateFmt(ch.date):'<span class="bad">Not completed</span>')+'</td><td>'+(ch?safe(ch.inspector||'N/A')+(ch.employeeNumber?' · #'+safe(ch.employeeNumber):''):'—')+'</td><td>'+(ch?safe(ch.auditResult||ch.status||'Completed'):'—')+'</td><td>'+(ch?safe(ch.notes||'None documented'):'—')+'</td></tr>'
+  }).join('');
+  const depRows=deps.length?deps.map(d=>'<tr><td>'+dateFmt(d.date)+'</td><td>'+safe(d.report||d.agencyReport||'N/A')+'</td><td>'+[(d.shock?'Shock delivered':'No shock'),d.adultPadsUsed?'Adult pads used':'',d.pediatricPadsUsed?'Pediatric pads used':'',d.rts?'Returned to service'+(d.rtsDate?' '+dateFmt(d.rtsDate):''):'',d.notes?safe(d.notes):''].filter(Boolean).join(' · ')+'</td></tr>').join(''):'<tr><td colspan="3">No deployments recorded.</td></tr>';
+  const statusRows=audit.length?audit.map(e=>'<tr><td>'+dateFmt(String(e.time||'').slice(0,10))+'</td><td>'+safe(e.type||'Event')+'</td><td>'+safe(e.detail||'')+'</td></tr>').join(''):'<tr><td colspan="3">No status or return-to-service events recorded.</td></tr>';
+  const summaryText=annualReady
+    ?'This AED completed all four quarterly inspections without documented inspection issues and is currently in service with required components in date.'
+    :annualHealth==='NEEDS ATTENTION'
+      ?'This AED remained generally serviceable during the year but has one or more annual documentation or readiness items requiring attention.'
+      :'This AED has an annual readiness deficiency because of incomplete quarterly inspections, an out-of-service condition, expired required components, or documented inspection issues.';
+  return '<section class="report-box annual-aed-summary" style="margin:0;break-inside:avoid">'+
+    '<div class="annual-aed-head"><div><h2 style="margin:0;color:#123a5a">'+safe(a.location)+(a.descriptor?' — '+safe(a.descriptor):'')+'</h2><p class="muted" style="margin:4px 0 0">Serial: '+safe(a.serial)+' · Group: '+safe(canonicalGroup(a))+'</p></div><div class="health '+annualClass+'">'+safe(annualHealth)+'</div></div>'+
+    '<div class="report-grid annual-aed-overview"><div class="report-box"><h3>Year-End Readiness</h3><div class="kv"><b>Current Status</b><div>'+status(a)+'</div></div><div class="kv"><b>Quarterly Checks</b><div>'+completed+' / 4</div></div><div class="kv"><b>Inspections With Issues</b><div>'+issueChecks+'</div></div><div class="kv"><b>Out-of-Service Inspection Statuses</b><div>'+oosChecks+'</div></div></div>'+
+    '<div class="report-box"><h3>Annual Activity</h3><div class="kv"><b>Deployments</b><div>'+deps.length+'</div></div><div class="kv"><b>Shock Events</b><div>'+shocks+'</div></div><div class="kv"><b>Returns to Service</b><div>'+rts+'</div></div><div class="kv"><b>Status / RTS Events</b><div>'+audit.length+'</div></div></div></div>'+
+    '<div class="report-box annual-health-note"><h3>Annual Readiness Summary</h3><p>'+safe(summaryText)+'</p></div>'+
+    '<div class="report-box"><h3>Quarterly Inspection History</h3><table class="summary-table annual-quarter-table"><thead><tr><th>Quarter</th><th>Date</th><th>Inspector</th><th>Result</th><th>Comments</th></tr></thead><tbody>'+quarterRows+'</tbody></table></div>'+
     '<div class="report-grid"><div class="report-box"><h3>Current Components</h3><div class="kv"><b>Adult Pads</b><div>'+dateFmt(a.adult)+'</div></div>'+(reportHasPediatricPads(a)?'<div class="kv"><b>Pediatric Pads</b><div>'+dateFmt(a.ped)+'</div></div>':'')+'<div class="kv"><b>Battery</b><div>'+dateFmt(a.battery)+'</div></div></div>'+
-    '<div class="report-box"><h3>Annual Deployment Activity</h3><table class="summary-table"><thead><tr><th>Date</th><th>Report #</th><th>Event</th></tr></thead><tbody>'+depRows+'</tbody></table></div></div></section>'
+    '<div class="report-box"><h3>Deployment History</h3><table class="summary-table"><thead><tr><th>Date</th><th>Report #</th><th>Event</th></tr></thead><tbody>'+depRows+'</tbody></table></div></div>'+
+    '<div class="report-box"><h3>Status / Return-to-Service History</h3><table class="summary-table"><thead><tr><th>Date</th><th>Event</th><th>Details</th></tr></thead><tbody>'+statusRows+'</tbody></table></div>'+
+  '</section>'
 }
 function buildAnnualPacketMarkup(year,sig){
   const units=tracked().slice().sort((a,b)=>canonicalGroup(a).localeCompare(canonicalGroup(b))||String(a.location||'').localeCompare(String(b.location||''))||String(a.descriptor||'').localeCompare(String(b.descriptor||''))||String(a.serial||'').localeCompare(String(b.serial||'')));
