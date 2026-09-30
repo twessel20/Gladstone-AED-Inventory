@@ -96,6 +96,69 @@ async function buildFromElement(source,filename='aed-report.pdf'){
     const doc=new JsPDF({unit:'in',format:'letter',orientation:'portrait',compress:true});
     const previewImages=[];
     const margin=.18,maxW=LETTER.w-margin*2,maxH=LETTER.h-margin*2;
+    // Build logical group packet pages before PDF capture.
+    // Each AED entry is atomic: never split an AED record across pages.
+    // New groups always begin on a fresh page; headers/footers repeat on every group page.
+    const groupSources=[...clone.children].filter(x=>x.classList?.contains('packet-group-source'));
+    if(groupSources.length){
+      for(const source of groupSources){
+        const groupName=source.getAttribute('data-group')||'Unassigned';
+        const headerTemplate=source.querySelector('.packet-group-page-header');
+        const bannerTemplate=source.querySelector('.packet-group-banner');
+        const footerTemplate=source.querySelector('.packet-group-page-footer');
+        const entries=[...source.querySelectorAll(':scope > .packet-group-entries > .packet-aed-entry')];
+        const sourceWidth=Math.max(1,source.getBoundingClientRect().width||source.scrollWidth||width);
+        const targetHeight=Math.floor(sourceWidth*(maxH/maxW));
+        const pages=[];
+
+        function makeGroupPage(isFirst){
+          const page=document.createElement('section');
+          page.className='packet-page packet-aed-page packet-group-rendered-page'+(isFirst?' packet-group-start':'');
+          page.setAttribute('data-group',groupName);
+          page.style.boxSizing='border-box';
+          page.style.width=sourceWidth+'px';
+          page.style.minHeight='0';
+          page.style.height='auto';
+          page.style.maxHeight='none';
+          page.style.overflow='visible';
+          if(headerTemplate)page.appendChild(headerTemplate.cloneNode(true));
+          if(bannerTemplate){
+            const banner=bannerTemplate.cloneNode(true);
+            if(!isFirst){
+              const label=banner.querySelector('span');
+              if(label)label.textContent='GROUP · CONTINUED';
+            }
+            page.appendChild(banner);
+          }
+          const body=document.createElement('div');
+          body.className='packet-group-page-entries';
+          page.appendChild(body);
+          if(footerTemplate)page.appendChild(footerTemplate.cloneNode(true));
+          source.parentNode.insertBefore(page,source);
+          pages.push({page,body});
+          return {page,body};
+        }
+
+        let current=makeGroupPage(true);
+        for(const entry of entries){
+          const node=entry.cloneNode(true);
+          current.body.appendChild(node);
+          await new Promise(r=>requestAnimationFrame(r));
+
+          // If adding this complete AED makes the page too tall, move the whole AED
+          // to a new page. Never split an AED record to use leftover space.
+          if(current.body.children.length>1 && current.page.scrollHeight>targetHeight){
+            current.body.removeChild(node);
+            current=makeGroupPage(false);
+            current.body.appendChild(node);
+            await new Promise(r=>requestAnimationFrame(r));
+          }
+        }
+        source.remove();
+      }
+      await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+    }
+
     const naturalHeightAtFullWidth=maxW*(clone.scrollHeight/Math.max(1,clone.scrollWidth));
     const fitScale=naturalHeightAtFullWidth>maxH?maxH/naturalHeightAtFullWidth:1;
     const forceOnePage=clone.classList?.contains('single-aed-report');
