@@ -100,3 +100,39 @@
   border-radius:8px;
   overflow:hidden;
 }
+
+/* v96: PDF capture must use Letter-page layout even when generated on a phone. */
+#generatedReportSheet.pdf-letter-capture{
+  width:900px!important;
+  max-width:900px!important;
+  padding:24px!important;
+}
+#generatedReportSheet.pdf-letter-capture .packet-page,
+#generatedReportSheet.pdf-letter-capture .packet-executive-page,
+#generatedReportSheet.pdf-letter-capture .packet-cover-page,
+#generatedReportSheet.pdf-letter-capture .packet-cert-page{
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  padding:26px!important;
+}
+#generatedReportSheet.pdf-letter-capture .report-grid,
+#generatedReportSheet.pdf-letter-capture .packet-executive-page .report-grid{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  gap:10px!important;
+  width:100%!important;
+}
+#generatedReportSheet.pdf-letter-capture .packet-aed-list{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+}
+#generatedReportSheet.pdf-letter-capture .report-header img{
+  width:72px!important;
+  height:72px!important;
+  max-width:72px!important;
+  flex:0 0 72px!important;
+}
+#generatedReportSheet.pdf-letter-capture .packet-cover-logo{
+  width:245px!important;
+  max-height:245px!important;
+}
