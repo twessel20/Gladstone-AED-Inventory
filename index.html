@@ -1042,6 +1042,7 @@ function inv(){
   Object.values(buckets).forEach(items=>items.sort((a,b)=>
     (a.location||'').localeCompare(b.location||'',undefined,{numeric:true,sensitivity:'base'})||
     (a.descriptor||'').localeCompare(b.descriptor||'',undefined,{numeric:true,sensitivity:'base'})||
+    expirationDaysForAed(a)-expirationDaysForAed(b)||
     (a.serial||'').localeCompare(b.serial||'',undefined,{numeric:true,sensitivity:'base'})
   ));
   const groups=Object.keys(buckets).sort((a,b)=>{
@@ -1122,6 +1123,7 @@ function checks(){
   Object.values(buckets).forEach(items=>items.sort((a,b)=>
     (a.location||'').localeCompare(b.location||'',undefined,{numeric:true,sensitivity:'base'})||
     (a.descriptor||'').localeCompare(b.descriptor||'',undefined,{numeric:true,sensitivity:'base'})||
+    expirationDaysForAed(a)-expirationDaysForAed(b)||
     (a.serial||'').localeCompare(b.serial||'',undefined,{numeric:true,sensitivity:'base'})
   ));
 
