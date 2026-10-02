@@ -887,14 +887,14 @@ const FIXED_LOCATION_DESCRIPTORS={
   'X19D140932':'Lobby',
   'X20A241496':'2nd Floor'
 };
-if(FIXED_LOCATION_DESCRIPTORS[a.serial]&&a.descriptor!==FIXED_LOCATION_DESCRIPTORS[a.serial]){a.descriptor=FIXED_LOCATION_DESCRIPTORS[a.serial];migrated=true}
-if(a.location==='Atkins-Johnson Farm'&&a.descriptor!=='Behind Desk'){a.descriptor='Behind Desk';migrated=true}
+if(FIXED_LOCATION_DESCRIPTORS[a.serial]&&!String(a.descriptor||'').trim()){a.descriptor=FIXED_LOCATION_DESCRIPTORS[a.serial];migrated=true}
+if(a.location==='Atkins-Johnson Farm'&&!String(a.descriptor||'').trim()){a.descriptor='Behind Desk';migrated=true}
 if(a.location==='Atkins-Johnson Farm'&&a.group!=='Community Center / Parks & Recreation'){a.group='Community Center / Parks & Recreation';migrated=true}
 if(a.serial==='X19D141892'){
-  if(a.location!=='Leisure Pool'){a.location='Leisure Pool';migrated=true}
-  if(a.descriptor!=='1st Floor · Community Center'){a.descriptor='1st Floor · Community Center';migrated=true}
-  if(a.group!=='Community Center / Parks & Recreation'){a.group='Community Center / Parks & Recreation';migrated=true}
-  if(a.address!=='6901 N Holmes St, Gladstone, MO 64118'){a.address='6901 N Holmes St, Gladstone, MO 64118';migrated=true}
+  const legacyLeisurePool=(a.location==='Leisure Pool'&&a.descriptor==='1st Floor · Community Center');
+  if(legacyLeisurePool){a.location='Community Center';a.descriptor='1st Floor - Leisure Pool';migrated=true}
+  if(!a.group){a.group='Community Center / Parks & Recreation';migrated=true}
+  if(!String(a.address||'').trim()){a.address='6901 N Holmes St, Gladstone, MO 64118';migrated=true}
 }
 if(!a.descriptor)a.descriptor='';
 const verifiedAddress=VERIFIED_AED_ADDRESSES[a.location]||'';
