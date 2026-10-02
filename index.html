@@ -915,9 +915,9 @@ function applyVerifiedAddressDefaults(){
     const known=VERIFIED_AED_ADDRESSES[a.location]||'';
     if(known&&!String(a.address||'').trim()){a.address=known;changed=true}
     if(a.serial==='X19D141892'){
-      if(a.location!=='Leisure Pool'){a.location='Leisure Pool';changed=true}
-      if(a.descriptor!=='1st Floor · Community Center'){a.descriptor='1st Floor · Community Center';changed=true}
-      if(a.group!=='Community Center / Parks & Recreation'){a.group='Community Center / Parks & Recreation';changed=true}
+      const legacyLeisurePool=(a.location==='Leisure Pool'&&a.descriptor==='1st Floor · Community Center');
+      if(legacyLeisurePool){a.location='Community Center';a.descriptor='1st Floor - Leisure Pool';changed=true}
+      if(!a.group){a.group='Community Center / Parks & Recreation';changed=true}
       if(!String(a.address||'').trim()){a.address='6901 N Holmes St, Gladstone, MO 64118';changed=true}
     }
   });
