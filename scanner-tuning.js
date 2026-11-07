@@ -15,15 +15,18 @@ function wideBarcodeBox(viewWidth,viewHeight){
 
 function tunedLiveConfig(config){
   const next=Object.assign({},config||{});
-  next.fps=Math.max(Number(next.fps)||0,15);
-  next.qrbox=wideBarcodeBox;
+  next.fps=Math.max(Number(next.fps)||0,12);
+  // Scan the entire camera frame: the prior short, wide crop could miss QR
+  // codes and barcodes positioned outside the shaded scan box on iPhones.
+  delete next.qrbox;
   next.disableFlip=true;
   delete next.aspectRatio;
+  // Moderate resolution helps iPhone browser decoders keep up with frames.
   next.videoConstraints={
     facingMode:{ideal:'environment'},
-    width:{ideal:1920},
-    height:{ideal:1080},
-    frameRate:{ideal:30,max:30}
+    width:{ideal:1280},
+    height:{ideal:720},
+    frameRate:{ideal:24,max:30}
   };
   return next;
 }
@@ -31,7 +34,20 @@ function tunedLiveConfig(config){
 const originalStart=H.prototype.start;
 H.prototype.start=function(cameraIdOrConfig,config,onSuccess,onError){
   const scanner=this;
-  return originalStart.call(scanner,cameraIdOrConfig,tunedLiveConfig(config),onSuccess,onError).then(async result=>{
+  const ctx=contexts.find(c=>c.reader===scanner.elementId);
+  const msg=ctx?document.getElementById(ctx.msg):null;
+  const success=(decoded,details)=>{
+    if(msg)msg.textContent='Barcode detected. Checking inventory…';
+    return onSuccess(decoded,details);
+  };
+  return originalStart.call(scanner,cameraIdOrConfig,tunedLiveConfig(config),success,onError).then(async result=>{
+    if(msg){
+      msg.textContent='Camera active. Place the entire barcode or QR code in view.';
+      setTimeout(()=>{
+        if(msg.isConnected&&msg.closest('dialog')?.open&&msg.textContent.startsWith('Camera active.'))
+          msg.textContent='Camera is active but no code was decoded. Try Take Barcode Photo or enter the serial manually.';
+      },7000);
+    }
     try{
       if(typeof scanner.getRunningTrackCapabilities==='function'&&typeof scanner.applyVideoConstraints==='function'){
         const caps=scanner.getRunningTrackCapabilities()||{};
